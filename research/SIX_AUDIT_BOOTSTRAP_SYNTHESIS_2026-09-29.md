@@ -60,12 +60,11 @@ This design would extend v1.0 in a later **new version**, following its semantic
 
 ## 5. Conflicts and decisions
 
-**D1 — default own-branch commit/push policy (Owner decision).** Two normal product repositories explicitly permit commit and push of the dedicated task branch once a repository task starts. The Factory audit demonstrates a branch where publication was forbidden until the owner explicitly said to commit/push, and a separate policy branch could not grant authority to that checkout. Options:
+**D1 — default own-branch commit/push policy (Owner decision: B, 2026-09-29).** For **new** manual projects, the proposed bootstrap default permits the executing agent to commit and push only the task's dedicated branch after the task's applicable checks. Bootstrap must **explicitly inform the owner at setup** that this default is active, explain its precise boundary, and provide a clear way to opt out or choose per-task authorization. The choice is recorded in the target project's authoritative instructions. Silence must never conceal the default.
 
-- **A, recommended:** Bootstrap asks the owner during project setup to select a publication policy and records it explicitly. Existing project authority is preserved; until selected, an executor does not infer commit/push. For projects selecting standing own-branch publication, no repeated approval is needed. The core completion contract reports `BLOCKED/LOCAL_COMPLETE` rather than falsely claiming remote DONE when publication is unavailable.
-- **B:** Standing own-branch commit/push is the proposed default for new manual projects, subject to explicit local opt-out. Faster, but a bootstrap run must never silently override an existing project's more restrictive instructions.
-- **C:** Require per-task approval for every project. Stronger default restraint but repeats avoidable gates in projects that already granted standing authority.
+For **existing** projects, inventory the effective rules first. A stricter existing commit/push restriction or task-specific prohibition remains in force unless the owner explicitly changes it; a rule on another branch or another project supplies no grant. The default does not grant push to `main`, merge, deployment, provider activation, mutation of other task branches, or any unrelated follow-up. If publication is disallowed or technically blocked, report the actual local/intermediate status instead of claiming remote DONE.
 
+The compared alternatives were A (explicit selection before any default grant) and C (approval per task). The owner selected B after confirming that B differs from A in its starting state: B permits own-branch publication by default for a new project, with a prominent notice and opt-out.
 Other differences can be resolved within the design without a new product choice: already granted authority outranks a generic skill's routine review prompt; genuinely new product intent still needs the owner. Review frequency, test commands, branch prefix, storage path and parallel labels remain project parameters. An optional automation profile should be a later independent proposal, not a condition for the manual standard.
 
 ## 6. Exclusions and evidence limits
@@ -74,6 +73,6 @@ Do not import financial/domain rules, product workflows, private operational det
 
 ## 7. Next executable boundary
 
-After D1 is decided, prepare a separate versioned implementation order to update `UNIVERSAL_PROJECT_BOOTSTRAP.md`, `skills/SKILL_MANIFEST.md`, both templates, `README.md`, and `CHANGELOG.md` consistently. The order should specify a version choice, exact semantic changes, migration/re-bootstrap behavior, conflict examples, a minimal acceptance matrix for a new project and an existing restrictive project, link/format/scope verification, and independent review. This report does **not** authorize that implementation, a merge, or publication of a new bootstrap version.
+With D1 decided, prepare a separate versioned implementation order to update `UNIVERSAL_PROJECT_BOOTSTRAP.md`, `skills/SKILL_MANIFEST.md`, both templates, `README.md`, and `CHANGELOG.md` consistently. The order should specify a version choice, exact semantic changes, migration/re-bootstrap behavior, conflict examples, a minimal acceptance matrix for a new project and an existing restrictive project, link/format/scope verification, and independent review. This decision and report do **not** authorize that implementation, a merge, or publication of a new bootstrap version.
 
 **Research completion check:** six report paths pinned; three planning and three repository viewpoints compared; current v1.0 inventoried; material conflicts isolated; no rule, skill, template or version modified.
