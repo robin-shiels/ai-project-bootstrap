@@ -2,7 +2,9 @@
 
 A reusable, product-neutral standard for consistent ChatGPT planning and Codex execution workflows across new and existing projects.
 
-**Current standard:** v1.0.0
+**Current standard:** v1.1.0
+
+> **New-project default: own task-branch commit/push is enabled.** After an explicitly started task passes its required checks, the executor may commit and push only that task's dedicated branch. This does not permit main/default-branch push, another task's branch, merge, release/tag, deployment or production/provider activation, and does not start a recommended follow-up. At setup you can choose **DISABLED** (opt out of commit/push) or **PER_TASK_APPROVAL** instead of **ALLOW_AFTER_CHECKS**. ChatGPT must prominently repeat this notice in its setup response and record the effective policy in your authoritative project instructions before relying on it. Existing projects keep their active restrictions; v1.1.0 does not grant permission retrospectively.
 
 ## Quick start
 
@@ -12,12 +14,13 @@ A reusable, product-neutral standard for consistent ChatGPT planning and Codex e
 
 > Bootstrap this project according to `UNIVERSAL_PROJECT_BOOTSTRAP.md`. Inventory the current project first. Do not invent product-specific rules. Stop only for genuine conflicts or owner decisions.
 
-4. ChatGPT first inventories existing rules, skills and workflows.
-5. It preserves equivalent behavior, fills gaps, upgrades outdated universal behavior when safe, and asks you about genuine conflicts.
-6. If project-specific instructions are missing, it uses structured brainstorming/discovery instead of inventing requirements.
-7. When the ChatGPT side is ready, it outputs a **Codex bootstrap prompt**.
-8. Copy that prompt into Codex.
-9. Codex independently inventories and reconciles its rules, skills, Git workflow, quality gates and completion contracts.
+4. ChatGPT resolves the actual repository/default branch and inventories existing rules, skills, workflows and commit/push authority with source/revision evidence.
+5. For a new project it prominently explains the default above, offers opt-out/per-task approval and records the effective choice; default B does not require an affirmative selection after notice. For an existing project it preserves current authority, flags an incompatible restrictive policy as CONFLICT, and obtains any missing scoped authority before publication.
+6. It preserves equivalent behavior, fills gaps, upgrades outdated universal behavior when safe, and asks you about genuine conflicts.
+7. If project-specific instructions are missing, it uses structured brainstorming/discovery instead of inventing requirements.
+8. When the ChatGPT side is ready, it outputs a **Codex bootstrap prompt** with the policy source and durable order.
+9. Copy that prompt into Codex.
+10. Codex independently inventories and reconciles its rules, skills, Git workflow, quality gates and completion contracts. It verifies and publishes only its own task branch when authorized, then returns a compact evidence-based handoff.
 
 The same process works for an existing project and can be re-run after the standard is updated.
 
@@ -39,7 +42,9 @@ The standard covers reusable workflow behavior such as:
 - robust repository discovery and code-search fallback;
 - current repository evidence before old chat assumptions;
 - autonomous planning/research until a real owner decision or execution-ready handoff;
-- durable Git-tracked work orders plus short execution prompts;
+- durable canonical orders and results (normally Git-tracked) plus short execution prompts;
+- visible own-branch publication policy with opt-out and existing-rule preservation;
+- task-appropriate checks and distinct local, branch, integration and deployment states;
 - recommendation-only next-chat guidance;
 - compact current-work status before recommendations;
 - parallel-work awareness;
@@ -106,15 +111,19 @@ No technology-specific `.gitignore` is included yet because this repository curr
 
 The standard uses semantic versions. A target project may record its last reconciled version, for example:
 
-`Universal Project Bootstrap: v1.0.0`
+`Universal Project Bootstrap: v1.1.0`
 
 That marker is useful but never replaces semantic inspection on a future upgrade.
+
+When upgrading from v1.0.0, reconcile behavior rather than replacing local instructions. Preserve existing restrictive commit/push rules until an explicit Owner change; show the concrete conflict with a proposed default B policy. Already equivalent own-branch permission stays intact without re-approval. See [CHANGELOG.md](CHANGELOG.md) for migration details. Branch completion does not claim integration or deployment; recheck current main and affected gates before any separately authorized integration.
 
 ## Relationship to automation/software factories
 
 This repository defines the workflow contract. A separate automation system or software factory may automate parts of that workflow and may therefore need different internal execution rules.
 
 The bootstrap standard should not be coupled to one automation implementation.
+
+The [six-audit synthesis](research/SIX_AUDIT_BOOTSTRAP_SYNTHESIS_2026-09-29.md) records the pinned evidence and Owner decision behind v1.1.0. Research reports remain source material, not independent execution grants.
 
 ## Contributing
 
