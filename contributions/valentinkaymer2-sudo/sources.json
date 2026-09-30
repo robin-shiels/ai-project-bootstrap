@@ -1,0 +1,964 @@
+{
+  "schema_version": "1.0",
+  "contributor": "valentinkaymer2-sudo",
+  "captured_at": "2026-09-30T12:32:15+00:00",
+  "baseline": {
+    "repository": "robin-shiels/ai-project-bootstrap",
+    "branch": "main",
+    "commit": "217b4b3ccd75557f707a627df87c2495e36cd35c",
+    "standard_version": "1.1.0"
+  },
+  "source_count": 25,
+  "counts_by_type": {
+    "bundled_skill": 3,
+    "conversation": 1,
+    "custom_skill": 10,
+    "helper_script": 1,
+    "workflow_document": 10
+  },
+  "notes": [
+    "25 Quellen sind Inventargrößen, keine Erfolgsmetrik.",
+    "Originalpfade und Originalprüfsummen geschützter Dokumente bleiben im privaten Quellenmapping.",
+    "Öffentliche Artefaktprüfsummen beziehen sich auf die bereinigten Auszüge, nicht private Originale.",
+    "Synthetische Anwendungsbeispiele sind keine historischen Erfolgsbehauptungen."
+  ],
+  "sources": [
+    {
+      "id": "S01",
+      "title": "Globale AGENTS-Arbeitspräferenz",
+      "kind": "workflow_document",
+      "layer": "Codex/global",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "Globale AGENTS-Arbeitspräferenz",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständig",
+      "source_modified_at": "2026-09-29T18:04:47+00:00",
+      "current_state": "Zugängliche Quelle bzw. Auszug geprüft",
+      "purpose": "Sitzungsübergreifende Arbeitsweise, selektive Akten und Modellberatung",
+      "written_rules": [
+        "Relevante offene Themen und Detailakten berücksichtigen.",
+        "Wiederverwendbare Abläufe gezielt verbessern.",
+        "Bei deutlicher Modell-Fehlpassung empfehlen; laufenden Thread nicht über globale Konfiguration umstellen."
+      ],
+      "observed_practice": {
+        "level": "observed_run",
+        "evidence": [
+          "E01",
+          "E03"
+        ],
+        "note": "Modellregel im zugänglichen Gespräch geändert und zurückgelesen; Akten im aktuellen Audit selektiv geöffnet."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Prüfe für eine umfangreiche Fehlersuche die geeignete Modellstufe.",
+        "expected_outcome": "Relevante offene Themen und Detailakten berücksichtigen.",
+        "negative_case": "Eine kleine Textkorrektur braucht keinen Modelldialog."
+      },
+      "project_only_rules": "Persönliche Modellberatung und ausdrücklich begrenzte Delegation; Browserprofilvorgabe nur für die konkrete Umgebung.",
+      "public_artifact": "sources/01-global-rules.md",
+      "redistribution": {
+        "mode": "redacted_excerpt",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "9d4849675938b887056deb8f18bef16886cdd6478adccc9f09985f1b4e33a27c"
+    },
+    {
+      "id": "S02",
+      "title": "Lokales Skill-Inventar und Wiederherstellung",
+      "kind": "workflow_document",
+      "layer": "Codex/local",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "Lokales Skill-Inventar und Wiederherstellung",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständig",
+      "source_modified_at": "2026-09-29T10:53:15+00:00",
+      "current_state": "Zugängliche Quelle bzw. Auszug geprüft",
+      "purpose": "Installation und Projektzuständigkeiten nachvollziehen",
+      "written_rules": [
+        "Quelle, Verknüpfung und Laufzeit unterscheiden.",
+        "Werkzeugabhängigkeiten separat prüfen."
+      ],
+      "observed_practice": {
+        "level": "available_not_executed",
+        "evidence": [
+          "E02"
+        ],
+        "note": "Quelltext und aktueller Skillkatalog vorhanden; keine Aussage über Häufigkeit oder Qualität der Verwendung."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Kann dieselbe Skillquelle auf einem zweiten Rechner genutzt werden?",
+        "expected_outcome": "Quelle, Verknüpfung und Laufzeit unterscheiden.",
+        "negative_case": "Eine Verknüpfung auf einem Rechner installiert nichts auf einem anderen."
+      },
+      "project_only_rules": "Keine zusätzliche Produktregel als universeller Standard vorgeschlagen.",
+      "public_artifact": "sources/02-inventory.md",
+      "redistribution": {
+        "mode": "paraphrase_only",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "e186c03213c23d36761cd9ede32b1c7e64088c53a89ecc56643f7a95f26a304a"
+    },
+    {
+      "id": "S03",
+      "title": "skill-learning-loop",
+      "kind": "custom_skill",
+      "layer": "Codex/local",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "skill-learning-loop",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständig",
+      "source_modified_at": "2026-09-26T18:12:37+00:00",
+      "current_state": "Lokaler Quelltext gelesen; katalogisiert",
+      "purpose": "Aus echten Erfahrungen kleine wiederverwendbare Verbesserungen ableiten",
+      "written_rules": [
+        "Vor einer neuen Skilldatei nach einer vorhandenen passenden Fähigkeit suchen.",
+        "Auslöser, Nutzen und Grenzen benennen; Projektfakten nicht in Skills verwandeln."
+      ],
+      "observed_practice": {
+        "level": "observed_run",
+        "evidence": [
+          "E03"
+        ],
+        "note": "Beim Modellwahl-Follow-up wurde eine globale Regel ergänzt, statt einen redundanten Skill anzulegen."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Nach mehreren gleichartigen Importfehlern verbessere den bestehenden Importskill.",
+        "expected_outcome": "Vor einer neuen Skilldatei nach einer vorhandenen passenden Fähigkeit suchen.",
+        "negative_case": "Ein einzelner Termin gehört in eine Projektakte."
+      },
+      "project_only_rules": "Keine zusätzliche Produktregel als universeller Standard vorgeschlagen.",
+      "public_artifact": "sources/03-skill-learning-loop.md",
+      "redistribution": {
+        "mode": "original",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "4c1525ff6dd713a4cfb0a003d679f44b37e730b1594e960747e0bd065c9427f0"
+    },
+    {
+      "id": "S04",
+      "title": "code-debugging",
+      "kind": "custom_skill",
+      "layer": "Codex/local",
+      "origin": "Eigenständig formulierter lokaler Skill, inspiriert von Superpowers Systematic Debugging; keine Kopie des fremden SKILL.md",
+      "locator": "code-debugging",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständig",
+      "source_modified_at": "2026-09-29T10:49:40+00:00",
+      "current_state": "Lokaler Quelltext gelesen; katalogisiert",
+      "purpose": "Ursache eines konkreten Fehlers prüfen, statt vermutete Symptome zu patchen",
+      "written_rules": [
+        "Erwartetes und beobachtetes Verhalten mit einer kleinen sicheren Fehlerprobe festhalten.",
+        "Eine konkrete Ursache prüfen und die ursprüngliche Fehlerprobe nach der Korrektur wiederholen."
+      ],
+      "observed_practice": {
+        "level": "available_not_executed",
+        "evidence": [
+          "E02"
+        ],
+        "note": "Quelltext und aktueller Skillkatalog vorhanden; keine Aussage über Häufigkeit oder Qualität der Verwendung."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Ein CSV-Import dupliziert Datensätze beim zweiten Aufruf.",
+        "expected_outcome": "Erwartetes und beobachtetes Verhalten mit einer kleinen sicheren Fehlerprobe festhalten.",
+        "negative_case": "Eine neue Funktion ohne Fehlersymptom ist kein Debuggingauftrag."
+      },
+      "project_only_rules": "Keine zusätzliche Produktregel als universeller Standard vorgeschlagen.",
+      "public_artifact": "sources/04-code-debugging.md",
+      "redistribution": {
+        "mode": "original",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "6ccbf1e72ddc2ac86a2fe4e1d5bd008cf2b106bca3c5f56b9d66e3514af9541f"
+    },
+    {
+      "id": "S05",
+      "title": "web-release-check",
+      "kind": "custom_skill",
+      "layer": "Codex/local",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "web-release-check",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständig",
+      "source_modified_at": "2026-09-26T18:12:37+00:00",
+      "current_state": "Lokaler Quelltext gelesen; katalogisiert",
+      "purpose": "Quellstand, Build und sichtbaren Live-Stand separat belegen",
+      "written_rules": [
+        "Ein Commit oder grünes CI-Signal belegt noch keine sichtbare Veröffentlichung.",
+        "Bei Darstellungsänderungen betroffene schmale und breite Ansichten prüfen."
+      ],
+      "observed_practice": {
+        "level": "available_not_executed",
+        "evidence": [
+          "E02"
+        ],
+        "note": "Quelltext und aktueller Skillkatalog vorhanden; keine Aussage über Häufigkeit oder Qualität der Verwendung."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Eine neue Überschrift wurde gespeichert: ist sie tatsächlich live?",
+        "expected_outcome": "Ein Commit oder grünes CI-Signal belegt noch keine sichtbare Veröffentlichung.",
+        "negative_case": "Ein reiner Entwurf erlaubt keine öffentliche Veröffentlichung."
+      },
+      "project_only_rules": "Konkrete Website und Veröffentlichungsstrecke sind Projektparameter.",
+      "public_artifact": "sources/05-web-release-check.md",
+      "redistribution": {
+        "mode": "redacted_excerpt",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "12261b14716ca8d6432afda0766791eef6a29d2c1260f2cb2963fb48ab7e639b"
+    },
+    {
+      "id": "S06",
+      "title": "xlsx-workbooks",
+      "kind": "custom_skill",
+      "layer": "Codex/local",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "xlsx-workbooks",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständig",
+      "source_modified_at": "2026-09-26T18:14:00+00:00",
+      "current_state": "Lokaler Quelltext gelesen; katalogisiert",
+      "purpose": "Lokale Tabellen und echte Formel-Neuberechnung prüfen",
+      "written_rules": [
+        "Formeltext und gespeicherten Ergebniswert unterscheiden; openpyxl berechnet nicht selbst.",
+        "Originale erhalten und geänderte Eingabe samt Ergebnis prüfen."
+      ],
+      "observed_practice": {
+        "level": "available_not_executed",
+        "evidence": [
+          "E02"
+        ],
+        "note": "Quelltext und aktueller Skillkatalog vorhanden; keine Aussage über Häufigkeit oder Qualität der Verwendung."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Ändere eine Mengeneingabe und prüfe die neue Summe.",
+        "expected_outcome": "Formeltext und gespeicherten Ergebniswert unterscheiden; openpyxl berechnet nicht selbst.",
+        "negative_case": "Ein altes Formelcache-Ergebnis ist kein neuer Rechennachweis."
+      },
+      "project_only_rules": "Dateityp, Office-Funktionen, Pythonpfad und LibreOffice-Verfügbarkeit vor Ort prüfen.",
+      "public_artifact": "sources/06-xlsx-workbooks.md",
+      "redistribution": {
+        "mode": "redacted_excerpt",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "92211eded91619ca9040cc394408c870b44395790a6c9a98e8a88d79ce651dd6"
+    },
+    {
+      "id": "S07",
+      "title": "inspect_workbook.py",
+      "kind": "helper_script",
+      "layer": "Codex/local",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "inspect_workbook.py",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständig",
+      "source_modified_at": "2026-09-26T18:14:00+00:00",
+      "current_state": "Zugängliche Quelle bzw. Auszug geprüft",
+      "purpose": "Formeln, Cachefehler und Scanbegrenzung sichtbar machen",
+      "written_rules": [
+        "Struktur, Formelzahl, Beispielwerte und Abbruch durch Scanlimit ausgeben.",
+        "Nur lesen; weder Formeln berechnen noch eine Datei reparieren."
+      ],
+      "observed_practice": {
+        "level": "observed_run",
+        "evidence": [
+          "E04"
+        ],
+        "note": "Dieser Beitrag prüft das unveränderte Originalskript an einer synthetischen Arbeitsmappe; Ergebnisse in VALIDATION.md."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Untersuche eine Arbeitsmappe mit Formel und gespeichertem Fehlerwert.",
+        "expected_outcome": "Struktur, Formelzahl, Beispielwerte und Abbruch durch Scanlimit ausgeben.",
+        "negative_case": "Das Programm ersetzt keine Tabellenkalkulation und kein vollständiges Audit großer Mappen."
+      },
+      "project_only_rules": "Keine zusätzliche Produktregel als universeller Standard vorgeschlagen.",
+      "public_artifact": "sources/07-inspect_workbook.py",
+      "redistribution": {
+        "mode": "original",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "5b4c0baeee91daafa393b89812ccb2bd28b01739587d53d29289de1e757e056f"
+    },
+    {
+      "id": "S08",
+      "title": "pdf-documents",
+      "kind": "custom_skill",
+      "layer": "Codex/local",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "pdf-documents",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständig",
+      "source_modified_at": "2026-09-26T18:14:00+00:00",
+      "current_state": "Lokaler Quelltext gelesen; katalogisiert",
+      "purpose": "Textebene, Scan, OCR und sichtbares Seitenbild unterscheiden",
+      "written_rules": [
+        "Leere Extraktion einer Bildseite nicht als leeres Dokument behandeln.",
+        "Wichtige OCR-Werte und sichtbare Änderungen am Seitenbild kontrollieren."
+      ],
+      "observed_practice": {
+        "level": "available_not_executed",
+        "evidence": [
+          "E02"
+        ],
+        "note": "Quelltext und aktueller Skillkatalog vorhanden; keine Aussage über Häufigkeit oder Qualität der Verwendung."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Lies den Betrag und die Frist aus einem eingescannten Formular.",
+        "expected_outcome": "Leere Extraktion einer Bildseite nicht als leeres Dokument behandeln.",
+        "negative_case": "OCR-Text allein belegt keine korrekt dargestellte PDF-Seite."
+      },
+      "project_only_rules": "Installierte Hilfsprogramme und private Dokumentzugänge sind nicht übertragbar.",
+      "public_artifact": "sources/08-pdf-documents.md",
+      "redistribution": {
+        "mode": "redacted_excerpt",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "41f1ea5e6df76c99c16767beb15ee1b98d2c6ebe0dc402860147708de2c93c6d"
+    },
+    {
+      "id": "S09",
+      "title": "wichtige-themen",
+      "kind": "custom_skill",
+      "layer": "Codex/local",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "wichtige-themen",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständig",
+      "source_modified_at": "2026-09-10T10:35:14+00:00",
+      "current_state": "Lokaler Quelltext gelesen; katalogisiert",
+      "purpose": "Mehrstufige Vorhaben sparsam speichern und sinnvoll nachfassen",
+      "written_rules": [
+        "Kurze Übersicht mit nächstem Schritt und Verweis auf maßgebliche Detailakte pflegen.",
+        "Eine offene Aufgabe verleiht keine neue Handlungsvollmacht; Hinweise brauchen relevante neue Entwicklung."
+      ],
+      "observed_practice": {
+        "level": "observed_run",
+        "evidence": [
+          "E01"
+        ],
+        "note": "Übersicht und passende Projektakten beim Einstieg in diesen Auftrag gelesen; Veröffentlichung der privaten Übersicht ausgeschlossen."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Halte einen offenen Zugang für den nächsten Austauschschritt fest.",
+        "expected_outcome": "Kurze Übersicht mit nächstem Schritt und Verweis auf maßgebliche Detailakte pflegen.",
+        "negative_case": "Allgemeine Wissensfragen sind keine neuen Verpflichtungen."
+      },
+      "project_only_rules": "Dateinamen und Nachfasspräferenzen sind konfigurierbar; kein eingebauter Scheduler.",
+      "public_artifact": "sources/09-wichtige-themen.md",
+      "redistribution": {
+        "mode": "redacted_excerpt",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "a2585fe38559a359ba2938afd20a34fa65dbb0665d462f8d6f587a23ebf5012d"
+    },
+    {
+      "id": "S10",
+      "title": "health-dashboard-dev",
+      "kind": "custom_skill",
+      "layer": "Codex/project",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "health-dashboard-dev",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständig",
+      "source_modified_at": "2026-09-26T18:12:37+00:00",
+      "current_state": "Lokaler Quelltext gelesen; katalogisiert",
+      "purpose": "Änderungen an einem privaten Datendashboard begrenzen",
+      "written_rules": [
+        "Kandidat, Produktion, Datenbank und Integrationen vor der Änderung identifizieren.",
+        "Herkunft erhalten, wiederholte Importe absichern und vor Migrationen einen wiederherstellbaren Stand sichern."
+      ],
+      "observed_practice": {
+        "level": "available_not_executed",
+        "evidence": [
+          "E02"
+        ],
+        "note": "Quelltext und aktueller Skillkatalog vorhanden; keine Aussage über Häufigkeit oder Qualität der Verwendung."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Prüfe einen Import im Entwicklungskandidaten.",
+        "expected_outcome": "Kandidat, Produktion, Datenbank und Integrationen vor der Änderung identifizieren.",
+        "negative_case": "Ein synthetischer Test ist keine persönliche Live-Abnahme."
+      },
+      "project_only_rules": "Dashboarddomäne, Pfade, Integrationen und Rolloutrechte bleiben projektspezifisch.",
+      "public_artifact": "sources/10-health-dashboard-dev.md",
+      "redistribution": {
+        "mode": "redacted_excerpt",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "9c39c18730807996e11af405a732501c523444e4411aba5eaf628e8786799dd2"
+    },
+    {
+      "id": "S11",
+      "title": "health-journal",
+      "kind": "custom_skill",
+      "layer": "Codex/project",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "health-journal",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständig; referenzierte Verbindung und Client nicht gelesen",
+      "source_modified_at": "2026-09-06T09:25:23+00:00",
+      "current_state": "Lokaler Quelltext gelesen; katalogisiert",
+      "purpose": "Eindeutige Nutzerberichte mit begrenztem Eingangsworkflow erfassen",
+      "written_rules": [
+        "Nur tatsächliche Aussagen des aktiven zugänglichen Chats oder ausdrücklich bereitgestellte Inhalte übernehmen.",
+        "Stabile source_id bei Retry; Annahme, Verarbeitung und Bestätigung getrennt berichten.",
+        "Ursprüngliche Aussagezeit und Zeitzone verwenden; Rückfragen mit konkreter question_id zuordnen."
+      ],
+      "observed_practice": {
+        "level": "available_not_executed",
+        "evidence": [
+          "E02"
+        ],
+        "note": "Quelltext und aktueller Skillkatalog vorhanden; keine Aussage über Häufigkeit oder Qualität der Verwendung."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Speichere die ausdrücklich berichtete heutige Aktivität.",
+        "expected_outcome": "Nur tatsächliche Aussagen des aktiven zugänglichen Chats oder ausdrücklich bereitgestellte Inhalte übernehmen.",
+        "negative_case": "Eine Zukunftsabsicht oder eine Aussage über eine andere Person ist kein eigener Bericht."
+      },
+      "project_only_rules": "Domäne, API, Client, Rechte und Serverpräferenzen sind projektspezifisch und hier nicht exportiert.",
+      "public_artifact": "sources/11-health-journal.md",
+      "redistribution": {
+        "mode": "redacted_excerpt",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "3b180a103c9dbad60e00327676585e4d321c651c5b6d04f1feb4880a86ef2698"
+    },
+    {
+      "id": "S12",
+      "title": "ideen-labor-research",
+      "kind": "custom_skill",
+      "layer": "Codex/project",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "ideen-labor-research",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständig",
+      "source_modified_at": "2026-09-26T18:12:37+00:00",
+      "current_state": "Lokaler Quelltext gelesen; katalogisiert",
+      "purpose": "Recherche mit Gegenprobe zur Entscheidung führen",
+      "written_rules": [
+        "Quellen mit Zeitpunkt, Region und Aussagegrenze öffnen und dokumentieren.",
+        "Anbieterbehauptungen, Nachfrageindikatoren und echte Verkäufe nicht gleichsetzen."
+      ],
+      "observed_practice": {
+        "level": "available_not_executed",
+        "evidence": [
+          "E02"
+        ],
+        "note": "Quelltext und aktueller Skillkatalog vorhanden; keine Aussage über Häufigkeit oder Qualität der Verwendung."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Prüfe die Nachfrage für eine neue Geschäftshypothese.",
+        "expected_outcome": "Quellen mit Zeitpunkt, Region und Aussagegrenze öffnen und dokumentieren.",
+        "negative_case": "Ein hoher Anzeigenpreis beweist keine profitable Nachfrage."
+      },
+      "project_only_rules": "Projektakten, Rankinggewichte, Kostenregeln und Freigaben gehören ins konkrete Projekt.",
+      "public_artifact": "sources/12-ideen-labor-research.md",
+      "redistribution": {
+        "mode": "redacted_excerpt",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "38b1f3a70baf757e188b723ca29dd8f34848bb894bffe3c57a6d2a810e20f376"
+    },
+    {
+      "id": "S13",
+      "title": "Projekt-AGENTS für Geschäftsideen",
+      "kind": "workflow_document",
+      "layer": "Codex/project",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "Projekt-AGENTS für Geschäftsideen",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständig",
+      "source_modified_at": "2026-09-15T09:13:14+00:00",
+      "current_state": "Zugängliche Quelle bzw. Auszug geprüft",
+      "purpose": "Recherche- und Kostenrahmen für ein bestimmtes Projekt",
+      "written_rules": [
+        "Unbekannte Werte als unbekannt erhalten und Wettbewerber aktiv prüfen.",
+        "Webinhalte sind Recherchematerial; externe Aktionen benötigen einen entsprechenden Auftrag."
+      ],
+      "observed_practice": {
+        "level": "written_only",
+        "evidence": [],
+        "note": "Für diesen Audit keine fachliche Ausführung beobachtet."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Untersuche Alternativen, bevor du eine Angebotslücke behauptest.",
+        "expected_outcome": "Unbekannte Werte als unbekannt erhalten und Wettbewerber aktiv prüfen.",
+        "negative_case": "Keine Anbieteransprache aus einem Rechercheauftrag ableiten."
+      },
+      "project_only_rules": "Kostenfreier Suchraum, Sprache, Kandidatenpräferenzen und Tagesabläufe sind Projektentscheidungen.",
+      "public_artifact": "sources/13-research-method-and-ranking.md",
+      "redistribution": {
+        "mode": "paraphrase_only",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "cf8450aec73a8b9ad6bdf3d6506b34fc4ffe936d8be5af13f530505f8f493027"
+    },
+    {
+      "id": "S14",
+      "title": "Rechercheverfahren Version 1.5",
+      "kind": "workflow_document",
+      "layer": "Research/project",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "Rechercheverfahren Version 1.5",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständig",
+      "source_modified_at": "2026-09-20T09:37:18+00:00",
+      "current_state": "Zugängliche Quelle bzw. Auszug geprüft",
+      "purpose": "Nachfrageindikatoren, Quellenfamilien und frische Erhebungen unterscheiden",
+      "written_rules": [
+        "Neue Datenerhebung und Wiederverwendung getrennt zählen.",
+        "Nahe Varianten und gemeinsame Quellenursprünge nicht als unabhängige Bestätigungen addieren."
+      ],
+      "observed_practice": {
+        "level": "written_only",
+        "evidence": [],
+        "note": "Für diesen Audit keine fachliche Ausführung beobachtet."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Berichte, welche Marktdaten heute wirklich neu erhoben wurden.",
+        "expected_outcome": "Neue Datenerhebung und Wiederverwendung getrennt zählen.",
+        "negative_case": "Ein historischer Datensatz wird durch erneutes Lesen nicht zu neuen Messungen."
+      },
+      "project_only_rules": "Suchschwellen, Tagesbudgets, Zeitanteile und Branchenprioritäten nicht als allgemeine Regeln übernehmen.",
+      "public_artifact": "sources/13-research-method-and-ranking.md",
+      "redistribution": {
+        "mode": "paraphrase_only",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "cf8450aec73a8b9ad6bdf3d6506b34fc4ffe936d8be5af13f530505f8f493027"
+    },
+    {
+      "id": "S15",
+      "title": "Bewertungsmodell Version 1",
+      "kind": "workflow_document",
+      "layer": "Research/project",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "Bewertungsmodell Version 1",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständig",
+      "source_modified_at": "2026-09-15T09:13:14+00:00",
+      "current_state": "Zugängliche Quelle bzw. Auszug geprüft",
+      "purpose": "Unsicherheit und Evidenzgrad neben dem Ranking darstellen",
+      "written_rules": [
+        "null bedeutet unbekannt, nicht null Leistung; Datenabdeckung und obere Grenze separat zeigen.",
+        "Ranking ist Untersuchungspriorität, keine Erfolgswahrscheinlichkeit; Evidenzgrad bleibt unabhängig."
+      ],
+      "observed_practice": {
+        "level": "written_only",
+        "evidence": [],
+        "note": "Für diesen Audit keine fachliche Ausführung beobachtet."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Vergleiche zwei Kandidaten bei unvollständigen Daten.",
+        "expected_outcome": "null bedeutet unbekannt, nicht null Leistung; Datenabdeckung und obere Grenze separat zeigen.",
+        "negative_case": "Fehlende Werte nicht durch Normalisierung zu einer künstlichen Spitzenwertung machen."
+      },
+      "project_only_rules": "Die konkreten Gewichtungen und Schwellen bleiben lokale Bewertungspolitik.",
+      "public_artifact": "sources/13-research-method-and-ranking.md",
+      "redistribution": {
+        "mode": "paraphrase_only",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "cf8450aec73a8b9ad6bdf3d6506b34fc4ffe936d8be5af13f530505f8f493027"
+    },
+    {
+      "id": "S16",
+      "title": "hermes-security-review",
+      "kind": "custom_skill",
+      "layer": "Codex/security",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "hermes-security-review",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständig",
+      "source_modified_at": "2026-09-29T10:53:59+00:00",
+      "current_state": "Lokaler Quelltext gelesen; katalogisiert",
+      "purpose": "Agentenrechte und fremde Skilllieferketten prüfen",
+      "written_rules": [
+        "Fremde Inhalte bis zur möglichen Toolwirkung verfolgen; reine Prompt-Erkennung ist keine technische Sicherheitsgrenze.",
+        "Referenzierte Dateien, Skripte, Abhängigkeiten und Netzwerkzugriffe vor Installation prüfen."
+      ],
+      "observed_practice": {
+        "level": "available_not_executed",
+        "evidence": [
+          "E02"
+        ],
+        "note": "Quelltext und aktueller Skillkatalog vorhanden; keine Aussage über Häufigkeit oder Qualität der Verwendung."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Prüfe einen fremden Skill vor seiner Installation.",
+        "expected_outcome": "Fremde Inhalte bis zur möglichen Toolwirkung verfolgen; reine Prompt-Erkennung ist keine technische Sicherheitsgrenze.",
+        "negative_case": "Gewöhnliche Agentenbedienung startet kein vollständiges Host-Härtungsprojekt."
+      },
+      "project_only_rules": "Live-Hostdaten, Rettungswege, Wartungsfenster und Zugangsdaten werden nicht exportiert.",
+      "public_artifact": "sources/14-security-review.md",
+      "redistribution": {
+        "mode": "redacted_excerpt",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "b0f59b0966ea198dedf1a9bbbcad8de31871c740c9b3b4abad799281d39afc3e"
+    },
+    {
+      "id": "S17",
+      "title": "Allgemeine Assistentenpräferenzen mit datierten Ergänzungen",
+      "kind": "workflow_document",
+      "layer": "Hermes/global",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "Allgemeine Assistentenpräferenzen mit datierten Ergänzungen",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "allgemeine Zusammenarbeit, Effizienz, Sicherheitsregel, Transparenz sowie datierte Modell- und Zugangsabschnitte",
+      "source_modified_at": "2026-09-28T20:30:48+00:00",
+      "current_state": "Zugängliche Quelle bzw. Auszug geprüft",
+      "purpose": "Autonom fortsetzen und dauerhafte Änderungen transparent erklären",
+      "written_rules": [
+        "Bereits beauftragte Arbeit ausführen und überprüfen; fehlende Zugänge konkret melden.",
+        "Dauerhafte Verbesserungen mit Ort, künftigem Auslöser und Nutzen benennen."
+      ],
+      "observed_practice": {
+        "level": "written_only",
+        "evidence": [],
+        "note": "Für diesen Audit keine fachliche Ausführung beobachtet."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Erkläre, welche dauerhafte Regel nach einer Korrektur ergänzt wurde.",
+        "expected_outcome": "Bereits beauftragte Arbeit ausführen und überprüfen; fehlende Zugänge konkret melden.",
+        "negative_case": "Historische Modell- oder Zugangsnotizen nicht als aktuelle Laufzeitkonfiguration behandeln."
+      },
+      "project_only_rules": "Aktive Routinen, persönliche Präferenzen und konkrete Konten bleiben privat.",
+      "public_artifact": "sources/15-assistant-preferences.md",
+      "redistribution": {
+        "mode": "paraphrase_only",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "18f007c1186155a19fd2c0a35248a52db911a8913d486fc0e54a60fe0377dd0c"
+    },
+    {
+      "id": "S18",
+      "title": "Projektübergabe zwischen T3/Codex und Hermes",
+      "kind": "workflow_document",
+      "layer": "Cross-runtime",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "Projektübergabe zwischen T3/Codex und Hermes",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "allgemeine Übergaberegeln, Skills und Zugangsgrenzen",
+      "source_modified_at": "2026-09-29T10:49:40+00:00",
+      "current_state": "Zugängliche Quelle bzw. Auszug geprüft",
+      "purpose": "Dateibasierte Übergabe bei getrennten Chats und Werkzeugen",
+      "written_rules": [
+        "Erledigte Schritte, Belege und offene Entscheidungen in einer gemeinsamen Projektakte halten.",
+        "Gemeinsame Dateien synchronisieren keine Chats, Logins oder laufenden Aufträge."
+      ],
+      "observed_practice": {
+        "level": "written_only",
+        "evidence": [],
+        "note": "Für diesen Audit keine fachliche Ausführung beobachtet."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Setze in einer zweiten Laufzeit anhand der Projektakte fort.",
+        "expected_outcome": "Erledigte Schritte, Belege und offene Entscheidungen in einer gemeinsamen Projektakte halten.",
+        "negative_case": "Eine Browseranmeldung auf Gerät A ist kein Zugangsbeleg auf Gerät B."
+      },
+      "project_only_rules": "Konkrete Projekte, Kalender, Befehle und Kontenzuordnungen bleiben privat.",
+      "public_artifact": "sources/16-runtime-boundaries.md",
+      "redistribution": {
+        "mode": "paraphrase_only",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "6668af17677b7d65af3826da34a9cb1bf8fe12ee7bafb877ca54d07ef1e5173d"
+    },
+    {
+      "id": "S19",
+      "title": "Knappe Übersicht offener Themen",
+      "kind": "workflow_document",
+      "layer": "Cross-session",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "Knappe Übersicht offener Themen",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "Struktur und für diesen Auftrag relevante Skill-/Projektverweise; keine Detailakten fremder Angelegenheiten",
+      "source_modified_at": "2026-09-30T12:30:46+00:00",
+      "current_state": "Zugängliche Quelle bzw. Auszug geprüft",
+      "purpose": "Relevante offene Schritte an maßgebliche Akten anbinden",
+      "written_rules": [
+        "Status, nächsten Schritt, Frist bzw. Prüftermin und letzten Hinweis knapp führen."
+      ],
+      "observed_practice": {
+        "level": "observed_run",
+        "evidence": [
+          "E01"
+        ],
+        "note": "Übersicht im aktuellen Auftrag eingesehen; konkrete Einträge nicht öffentlich kopiert."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Finde vor der Weiterarbeit die passende Detailakte.",
+        "expected_outcome": "Status, nächsten Schritt, Frist bzw. Prüftermin und letzten Hinweis knapp führen.",
+        "negative_case": "Private Fristen und Kundenvorgänge nicht in öffentliche Beispieltabellen übertragen."
+      },
+      "project_only_rules": "Der gesamte konkrete Inhalt bleibt privat; nur Struktur abstrahiert.",
+      "public_artifact": "sources/16-runtime-boundaries.md",
+      "redistribution": {
+        "mode": "paraphrase_only",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "6668af17677b7d65af3826da34a9cb1bf8fe12ee7bafb877ca54d07ef1e5173d"
+    },
+    {
+      "id": "S20",
+      "title": "Betriebsregeln eines privaten Datendashboards",
+      "kind": "workflow_document",
+      "layer": "Operations/project",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "Betriebsregeln eines privaten Datendashboards",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "Kandidat-/Produktionsabgrenzung, konsistente Sicherung, Migration, Rollback und Testgrenzen",
+      "source_modified_at": "2026-09-20T10:25:02+00:00",
+      "current_state": "Zugängliche Quelle bzw. Auszug geprüft",
+      "purpose": "Wiederherstellbarkeit und tatsächlichen Betriebsstand prüfen",
+      "written_rules": [
+        "Datenbank und referenzierte Dateien konsistent sichern, Restore isoliert durchführen.",
+        "Rollout und externe Adapter separat autorisieren; synthetische Prüfung nicht als physische Geräteprüfung ausgeben."
+      ],
+      "observed_practice": {
+        "level": "reported_history",
+        "evidence": [],
+        "note": "Dokument berichtet frühere Migrations-/Restoretests. Diese wurden im Austausch-Audit nicht wiederholt oder unabhängig nachgewiesen."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Bereite eine Migration im Kandidaten vor.",
+        "expected_outcome": "Datenbank und referenzierte Dateien konsistent sichern, Restore isoliert durchführen.",
+        "negative_case": "Eine alte Sicherung nicht über eine aktive Datenbank schreiben."
+      },
+      "project_only_rules": "Dienstnamen, Datenbanken, Sicherungsziele, Netzwerk und Produktionsrechte bleiben privat.",
+      "public_artifact": "sources/16-runtime-boundaries.md",
+      "redistribution": {
+        "mode": "paraphrase_only",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "6668af17677b7d65af3826da34a9cb1bf8fe12ee7bafb877ca54d07ef1e5173d"
+    },
+    {
+      "id": "S21",
+      "title": "Betriebsweg eines persistenten MCP-Browsers",
+      "kind": "workflow_document",
+      "layer": "Browser/runtime",
+      "origin": "Eigene, mit Codex entwickelte Vorgabe im Nutzerarbeitsbereich",
+      "locator": "Betriebsweg eines persistenten MCP-Browsers",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "Aufbau, Benutzung, Profilbindung und Wiederherstellungsgrenzen",
+      "source_modified_at": "2026-09-29T19:20:22+00:00",
+      "current_state": "Zugängliche Quelle bzw. Auszug geprüft",
+      "purpose": "Vorhandene Browserprofile und reale Toolverfügbarkeit prüfen",
+      "written_rules": [
+        "Die tatsächlich angemeldete Sitzung gezielt anbinden und Fähigkeiten der aktuellen Laufzeit prüfen.",
+        "Ein persistentes Volume ist kein unabhängiges Backup."
+      ],
+      "observed_practice": {
+        "level": "reported_history",
+        "evidence": [],
+        "note": "Betriebsdokument berichtet konkrete frühere Prüfungen; kein Browserzugriff oder Profiltest für diesen Beitrag ausgeführt."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Nutze eine vom Nutzer bereitgestellte bestehende Browseranmeldung.",
+        "expected_outcome": "Die tatsächlich angemeldete Sitzung gezielt anbinden und Fähigkeiten der aktuellen Laufzeit prüfen.",
+        "negative_case": "Ein frisches getrenntes Agentenprofil enthält diese Anmeldung nicht automatisch."
+      },
+      "project_only_rules": "Hosts, Logins, Ports, Profile und Startkommandos sind lokale Betriebsparameter.",
+      "public_artifact": "sources/16-runtime-boundaries.md",
+      "redistribution": {
+        "mode": "paraphrase_only",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "6668af17677b7d65af3826da34a9cb1bf8fe12ee7bafb877ca54d07ef1e5173d"
+    },
+    {
+      "id": "S22",
+      "title": "Aktiver zugänglicher Gesprächskontext",
+      "kind": "conversation",
+      "layer": "Codex/conversation",
+      "origin": "Aktueller direkter Nutzerauftrag und zugängliche Gesprächs-/Toolschritte",
+      "locator": "Aktiver zugänglicher Gesprächskontext",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "aktueller Austauschauftrag und sichtbares Modellwahl-Follow-up; keine Archivsuche",
+      "source_modified_at": null,
+      "current_state": "Zugängliche Quelle bzw. Auszug geprüft",
+      "purpose": "Nutzerauftrag, jüngste Entscheidung und tatsächliche Toolschritte zuordnen",
+      "written_rules": [
+        "Eigener Beitrag auf eigenem Branch; bestehende Standards unangetastet lassen.",
+        "Vorgaben, beobachtete Praxis und fehlende Quellen getrennt dokumentieren."
+      ],
+      "observed_practice": {
+        "level": "observed_run",
+        "evidence": [
+          "E01",
+          "E03"
+        ],
+        "note": "Direkter aktueller Auftrag und sichtbare Toolergebnisse; nur Verhaltensparaphrase öffentlich, kein Chattranskript."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Erfasse unsere Erfahrungen für den Austausch, ohne sie gleich zum Standard zu machen.",
+        "expected_outcome": "Eigener Beitrag auf eigenem Branch; bestehende Standards unangetastet lassen.",
+        "negative_case": "Keine Inhalte nicht zugänglicher ChatGPT-Projekte erfinden."
+      },
+      "project_only_rules": "Keine zusätzliche Produktregel als universeller Standard vorgeschlagen.",
+      "public_artifact": "sources/18-conversation-observations.md",
+      "redistribution": {
+        "mode": "paraphrase_only",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "e459c78b9a6492cdf97c5385259aace6a02d677a578765d2b9ebd940ef47f59e"
+    },
+    {
+      "id": "S23",
+      "title": "openai-docs",
+      "kind": "bundled_skill",
+      "layer": "Codex/platform",
+      "origin": "Mit Codex bereitgestellte Herstelleranweisung, kein eigener Skill",
+      "locator": "openai-docs",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständige zugängliche Anweisung; keine fremden Referenz-/Scriptpakete kopiert",
+      "source_modified_at": "2026-09-29T09:05:08+00:00",
+      "current_state": "Lokaler Quelltext gelesen; katalogisiert",
+      "purpose": "Aktuelle Produkt- und Modellfragen belegen",
+      "written_rules": [
+        "Aktuelle offizielle Dokumentation vor Modell- oder Produktbehauptungen prüfen."
+      ],
+      "observed_practice": {
+        "level": "available_not_executed",
+        "evidence": [
+          "E02"
+        ],
+        "note": "Lokale Anweisung gelesen; Originaltext und Herstellerressourcen nicht exportiert."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Prüfe die aktuelle Modellwahl-Dokumentation.",
+        "expected_outcome": "Aktuelle offizielle Dokumentation vor Modell- oder Produktbehauptungen prüfen.",
+        "negative_case": "Keine feste Modellliste aus einer alten Notiz als aktuell ausgeben."
+      },
+      "project_only_rules": "Version und Verhalten gelten für die hier zugängliche Installation; keine Portabilität ohne Prüfung.",
+      "public_artifact": "sources/17-bundled-skills.md",
+      "redistribution": {
+        "mode": "paraphrase_only",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "5df773afbe1e0f0d25eccdbe9e36c42c3c8bd49c40b3e84271a8883e3950230e"
+    },
+    {
+      "id": "S24",
+      "title": "skill-creator",
+      "kind": "bundled_skill",
+      "layer": "Codex/platform",
+      "origin": "Mit Codex bereitgestellte Herstelleranweisung, kein eigener Skill",
+      "locator": "skill-creator",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständige zugängliche Anweisung; keine fremden Referenz-/Scriptpakete kopiert",
+      "source_modified_at": "2026-09-29T09:05:08+00:00",
+      "current_state": "Lokaler Quelltext gelesen; katalogisiert",
+      "purpose": "Nicht offensichtliche, eng begrenzte Skillführung erstellen",
+      "written_rules": [
+        "Auslöser präzise halten und passende Struktur-/Verhaltensprüfung wählen."
+      ],
+      "observed_practice": {
+        "level": "available_not_executed",
+        "evidence": [
+          "E02"
+        ],
+        "note": "Lokale Anweisung gelesen; Originaltext und Herstellerressourcen nicht exportiert."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Überarbeite einen wiederkehrend fehlgeleiteten Skill.",
+        "expected_outcome": "Auslöser präzise halten und passende Struktur-/Verhaltensprüfung wählen.",
+        "negative_case": "Ein gültiges YAML beweist keine gute Entscheidungsqualität."
+      },
+      "project_only_rules": "Version und Verhalten gelten für die hier zugängliche Installation; keine Portabilität ohne Prüfung.",
+      "public_artifact": "sources/17-bundled-skills.md",
+      "redistribution": {
+        "mode": "paraphrase_only",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "5df773afbe1e0f0d25eccdbe9e36c42c3c8bd49c40b3e84271a8883e3950230e"
+    },
+    {
+      "id": "S25",
+      "title": "skill-installer",
+      "kind": "bundled_skill",
+      "layer": "Codex/platform",
+      "origin": "Mit Codex bereitgestellte Herstelleranweisung, kein eigener Skill",
+      "locator": "skill-installer",
+      "inspected_at": "2026-09-30T12:32:15+00:00",
+      "inspected_scope": "vollständige zugängliche Anweisung; keine fremden Referenz-/Scriptpakete kopiert",
+      "source_modified_at": "2026-09-29T09:05:08+00:00",
+      "current_state": "Lokaler Quelltext gelesen; katalogisiert",
+      "purpose": "Installation und aktuelle Quelle von Skills unterscheiden",
+      "written_rules": [
+        "Vorhandene Zielordner erhalten; Installationsquelle und Laufzeitgrenzen prüfen."
+      ],
+      "observed_practice": {
+        "level": "observed_run",
+        "evidence": [
+          "E01",
+          "E02"
+        ],
+        "note": "Lokale Anweisung gelesen; Originaltext und Herstellerressourcen nicht exportiert."
+      },
+      "concrete_example": {
+        "type": "synthetic_application_example",
+        "request": "Prüfe ein konkretes Repository auf installierbare Skillpakete.",
+        "expected_outcome": "Vorhandene Zielordner erhalten; Installationsquelle und Laufzeitgrenzen prüfen.",
+        "negative_case": "Ein Manifest installiert keine Fähigkeit."
+      },
+      "project_only_rules": "Version und Verhalten gelten für die hier zugängliche Installation; keine Portabilität ohne Prüfung.",
+      "public_artifact": "sources/17-bundled-skills.md",
+      "redistribution": {
+        "mode": "paraphrase_only",
+        "permission_basis": "Aktueller ausdrücklicher Nutzerauftrag zur öffentlichen Veröffentlichung eigener Arbeitsquellen; keine Freigabe fremder Originaltexte."
+      },
+      "limits": "Quelltext und Katalogeintrag belegen keine regelmäßige erfolgreiche Anwendung. Beispiele sind synthetisch; Zeitstempel sind keine Autoritäts- oder Laufzeitnachweise.",
+      "public_artifact_sha256": "5df773afbe1e0f0d25eccdbe9e36c42c3c8bd49c40b3e84271a8883e3950230e"
+    }
+  ]
+}

@@ -1,0 +1,426 @@
+{
+  "schema_version": "1.0",
+  "baseline_commit": "217b4b3ccd75557f707a627df87c2495e36cd35c",
+  "candidate_count": 18,
+  "counts_by_classification": {
+    "MISSING": 11,
+    "EQUIVALENT": 6,
+    "OUTDATED": 0,
+    "CONFLICT": 1
+  },
+  "candidates": [
+    {
+      "id": "C01",
+      "source_ids": [
+        "S01",
+        "S02",
+        "S18",
+        "S22",
+        "S23",
+        "S24",
+        "S25"
+      ],
+      "baseline_classification": "EQUIVALENT",
+      "trigger": "Vor Aussagen über Fähigkeiten oder den aktuellen Projektstand",
+      "action": "Quelle, Runtime und tatsächliches Zugriffsergebnis separat prüfen",
+      "intended_outcome": "Kein angenommenes Zugriffs-/Installationsversprechen",
+      "authority_boundary": "Aktueller Auftrag begrenzt Zugriff und Handlungen",
+      "failure_or_negative_case": "Datei vorhanden, aber Login oder Tool fehlt",
+      "disposition": "retain_baseline",
+      "effort": "low",
+      "evidence_ids": [
+        "E01",
+        "E02",
+        "E03"
+      ],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Semantischen Zielabgleich statt weiterer Duplikatregel durchführen."
+    },
+    {
+      "id": "C02",
+      "source_ids": [
+        "S01",
+        "S13",
+        "S17",
+        "S22"
+      ],
+      "baseline_classification": "EQUIVALENT",
+      "trigger": "Bereits beauftragte natürliche Zwischenschritte",
+      "action": "Im erteilten Rahmen weiterarbeiten; spätere Empfehlung nicht automatisch starten",
+      "intended_outcome": "Auftrag abgeschlossen ohne Routinefreigaben",
+      "authority_boundary": "Material neue Produkt-/Kosten-/Providerwahl gesondert entscheiden",
+      "failure_or_negative_case": "Empfehlung wird fälschlich als neuer Auftrag behandelt",
+      "disposition": "retain_baseline",
+      "effort": "low",
+      "evidence_ids": [
+        "E01",
+        "E03"
+      ],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Semantischen Zielabgleich statt weiterer Duplikatregel durchführen."
+    },
+    {
+      "id": "C03",
+      "source_ids": [
+        "S01",
+        "S09",
+        "S18",
+        "S19"
+      ],
+      "baseline_classification": "MISSING",
+      "trigger": "Relevantes echtes mehrstufiges Vorhaben über mehrere Sitzungen",
+      "action": "Kurzen Index und maßgebliche Detailakte pflegen; sparsam nachfassen",
+      "intended_outcome": "Nächster Schritt auffindbar",
+      "authority_boundary": "Offenes Vorhaben ist keine neue Handlungsvollmacht",
+      "failure_or_negative_case": "Allgemeine Wissensfrage wird zur Verpflichtung oder Erinnerung doppelt gesendet",
+      "disposition": "offer_optionally",
+      "effort": "moderate",
+      "evidence_ids": [
+        "E01",
+        "E03"
+      ],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Geltende Zielregeln, Zugänge und Ressourcen prüfen; beobachtbare Positiv-/Negativfälle vor Übernahme wählen."
+    },
+    {
+      "id": "C04",
+      "source_ids": [
+        "S01",
+        "S03",
+        "S24"
+      ],
+      "baseline_classification": "MISSING",
+      "trigger": "Wiederkehrender nicht offensichtlicher Ablauf oder wesentliche Korrektur",
+      "action": "Vorhandenen Skill vor Neuanlage prüfen; Auslöser und Gegenfall nennen",
+      "intended_outcome": "Gezielte wiederverwendbare Verbesserung",
+      "authority_boundary": "Neue Regel erweitert keine Zugriffs-/Aktionsrechte",
+      "failure_or_negative_case": "Ein einzelner Projektfakt wird zum generischen Skill",
+      "disposition": "adapt_optionally",
+      "effort": "low",
+      "evidence_ids": [
+        "E01",
+        "E02",
+        "E03"
+      ],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Geltende Zielregeln, Zugänge und Ressourcen prüfen; beobachtbare Positiv-/Negativfälle vor Übernahme wählen."
+    },
+    {
+      "id": "C05",
+      "source_ids": [
+        "S04",
+        "S09",
+        "S11",
+        "S16",
+        "S24"
+      ],
+      "baseline_classification": "EQUIVALENT",
+      "trigger": "Skillbeschreibung oder Auswahl prüfen",
+      "action": "Auslöser und plausible ähnlich klingende Gegenfälle konkretisieren",
+      "intended_outcome": "Weniger Fehlrouting",
+      "authority_boundary": "Spezialisierter Review verlangt relevante Aufgabe",
+      "failure_or_negative_case": "Jede Agentenfrage startet automatisch eine Härtung",
+      "disposition": "retain_baseline",
+      "effort": "low",
+      "evidence_ids": [
+        "E01",
+        "E02"
+      ],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Semantischen Zielabgleich statt weiterer Duplikatregel durchführen."
+    },
+    {
+      "id": "C06",
+      "source_ids": [
+        "S01",
+        "S17",
+        "S22",
+        "S23"
+      ],
+      "baseline_classification": "MISSING",
+      "trigger": "Erkennbar deutliche Fehlpassung zwischen Aufgabe und gewähltem Modell",
+      "action": "Verfügbare Modell-/Reasoningoption empfehlen",
+      "intended_outcome": "Angemessene Qualitäts-/Zeit-/Nutzungsabwägung",
+      "authority_boundary": "Nutzerwahl erhalten; kein globales Umstellen des laufenden Threads",
+      "failure_or_negative_case": "Kontingenteinsparung ohne Benchmark behauptet oder feste Wahl übergangen",
+      "disposition": "offer_optionally",
+      "effort": "low",
+      "evidence_ids": [
+        "E01",
+        "E02",
+        "E03"
+      ],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Geltende Zielregeln, Zugänge und Ressourcen prüfen; beobachtbare Positiv-/Negativfälle vor Übernahme wählen."
+    },
+    {
+      "id": "C07",
+      "source_ids": [
+        "S04"
+      ],
+      "baseline_classification": "EQUIVALENT",
+      "trigger": "Konkretes reproduzierbares oder protokolliertes Fehlersymptom",
+      "action": "Kleine sichere Probe, Hypothese, Ursache, Änderung und Wiederprobe",
+      "intended_outcome": "Tatsächlicher Fehlerfall geprüft",
+      "authority_boundary": "Projektregeln und Auftrag gelten",
+      "failure_or_negative_case": "Ungeprüfte Hypothese führt zu breiter Codeänderung",
+      "disposition": "retain_baseline",
+      "effort": "task_dependent",
+      "evidence_ids": [
+        "E02"
+      ],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Semantischen Zielabgleich statt weiterer Duplikatregel durchführen."
+    },
+    {
+      "id": "C08",
+      "source_ids": [
+        "S05",
+        "S10",
+        "S20"
+      ],
+      "baseline_classification": "EQUIVALENT",
+      "trigger": "Website-/Betriebsänderung mit Veröffentlichung",
+      "action": "Quelle, Build, Publikation und Live-Merkmal getrennt prüfen",
+      "intended_outcome": "Tatsächlicher Lebenszyklusstand",
+      "authority_boundary": "Deployment nur im konkreten Auftrag",
+      "failure_or_negative_case": "Grünes CI wird als Live-Verifikation gemeldet",
+      "disposition": "retain_baseline",
+      "effort": "task_dependent",
+      "evidence_ids": [
+        "E02"
+      ],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Semantischen Zielabgleich statt weiterer Duplikatregel durchführen."
+    },
+    {
+      "id": "C09",
+      "source_ids": [
+        "S06",
+        "S07"
+      ],
+      "baseline_classification": "MISSING",
+      "trigger": "Lokale Tabelle mit Formeln erstellen oder ändern",
+      "action": "Formeltext/Cache prüfen; passende Engine rechnet neu; relevante Ergebnisse prüfen",
+      "intended_outcome": "Keine Scheinverifikation aus altem Cache",
+      "authority_boundary": "Dateien nur im Auftrag bearbeiten",
+      "failure_or_negative_case": "Makros/Pivots/Bezüge beim Speichern verändert oder Engine nicht vorhanden",
+      "disposition": "offer_optionally",
+      "effort": "dependency_bound",
+      "evidence_ids": [
+        "E02",
+        "E04"
+      ],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Geltende Zielregeln, Zugänge und Ressourcen prüfen; beobachtbare Positiv-/Negativfälle vor Übernahme wählen."
+    },
+    {
+      "id": "C10",
+      "source_ids": [
+        "S08"
+      ],
+      "baseline_classification": "MISSING",
+      "trigger": "PDF oder Scan auswerten/bearbeiten",
+      "action": "Textebene prüfen, bei Bedarf OCR und Seitenbild kontrollieren",
+      "intended_outcome": "Kritische Werte und Darstellung geprüft",
+      "authority_boundary": "Keine neue Versandfreigabe",
+      "failure_or_negative_case": "Plausibler OCR-Betrag falsch oder visuell fehlender Text",
+      "disposition": "offer_optionally",
+      "effort": "dependency_bound",
+      "evidence_ids": [
+        "E02"
+      ],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Geltende Zielregeln, Zugänge und Ressourcen prüfen; beobachtbare Positiv-/Negativfälle vor Übernahme wählen."
+    },
+    {
+      "id": "C11",
+      "source_ids": [
+        "S10",
+        "S11",
+        "S12",
+        "S15",
+        "S20"
+      ],
+      "baseline_classification": "MISSING",
+      "trigger": "Daten erfassen oder Prozessstatus ändern",
+      "action": "Bericht/Messwert/Schätzung und angenommen/verarbeitet/bestätigt getrennt erhalten",
+      "intended_outcome": "Herkunft und Aussagegrenze bleiben sichtbar",
+      "authority_boundary": "Domänenvertrag entscheidet Semantik",
+      "failure_or_negative_case": "Bestätigte Schätzung wird zur Messung oder Eingang als fertig gemeldet",
+      "disposition": "adapt_optionally",
+      "effort": "moderate",
+      "evidence_ids": [
+        "E02"
+      ],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Geltende Zielregeln, Zugänge und Ressourcen prüfen; beobachtbare Positiv-/Negativfälle vor Übernahme wählen."
+    },
+    {
+      "id": "C12",
+      "source_ids": [
+        "S12",
+        "S13",
+        "S14"
+      ],
+      "baseline_classification": "MISSING",
+      "trigger": "Neue Evidenz und Rechercheleistung berichten",
+      "action": "Frische Erhebung, Wiederverwendung, Quellenfamilien und Varianten unterscheiden",
+      "intended_outcome": "Nachvollziehbare Evidenzmenge",
+      "authority_boundary": "Kostenregeln und Ansprachegrenzen des Projekts gelten",
+      "failure_or_negative_case": "Wiederverwendete Monatsreihe zählt als neue Tagesmessung",
+      "disposition": "offer_optionally",
+      "effort": "moderate",
+      "evidence_ids": [
+        "E02"
+      ],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Geltende Zielregeln, Zugänge und Ressourcen prüfen; beobachtbare Positiv-/Negativfälle vor Übernahme wählen."
+    },
+    {
+      "id": "C13",
+      "source_ids": [
+        "S15"
+      ],
+      "baseline_classification": "MISSING",
+      "trigger": "Unvollständig belegte Optionen bewerten",
+      "action": "Bekannten Score, Abdeckung, Obergrenze und separaten Evidenzgrad ausweisen",
+      "intended_outcome": "Unsicherheit beeinflusst Priorität sichtbar",
+      "authority_boundary": "Gewichte und unbekannt/0-Semantik projektspezifisch erhalten",
+      "failure_or_negative_case": "Wenig untersuchte Optionen gewinnen durch Normalisierung",
+      "disposition": "offer_optionally",
+      "effort": "moderate",
+      "evidence_ids": [],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Geltende Zielregeln, Zugänge und Ressourcen prüfen; beobachtbare Positiv-/Negativfälle vor Übernahme wählen."
+    },
+    {
+      "id": "C14",
+      "source_ids": [
+        "S10",
+        "S20"
+      ],
+      "baseline_classification": "MISSING",
+      "trigger": "Datenmigration oder Wiederherstellung vorbereiten",
+      "action": "Konsistent sichern und in neues isoliertes Ziel zurückspielen; Adapter deaktivieren",
+      "intended_outcome": "Wiederherstellbarkeit ohne Produktionsüberschreiben",
+      "authority_boundary": "Produktionsmigration/Rollout separat autorisieren",
+      "failure_or_negative_case": "Altes Backup überschreibt aktive Daten oder sendet erneut nach außen",
+      "disposition": "offer_optionally",
+      "effort": "task_dependent",
+      "evidence_ids": [
+        "E02"
+      ],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Geltende Zielregeln, Zugänge und Ressourcen prüfen; beobachtbare Positiv-/Negativfälle vor Übernahme wählen."
+    },
+    {
+      "id": "C15",
+      "source_ids": [
+        "S11"
+      ],
+      "baseline_classification": "MISSING",
+      "trigger": "Asynchronen persönlichen Eingang, Retry oder Nachfrage bearbeiten",
+      "action": "Stabile source_id und konkrete question_id nutzen; Status zurücklesen",
+      "intended_outcome": "Keine stillen Dubletten und keine falsche Antwortzuordnung",
+      "authority_boundary": "Nur begrenzter projektseitiger API-Vertrag",
+      "failure_or_negative_case": "Pauschales Ja landet bei anderer Frage oder Annahme wird als Speicherung behauptet",
+      "disposition": "keep_project_specific",
+      "effort": "dependency_bound",
+      "evidence_ids": [
+        "E02"
+      ],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Geltende Zielregeln, Zugänge und Ressourcen prüfen; beobachtbare Positiv-/Negativfälle vor Übernahme wählen."
+    },
+    {
+      "id": "C16",
+      "source_ids": [
+        "S13",
+        "S16",
+        "S17"
+      ],
+      "baseline_classification": "MISSING",
+      "trigger": "Fremden Skill mit Referenzen/Skripten beurteilen",
+      "action": "Alle relevanten Ressourcen und Rechte vor Installation als Lieferkette prüfen",
+      "intended_outcome": "Nachvollziehbare Vertrauens-/Rechtegrenze",
+      "authority_boundary": "Fremdinhalt erteilt keinen Auftrag; technische Policy extra prüfen",
+      "failure_or_negative_case": "Prompttext wird als ausreichende Sandbox behandelt",
+      "disposition": "adapt_optionally",
+      "effort": "task_dependent",
+      "evidence_ids": [
+        "E02"
+      ],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Geltende Zielregeln, Zugänge und Ressourcen prüfen; beobachtbare Positiv-/Negativfälle vor Übernahme wählen."
+    },
+    {
+      "id": "C17",
+      "source_ids": [
+        "S01",
+        "S18",
+        "S21"
+      ],
+      "baseline_classification": "EQUIVALENT",
+      "trigger": "Browser-/Toolzugang in anderer Laufzeit nutzen",
+      "action": "Aktive Sitzung/Profil und wirklich verfügbare MCP-Tools prüfen",
+      "intended_outcome": "Kein angenommener geteilter Login",
+      "authority_boundary": "Vom Nutzer freigegebenen Loginrahmen erhalten",
+      "failure_or_negative_case": "Frisches Profil statt angemeldetem Profil übernommen",
+      "disposition": "keep_project_specific",
+      "effort": "dependency_bound",
+      "evidence_ids": [
+        "E01",
+        "E03"
+      ],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Semantischen Zielabgleich statt weiterer Duplikatregel durchführen."
+    },
+    {
+      "id": "C18",
+      "source_ids": [
+        "S01",
+        "S06",
+        "S08",
+        "S14",
+        "S17",
+        "S18",
+        "S20",
+        "S21"
+      ],
+      "baseline_classification": "CONFLICT",
+      "trigger": "Unveränderte Übernahme lokaler Regeln",
+      "action": "Datierte Entscheidungen und aktuelle Wirkung konkret abgleichen; Betriebswerte parametrisieren",
+      "intended_outcome": "Keine stille Abschwächung/Fehlanwendung",
+      "authority_boundary": "Höhere Plattform-/Nutzer-/Projektvorgaben bewahren",
+      "failure_or_negative_case": "Alte Modelle, Zugänge oder Startbefehle fälschlich aktuell behandelt",
+      "disposition": "defer_assessment",
+      "effort": "unknown",
+      "evidence_ids": [
+        "E01",
+        "E02",
+        "E03"
+      ],
+      "evidence_limit": "Siehe Quelle: Vorgabe/Verfügbarkeit ist keine Ausführung. Keine unabhängige Langzeit-/Kostenevaluation.",
+      "adopted": false,
+      "validation_needed": "Geltende Zielregeln, Zugänge und Ressourcen prüfen; beobachtbare Positiv-/Negativfälle vor Übernahme wählen."
+    }
+  ]
+}
