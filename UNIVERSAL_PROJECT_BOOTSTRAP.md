@@ -1,6 +1,6 @@
 # Universal Project Bootstrap Standard
 
-**Version:** 1.1.0
+**Version:** 2.0.0
 
 **Scope:** product-neutral ChatGPT + Codex workflow bootstrap  
 **Mode:** inventory-first, idempotent, conflict-aware
@@ -70,15 +70,28 @@ Research/audit findings are evidence and planning inputs; their recommendations 
 
 ## Own task-branch publication policy
 
-**New projects bootstrapped to v1.1.0 use default B:** explicitly started tasks may commit and push only their dedicated task branch after the task's relevant verification. At setup, prominently deliver this notice in the ChatGPT setup response as well as the onboarding documentation, before relying on the default:
+**New projects bootstrapped to v1.1.0 or later use default B:** explicitly started tasks may commit and push only their dedicated task branch after the task's relevant verification. At setup, prominently deliver this notice in the ChatGPT setup response as well as the onboarding documentation, before relying on the default:
 
 > Own task-branch commit/push is enabled by default for this new project. After an explicitly started task passes its required checks, the executor may commit and push only that task's dedicated branch. This does not authorize push to main/the default branch, another task's branch, merge, release/tag, deployment or production/provider activation, and does not start a recommended follow-up. You can opt out of commit/push or require explicit approval per task. Your effective choice will be recorded in the project's authoritative instructions; stricter project or task restrictions prevail.
 
 Offer the concrete choices **ALLOW_AFTER_CHECKS** (default), **PER_TASK_APPROVAL**, or **DISABLED** for own task-branch commit/push. No affirmative selection is required to use B for a new project once the notice is delivered; an opt-out or per-task choice takes effect before publication. Record the effective policy, the notice delivery and any Owner choice in the target project's existing authoritative instruction structure. Ensure the Codex handoff carries that policy and its source. Do not hide the notice solely in an executor template or silently assume it was delivered.
 
-**Existing projects:** inspect their active authority before reconciliation. Preserve an explicit restrictive commit/push rule until the Owner changes it. If the proposed upgrade would permit currently forbidden publication, classify it as **CONFLICT**, show the existing and proposed behaviors and ask about that concrete change; keep the restriction meanwhile. Existing own-branch permission that satisfies the contract is **EQUIVALENT** and needs no duplicate rule or repeated approval. If authority is absent or unclear, record the gap and obtain an explicit scoped grant before commit/push; silence is never retroactive consent from v1.1.0. Evaluate commit and push separately if the existing policy distinguishes them.
+**Existing projects:** inspect their active authority before reconciliation. Preserve an explicit restrictive commit/push rule until the Owner changes it. If the proposed upgrade would permit currently forbidden publication, classify it as **CONFLICT**, show the existing and proposed behaviors and ask about that concrete change; keep the restriction meanwhile. Existing own-branch permission that satisfies the contract is **EQUIVALENT** and needs no duplicate rule or repeated approval. If authority is absent or unclear, record the gap and obtain an explicit scoped grant before commit/push; silence is never retroactive consent from a standard version. Evaluate commit and push separately if the existing policy distinguishes them.
 
 Every task rechecks its effective authority. A stronger task-specific prohibition wins over standing permission. With opt-out, stop before the prohibited commit/push, preserve the result locally and report actual evidence as LOCAL_COMPLETE or BLOCKED. Missing access or a failed push likewise cannot be reported as remote DONE. No policy authorizes mutation of another task's branch/worktree, main/default-branch push, integration, release or deployment merely because the task is complete.
+
+This publication policy covers **branch push only**. Merge authority is a separate contract: see [Dev-box merge gate](#dev-box-merge-gate). Do not read "publication excludes merge" as "this project never auto-merges", and do not read the merge gate as extra push authority.
+
+## Dev-box merge gate
+
+From v2.0.0 the standard includes the [dev-box merge gate policy](DEVBOX_GATE_POLICY.md), a deliberate, incompatible change to the earlier default that every merge needed separate authority:
+
+- **Gate as binding check.** A project that adopts the gate checks each PR on its actual merge commit (`B` + `H` = `M`, tree `T`) and every release candidate on the exact current integration commit, locally on its development machine. Reference CLI, schema, rule texts, checklist and tests: [`templates/devbox_merge_gate.py`](templates/devbox_merge_gate.py), [`templates/devbox_merge_gate.example.toml`](templates/devbox_merge_gate.example.toml), [`templates/AGENTS_DEVBOX_GATE.md`](templates/AGENTS_DEVBOX_GATE.md), [`templates/CLAUDE_DEVBOX_GATE.md`](templates/CLAUDE_DEVBOX_GATE.md), [`templates/DEVBOX_GATE_ROLLOUT_CHECKLIST.md`](templates/DEVBOX_GATE_ROLLOUT_CHECKLIST.md).
+- **No automatic hosted CI.** GitHub-hosted workflows start at most through deliberate `workflow_dispatch` for diagnosis, never automatically. A red executed diagnosis run is a stop signal; a job that failed before its first step is no test result.
+- **Standard auto-merge for own task PRs.** Once the gate contract is integrated on the integration branch, own task PRs that are explicitly marked mergeable and have no open decision may be integrated automatically by the gate's compare-and-swap after a complete green run. Foreign, unknown and fork PRs never are; they are checked only in a verifiably isolated environment.
+- **No self-authorization, no deployment.** The first gate PR and every PR that changes the gate need a concrete owner approval with exact evidence. No project receives deployment authority from this standard; deployment stays a separate project decision with its own gate run on the exact current commit.
+
+**New projects** adopt the auto-merge contract only after the gate is set up and its bootstrap PR is integrated; until then the earlier rule applies (no merge without separate authority). **Existing projects** keep stricter merge prohibitions, open owner questions, infrastructure/migration exclusions and binding branch rules: show an incompatible rule as CONFLICT with its practical consequence and do not overwrite it silently. A binding GitHub status rule that cannot be met without a hosted check stops the rollout for that project until the owner decides.
 
 ## Autonomous ChatGPT planning/research
 
@@ -163,6 +176,8 @@ Substantial results belong in the same durable canonical workflow: include evide
 
 ## Execution and verification
 
+Projects that adopted the [dev-box merge gate](#dev-box-merge-gate) use it as the binding merge and release check; focused local checks still come first, and a hosted diagnosis run never replaces the gate. Reconcile its configured plan with the project's declared runtime matrix and documented quality gates; never silently drop a check or a supported version.
+
 Read the current order and applicable instructions, inspect the actual base/worktree and keep changes within authorized scope. Choose checks by task type and risk:
 
 - Reports/documentation: content, source, link, format, scope and privacy review; no invented product tests for an audit-only result.
@@ -186,7 +201,7 @@ A remotely completed repository task requires, where authorized/applicable: comp
 
 Target-project labels may differ; keep these meanings separate. Branch DONE does not imply integration readiness, integration or deployment.
 
-Before any separately authorized integration, inspect current main/default branch since the task base for textual and semantic overlap. Reconcile affected work and rerun impacted gates. Focused checks suffice for clearly bounded changes; shared contracts, migrations or uncertain impact require broader validation. Protect shared status/docs by preserving unrelated canonical updates. Old green checks are not current integration proof, and current-main compatibility does not itself authorize a merge.
+Integration authority comes either from a separate scoped grant or, in a project with an integrated gate, from the gate's own-task-PR contract; neither is implied by branch completion. Before any integration, inspect current main/default branch since the task base for textual and semantic overlap. Reconcile affected work and rerun impacted gates. Focused checks suffice for clearly bounded changes; shared contracts, migrations or uncertain impact require broader validation. Protect shared status/docs by preserving unrelated canonical updates. Old green checks are not current integration proof, and current-main compatibility does not itself authorize a merge.
 
 ## Compact handoff
 
@@ -218,7 +233,7 @@ The final instructions must preserve universal workflow + project-specific rules
 
 A project may record:
 
-`Universal Project Bootstrap: v1.1.0`
+`Universal Project Bootstrap: v2.0.0`
 
 The marker is evidence only; future upgrades still inspect actual semantics.
 
@@ -258,6 +273,8 @@ An upgrade must not erase project-specific additions. An older universal behavio
 
 For v1.0.0 → v1.1.0, inventory each capability, strengthen evidence/results/lifecycle where intent is preserved, and retain existing publication authority. Do not apply new-project default B retrospectively. Show a restrictive-policy conflict before proposing an Owner change and leave the active restriction effective until that change is explicit. Update the version marker only to describe the actual reconciliation; unresolved areas remain listed, not hidden behind the marker.
 
+For v1.1.0 → v2.0.0, inventory existing workflows, required checks/rulesets/merge queue and merge rules first. Moving hosted CI to `workflow_dispatch`, adopting the gate and enabling own-task-PR auto-merge are one scoped, reviewable project task following the [rollout checklist](templates/DEVBOX_GATE_ROLLOUT_CHECKLIST.md); its bootstrap PR is never self-merged. Existing stricter merge or release rules are CONFLICT until the owner changes them. A project may record `v2.0.0` only after that reconciliation; recording it does not itself adopt the gate.
+
 ## Public-standard hygiene
 
 Never add secrets, credentials, personal data, private infrastructure details, product-specific business rules, private repo names as defaults or one-project provider/account identifiers. Examples stay generic.
@@ -273,6 +290,7 @@ Report briefly:
 - MISSING areas added;
 - CONFLICT areas/owner decisions;
 - effective commit/push policy, prominent notice delivery for new projects, opt-out/per-task choice and existing restrictions preserved;
+- merge-gate state (not adopted / bootstrap PR prepared / integrated), hosted-CI triggers and any merge-rule CONFLICT;
 - skills/capabilities reconciled;
 - project-specific discovery performed or not needed;
 - files changed;

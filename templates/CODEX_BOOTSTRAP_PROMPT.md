@@ -1,6 +1,6 @@
 # Codex Bootstrap Prompt Template
 
-**Bootstrap standard:** v1.1.0
+**Bootstrap standard:** v2.0.0
 
 ChatGPT generates a target-project-specific prompt after its own bootstrap is complete. Fill the setup context from inspected evidence; unresolved decisions stay explicit. The new-project default B notice must already be prominent in the ChatGPT setup response, with opt-out/per-task choices; this template alone does not deliver that notice or grant authority.
 
@@ -12,6 +12,7 @@ ChatGPT generates a target-project-specific prompt after its own bootstrap is co
 - For a new project: delivered B notice/date and Owner choice, or disclosed ALLOW_AFTER_CHECKS default. Alternatives: PER_TASK_APPROVAL or DISABLED (opt out of commit/push).
 - Existing restrictive rules, task-specific prohibitions, unresolved conflicts/authority gaps.
 - Exact task artifact/reference and authorized scope, branch convention, relevant checks, integration/deployment boundaries.
+- Dev-box merge gate state (not adopted / bootstrap PR prepared / integrated with revision), hosted-CI triggers, merge exclusions and named project exceptions.
 
 Do not invent missing context or claim Codex is configured because ChatGPT is configured.
 
@@ -51,7 +52,13 @@ Check the effective publication policy independently against active instructions
 - New project with DISABLED or PER_TASK_APPROVAL: stop before any prohibited/unapproved commit or push. Preserve the local result and report actual state and missing authority.
 - Existing project with restrictive policy: preserve it until explicit Owner change. An incompatible proposed B grant is CONFLICT; show the existing/proposed behaviors and consequence rather than overwriting the restriction.
 - Existing equivalent permission: preserve it without duplicate rules or repeated approval. Missing/unclear authority is a gap, not retroactive consent; obtain a scoped grant before publication. Respect separate commit/push restrictions where present.
-- Any stronger task prohibition prevails. No policy above authorizes main/default-branch push, another task's branch/worktree, merge, release/tag, deployment, production/provider activation or recommendation-only follow-up.
+- Any stronger task prohibition prevails. No publication policy above authorizes main/default-branch push, another task's branch/worktree, merge, release/tag, deployment, production/provider activation or recommendation-only follow-up.
+
+Check the merge contract separately (DEVBOX_GATE_POLICY.md):
+
+- Gate integrated on the integration branch: own task PRs with `STATUS: DONE`, matching `COMMIT`, `BLOCKER: none` and `MERGE_READY: yes` may be merged only through the gate's `merge-ff` compare-and-swap after a complete green run on the actual merge commit. Never plain push, force, admin bypass or the PR merge API.
+- Gate not integrated, bootstrap PR, PRs changing the gate, foreign/fork PRs, drafts, open decisions and merge-excluded paths: no merge; present exact `B`/`H`/`T` evidence and ask the Owner.
+- Hosted CI only by deliberate `workflow_dispatch`; never add automatic triggers or self-hosted runners. A merge never grants deployment.
 
 Ensure at minimum that Codex has coherent contracts for:
 - reading repository instructions;
@@ -60,7 +67,7 @@ Ensure at minimum that Codex has coherent contracts for:
 - task/risk-appropriate validation and actual command/exit-status evidence;
 - Git isolation for parallel work when used;
 - independent execution preflight for parallel candidates, including code/contracts/dependencies/migrations/shared resources and integration cost;
-- current-main impact review/revalidation before separately authorized integration;
+- current-main impact review/revalidation before integration, and the dev-box merge gate where adopted;
 - shared status/document reconciliation from current canonical content, preserving unrelated transitions;
 - compact completion/blocker reporting;
 - distinct local, branch, integration and deployment states;
