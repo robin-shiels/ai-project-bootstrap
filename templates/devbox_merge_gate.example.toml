@@ -1,0 +1,121 @@
+# Dev-box merge gate configuration — EXAMPLE ONLY.
+#
+# Every value below is a placeholder. This file is not a running project
+# configuration. Copy it into the target repository (usually next to the gate
+# script, e.g. .github/devbox_merge_gate.toml), replace every placeholder with
+# inspected project facts and run `validate-config`.
+#
+# Schema rules (enforced by devbox_merge_gate.py):
+# - Unknown keys, wrong types and missing keys are errors. There are no
+#   silent defaults for authorization, isolation or required checks.
+# - Commands are argument lists. No shell evaluates them. Allowed
+#   placeholders in argv and env values: {base} {target} {worktree}
+#   {run_id} {run_dir}. Anything else is rejected.
+# - Path patterns are repository-relative fnmatch patterns; `*` also crosses
+#   `/`. Unknown and empty diffs always run the full plan.
+
+schema_version = 1
+
+[repository]
+slug = "example-owner/example-repo"   # GitHub owner/name
+remote = "origin"                     # git remote of the gate checkout
+integration_ref = "refs/heads/main"   # the only ref merge-ff may move
+
+[contract]
+# merge-ff runs only when exactly this script and this config are on B.
+# A PR that changes either file can never be merged by the gate itself.
+gate_script = ".github/scripts/devbox_merge_gate.py"
+gate_config = ".github/devbox_merge_gate.toml"
+
+[authorization]
+# Same-repository PRs of these accounts count as own origin.
+trusted_authors = ["example-owner"]
+# Own branches whose code may be checked under the gate's UID.
+check_head_patterns = ["agent/*"]
+# Own task branches that merge-ff may integrate (may be empty: no auto-merge).
+merge_head_patterns = ["agent/*"]
+# Handoff in the PR body: STATUS must start with one of these.
+done_statuses = ["DONE"]
+# Also require the explicit handoff line `MERGE_READY: yes`.
+require_merge_ready = true
+# Branches the gate must never merge (for example the gate bootstrap PR).
+never_merge_heads = ["agent/devbox-gate-bootstrap"]
+
+# Optional, narrowly named owner exception for one existing own PR whose
+# branch does not match merge_head_patterns. One table per PR, exact branch,
+# documented decision. All other merge conditions still apply.
+# [[authorization.exceptions]]
+# pr = 7
+# head_ref = "feature/example-chain-step"
+# author = "example-owner"
+# decision = "Owner decision YYYY-MM-DD: integrate the named chain one PR at a time"
+
+[isolation]
+# "refuse": untrusted code stops with ISOLATION_REQUIRED before any install,
+# build or test step. "check-only-in-isolated-env": allowed only for an
+# instance that runs in a separately provisioned environment; the gate then
+# verifies its UID and that none of must_not_read is readable, and still
+# never merges untrusted code.
+untrusted_code = "refuse"
+forbidden_uids = []        # e.g. the UID that holds project/deploy access
+must_not_read = []         # e.g. credential files of that UID
+
+[paths]
+docs_only = ["README.md", "docs/*.md"]
+# Documents that look like docs but govern quality, CI, security or operations.
+force_full = ["docs/*GATE*", "docs/*CI*", "docs/*QUALITY*", "docs/*SECURITY*", "docs/*DEPLOY*"]
+# merge-ff never integrates these; they need a separate owner order.
+merge_excluded = [".github/*", "AGENTS.md", "CLAUDE.md", "migrations/*", "deploy/*"]
+
+[application]
+# All present: application steps are mandatory. None present: application
+# steps are reported NOT_PRESENT (never passed). Some present: stop.
+markers = ["pyproject.toml", "tests"]
+
+[resources]
+min_mem_available_mib = 2048
+min_swap_free_mib = 0
+heavy_process_patterns = ["(^|/)pytest(\\s|$)", "-m pytest(\\s|$)"]
+systemd_scope = true
+scope_properties = ["MemoryMax=3G", "CPUQuota=200%"]
+watched_user_services = []   # recorded only; the gate never starts/stops them
+
+[state]
+dir = "~/.local/state/devbox-merge-gate/example-repo"   # lock, logs, worktrees
+temp_ref_prefix = "refs/heads/merge-gate/"
+
+[environment]
+# Inherited variables passed to project code (PATH, HOME and XDG_RUNTIME_DIR always are).
+# Credential-like names are rejected.
+pass = []
+set = { PYTHONDONTWRITEBYTECODE = "1" }
+
+[logs]
+extra_secret_patterns = []
+
+# Optional setup/teardown, e.g. a disposable database. Teardown always runs.
+# [[setup]]
+# name = "create disposable test database"
+# argv = ["scripts/test-db.sh", "create", "{run_dir}/db"]
+# timeout_s = 120
+
+[[steps]]
+name = "git diff --check"
+argv = ["git", "diff", "--check", "{base}", "{target}"]
+timeout_s = 300
+plans = ["docs-only", "full", "release"]
+application = false
+
+[[steps]]
+name = "install locked dependencies"
+argv = ["uv", "sync", "--locked"]
+timeout_s = 900
+plans = ["full", "release"]
+application = true
+
+[[steps]]
+name = "tests"
+argv = ["uv", "run", "pytest", "-q"]
+timeout_s = 1800
+plans = ["full", "release"]
+application = true

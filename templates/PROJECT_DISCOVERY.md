@@ -1,6 +1,6 @@
 # Project Discovery Coverage Template
 
-**Bootstrap standard:** v1.1.0
+**Bootstrap standard:** v2.0.0
 
 Use this only when project-specific instructions are missing or materially incomplete. It is a coverage guide, not a questionnaire to ask mechanically.
 
@@ -43,5 +43,9 @@ Offer **ALLOW_AFTER_CHECKS** (default B), **PER_TASK_APPROVAL**, and **DISABLED*
 For an **existing project**, inspect and preserve effective authority first. A proposed grant incompatible with a restrictive rule is **CONFLICT**: explain, for example, “Existing rule requires per-task push approval; proposed B permits own-branch push after checks. Keep the existing restriction unless the Owner explicitly changes it.” Already equivalent permission stays **EQUIVALENT** without duplicate rules or repetitive approval. Missing/unclear authority is not retroactive consent; obtain a scoped grant before publication. Preserve separate commit/push restrictions if the project distinguishes them.
 
 Keep the effective choice in the existing authoritative instructions rather than a competing file. With opt-out/per-task approval, the executor stops before any unapproved commit/push and reports LOCAL_COMPLETE or BLOCKED with actual local evidence. A branch DONE handoff requires exact remote SHA verification and a clean owned worktree; it does not establish integration/deployment.
+
+## Merge gate at setup
+
+Ask only what the repository does not answer: whether the project adopts the [dev-box merge gate](../DEVBOX_GATE_POLICY.md) now or later, its integration branch, the checks and runtime versions its gate must run, merge-excluded paths, which own branches count as task branches, whether an isolated environment for foreign code exists, and the separate deployment authority (none by default). Tell the Owner that hosted CI then runs only by manual dispatch and that own explicitly mergeable task PRs are merged automatically only after the gate's bootstrap PR is integrated.
 
 Persist resulting decisions in the target project's authoritative project-specific instructions/specifications. Never add them to the universal bootstrap repository merely because one project needs them.

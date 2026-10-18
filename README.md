@@ -2,9 +2,11 @@
 
 A reusable, product-neutral standard for consistent ChatGPT planning and Codex execution workflows across new and existing projects.
 
-**Current standard:** v1.1.0
+**Current standard:** v2.0.0
 
-> **New-project default: own task-branch commit/push is enabled.** After an explicitly started task passes its required checks, the executor may commit and push only that task's dedicated branch. This does not permit main/default-branch push, another task's branch, merge, release/tag, deployment or production/provider activation, and does not start a recommended follow-up. At setup you can choose **DISABLED** (opt out of commit/push) or **PER_TASK_APPROVAL** instead of **ALLOW_AFTER_CHECKS**. ChatGPT must prominently repeat this notice in its setup response and record the effective policy in your authoritative project instructions before relying on it. Existing projects keep their active restrictions; v1.1.0 does not grant permission retrospectively.
+> **New-project default: own task-branch commit/push is enabled.** After an explicitly started task passes its required checks, the executor may commit and push only that task's dedicated branch. This does not permit main/default-branch push, another task's branch, merge, release/tag, deployment or production/provider activation, and does not start a recommended follow-up. At setup you can choose **DISABLED** (opt out of commit/push) or **PER_TASK_APPROVAL** instead of **ALLOW_AFTER_CHECKS**. ChatGPT must prominently repeat this notice in its setup response and record the effective policy in your authoritative project instructions before relying on it. Existing projects keep their active restrictions; a standard version does not grant permission retrospectively.
+
+> **v2.0.0: dev-box merge gate and no automatic hosted CI.** Projects check PRs on their actual merge result and releases on the exact current commit with a deliberately started local gate. GitHub-hosted CI starts at most through manual `workflow_dispatch` for diagnosis. Once a project's gate is integrated, its own explicitly mergeable task PRs without open decisions may be merged automatically by the gate; foreign PRs never are, and deployment always stays a separate project decision. See [`DEVBOX_GATE_POLICY.md`](DEVBOX_GATE_POLICY.md). Branch push authority above is still not merge authority.
 
 ## Quick start
 
@@ -45,6 +47,7 @@ The standard covers reusable workflow behavior such as:
 - durable canonical orders and results (normally Git-tracked) plus short execution prompts;
 - visible own-branch publication policy with opt-out and existing-rule preservation;
 - task-appropriate checks and distinct local, branch, integration and deployment states;
+- a local merge/release gate on the actual merge result, own-task-PR auto-merge after adoption, and hosted CI only by manual dispatch;
 - recommendation-only next-chat guidance;
 - compact current-work status before recommendations;
 - parallel-work awareness;
@@ -90,32 +93,45 @@ ChatGPT uses [`templates/CODEX_BOOTSTRAP_PROMPT.md`](templates/CODEX_BOOTSTRAP_P
 
 ChatGPT and Codex remain separate layers: configuring one does not falsely imply that the other is configured.
 
+## Dev-box merge gate
+
+[`DEVBOX_GATE_POLICY.md`](DEVBOX_GATE_POLICY.md) is the contract. The reference CLI [`templates/devbox_merge_gate.py`](templates/devbox_merge_gate.py) (Python 3.12+, standard library, `git` and `gh`) is configured by a strictly validated TOML file ([example](templates/devbox_merge_gate.example.toml)); its tests run with `python3 -m unittest discover -s tests` against temporary repositories and fakes only. Adopt it per project with the [rollout checklist](templates/DEVBOX_GATE_ROLLOUT_CHECKLIST.md) and the [AGENTS.md](templates/AGENTS_DEVBOX_GATE.md) / [CLAUDE.md](templates/CLAUDE_DEVBOX_GATE.md) rule texts. An optional manual diagnosis workflow is in [`templates/github-actions-diagnose.example.yml`](templates/github-actions-diagnose.example.yml). This repository itself has no workflow and no runner.
+
 ## Repository structure
 
 ```text
 .
 ├── README.md
 ├── UNIVERSAL_PROJECT_BOOTSTRAP.md
+├── DEVBOX_GATE_POLICY.md
 ├── CHANGELOG.md
 ├── LICENSE
 ├── skills/
 │   └── SKILL_MANIFEST.md
-└── templates/
-    ├── CODEX_BOOTSTRAP_PROMPT.md
-    └── PROJECT_DISCOVERY.md
+├── templates/
+│   ├── CODEX_BOOTSTRAP_PROMPT.md
+│   ├── PROJECT_DISCOVERY.md
+│   ├── devbox_merge_gate.py
+│   ├── devbox_merge_gate.example.toml
+│   ├── AGENTS_DEVBOX_GATE.md
+│   ├── CLAUDE_DEVBOX_GATE.md
+│   ├── DEVBOX_GATE_ROLLOUT_CHECKLIST.md
+│   └── github-actions-diagnose.example.yml
+└── tests/
+    └── test_devbox_merge_gate.py
 ```
 
-No technology-specific `.gitignore` is included yet because this repository currently contains only portable documentation/templates and assumes no runtime stack.
+The `.gitignore` only excludes Python bytecode of the reference CLI and its tests.
 
 ## Versioning
 
 The standard uses semantic versions. A target project may record its last reconciled version, for example:
 
-`Universal Project Bootstrap: v1.1.0`
+`Universal Project Bootstrap: v2.0.0`
 
 That marker is useful but never replaces semantic inspection on a future upgrade.
 
-When upgrading from v1.0.0, reconcile behavior rather than replacing local instructions. Preserve existing restrictive commit/push rules until an explicit Owner change; show the concrete conflict with a proposed default B policy. Already equivalent own-branch permission stays intact without re-approval. See [CHANGELOG.md](CHANGELOG.md) for migration details. Branch completion does not claim integration or deployment; recheck current main and affected gates before any separately authorized integration.
+When upgrading from v1.1.0 to v2.0.0, inventory workflows, branch rules and merge rules first and adopt the gate through a scoped project task; existing stricter merge rules stay CONFLICT until the owner changes them. When upgrading from v1.0.0, reconcile behavior rather than replacing local instructions. Preserve existing restrictive commit/push rules until an explicit Owner change; show the concrete conflict with a proposed default B policy. Already equivalent own-branch permission stays intact without re-approval. See [CHANGELOG.md](CHANGELOG.md) for migration details. Branch completion does not claim integration or deployment; recheck current main and affected gates before any separately authorized integration.
 
 ## Relationship to automation/software factories
 

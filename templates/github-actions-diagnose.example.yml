@@ -1,0 +1,36 @@
+# OPTIONAL manual diagnosis workflow — EXAMPLE ONLY.
+#
+# Contract: DEVBOX_GATE_POLICY.md. The binding merge and release check is the
+# dev-box merge gate. This workflow never starts automatically: it has no
+# push, pull_request, pull_request_target, merge_group, schedule or
+# workflow_run trigger. Someone starts it deliberately for a concrete
+# diagnosis (GitHub requires the file on the default branch for that).
+#
+# It is read-only: no secrets, no deployment, no agent start, no self-hosted
+# runner. A red run that executed steps is a stop signal for the change it
+# diagnosed; a job that fails before its first step is no test result.
+#
+# Before use: replace the placeholder steps with the project's own checks and
+# pin every third-party action to a reviewed full commit SHA.
+name: Diagnose
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: diagnose-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@REPLACE_WITH_REVIEWED_FULL_COMMIT_SHA # vX.Y.Z
+        with:
+          persist-credentials: false
+      - name: Project checks (placeholder)
+        run: echo "Replace with the project's documented check commands"
