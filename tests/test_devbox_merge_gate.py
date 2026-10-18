@@ -870,6 +870,21 @@ class NegativeTests(GateTestCase):
         code, run = self.run_gate("check-only-pr", pr=pr.number)
         self.assert_stop(code, run, gate.Code.MERGE_TOPOLOGY)
 
+    def test_missing_git_identity_is_no_conflict(self) -> None:
+        self.init_main()
+        pr = self.open_pr({"app.py": "ident = 1\n"})
+        git(self.checkout, "config", "user.useConfigOnly", "true")
+        for name in (
+            "GIT_AUTHOR_NAME",
+            "GIT_AUTHOR_EMAIL",
+            "GIT_COMMITTER_NAME",
+            "GIT_COMMITTER_EMAIL",
+        ):
+            os.environ.pop(name, None)
+        code, run = self.run_gate("check-only-pr", pr=pr.number)
+        self.assert_stop(code, run, gate.Code.PRECONDITION)
+        self.assertIn("git identity missing", run.record.stop_reason)
+
     def test_incomplete_application_markers_stop(self) -> None:
         self.init_main(application=False)
         pr = self.open_pr({"app.py": "only = 1\n"})

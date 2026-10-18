@@ -204,7 +204,7 @@ isolation. Therefore:
 | --- | --- | --- |
 | `USAGE` | 2 | no mode, malformed SHA |
 | `CONFIG` | 3 | configuration invalid (unknown key, wrong type, missing required value, shell string, unknown placeholder, credential-like variable) |
-| `PRECONDITION` | 10 | PR not open, wrong base, incomplete application markers |
+| `PRECONDITION` | 10 | PR not open, wrong base, incomplete application markers, missing git identity for the merge commit |
 | `HEAD_MISMATCH` | 11 | head differs from expectation, fetched head, handoff or re-check |
 | `BASE_MOVED` | 12 | integration ref moved; release SHA not current |
 | `NOT_AUTHORIZED` | 13 | no own task PR, draft, missing handoff/merge-ready, blocker, contract not on `B`, self-authorizing gate PR, never-merge branch |
@@ -216,7 +216,7 @@ isolation. Therefore:
 | `LOG_INTEGRITY` | 21 | secret pattern in the log, changed log before the update |
 | `REF_UPDATE_REJECTED` | 30 | compare-and-swap rejected or unclear with the ref not at `M` |
 | `POST_VERIFY` | 31 | ref at `M` after an ambiguous answer, or post-update check failed |
-| `ERROR` | 40 | unexpected tool failure |
+| `ERROR` | 40 | unexpected tool failure, including a failed merge without conflicting paths |
 
 ## 7. Branch rules, required checks and merge queue
 

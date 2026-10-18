@@ -1611,10 +1611,32 @@ class Gate:
             f"Merge pull request #{pr.number} from {owner}/{pr.head_ref}\n\n{pr.title}\n\n"
             f"Gate-Run: {self.run_id}\nGate-Base: {base}\nGate-Head: {head}\n"
         )
-        if not tree_git.ok("merge", "--no-ff", "--no-edit", "-m", message, head):
+        for ident in ("GIT_AUTHOR_IDENT", "GIT_COMMITTER_IDENT"):
+            if not tree_git.ok("var", ident):
+                raise GateStop(
+                    Code.PRECONDITION,
+                    f"git identity missing ({ident}); configure user.name/user.email "
+                    "for the gate checkout",
+                )
+        merged = subprocess.run(
+            ("git", "merge", "--no-ff", "--no-edit", "-m", message, head),
+            cwd=self.worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if merged.returncode != 0:
+            unmerged = tree_git("ls-files", "--unmerged")
             tree_git.ok("merge", "--abort")
+            if unmerged:
+                raise GateStop(
+                    Code.MERGE_TOPOLOGY, "merge conflict; integrate in the task branch"
+                )
+            detail = (merged.stderr or merged.stdout).strip().splitlines()
             raise GateStop(
-                Code.MERGE_TOPOLOGY, "merge conflict; integrate in the task branch"
+                Code.ERROR,
+                "git merge failed without a conflict: "
+                + (detail[-1][:200] if detail else f"exit {merged.returncode}"),
             )
         merge = tree_git("rev-parse", "HEAD")
         self.record.merge_commit = merge
