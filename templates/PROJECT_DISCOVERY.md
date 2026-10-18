@@ -1,6 +1,6 @@
 # Project Discovery Coverage Template
 
-**Bootstrap standard:** v1.1.0
+**Bootstrap standard:** v1.2.0
 
 Use this only when project-specific instructions are missing or materially incomplete. It is a coverage guide, not a questionnaire to ask mechanically.
 

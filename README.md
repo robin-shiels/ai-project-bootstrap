@@ -2,9 +2,9 @@
 
 A reusable, product-neutral standard for consistent ChatGPT planning and Codex execution workflows across new and existing projects.
 
-**Current standard:** v1.1.0
+**Current standard:** v1.2.0
 
-> **New-project default: own task-branch commit/push is enabled.** After an explicitly started task passes its required checks, the executor may commit and push only that task's dedicated branch. This does not permit main/default-branch push, another task's branch, merge, release/tag, deployment or production/provider activation, and does not start a recommended follow-up. At setup you can choose **DISABLED** (opt out of commit/push) or **PER_TASK_APPROVAL** instead of **ALLOW_AFTER_CHECKS**. ChatGPT must prominently repeat this notice in its setup response and record the effective policy in your authoritative project instructions before relying on it. Existing projects keep their active restrictions; v1.1.0 does not grant permission retrospectively.
+> **New-project default: own task-branch commit/push is enabled.** After an explicitly started task passes its required checks, the executor may commit and push only that task's dedicated branch. This does not permit main/default-branch push, another task's branch, merge, release/tag, deployment or production/provider activation, and does not start a recommended follow-up. At setup you can choose **DISABLED** (opt out of commit/push) or **PER_TASK_APPROVAL** instead of **ALLOW_AFTER_CHECKS**. ChatGPT must prominently repeat this notice in its setup response and record the effective policy in your authoritative project instructions before relying on it. Existing projects keep their active restrictions; no standard version grants permission retrospectively.
 
 ## Quick start
 
@@ -45,6 +45,7 @@ The standard covers reusable workflow behavior such as:
 - durable canonical orders and results (normally Git-tracked) plus short execution prompts;
 - visible own-branch publication policy with opt-out and existing-rule preservation;
 - task-appropriate checks and distinct local, branch, integration and deployment states;
+- a cost-aware GitHub Actions policy and rollout checklist, adapted to each repository;
 - recommendation-only next-chat guidance;
 - compact current-work status before recommendations;
 - parallel-work awareness;
@@ -84,6 +85,13 @@ The manifest defines capabilities and expected behavior. It does **not** assume 
 
 For a new or underspecified project, [`templates/PROJECT_DISCOVERY.md`](templates/PROJECT_DISCOVERY.md) provides coverage for structured brainstorming. Existing repository context is inspected first, so the owner should only be asked genuine unresolved questions.
 
+## GitHub Actions CI
+
+Use [`CI_POLICY.md`](CI_POLICY.md) and the
+[`rollout checklist`](templates/GITHUB_ACTIONS_CI_CHECKLIST.md) when setting up
+or reviewing CI. The [`Python example`](templates/github-actions-python-ci.yml)
+is optional and must be adapted to the actual project stack and checks.
+
 ## Codex bootstrap
 
 ChatGPT uses [`templates/CODEX_BOOTSTRAP_PROMPT.md`](templates/CODEX_BOOTSTRAP_PROMPT.md) to produce the final project-specific prompt that you copy into Codex.
@@ -96,13 +104,16 @@ ChatGPT and Codex remain separate layers: configuring one does not falsely imply
 .
 ├── README.md
 ├── UNIVERSAL_PROJECT_BOOTSTRAP.md
+├── CI_POLICY.md
 ├── CHANGELOG.md
 ├── LICENSE
 ├── skills/
 │   └── SKILL_MANIFEST.md
 └── templates/
     ├── CODEX_BOOTSTRAP_PROMPT.md
-    └── PROJECT_DISCOVERY.md
+    ├── PROJECT_DISCOVERY.md
+    ├── GITHUB_ACTIONS_CI_CHECKLIST.md
+    └── github-actions-python-ci.yml
 ```
 
 No technology-specific `.gitignore` is included yet because this repository currently contains only portable documentation/templates and assumes no runtime stack.
@@ -111,7 +122,7 @@ No technology-specific `.gitignore` is included yet because this repository curr
 
 The standard uses semantic versions. A target project may record its last reconciled version, for example:
 
-`Universal Project Bootstrap: v1.1.0`
+`Universal Project Bootstrap: v1.2.0`
 
 That marker is useful but never replaces semantic inspection on a future upgrade.
 

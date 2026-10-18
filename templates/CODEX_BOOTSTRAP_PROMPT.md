@@ -1,6 +1,6 @@
 # Codex Bootstrap Prompt Template
 
-**Bootstrap standard:** v1.1.0
+**Bootstrap standard:** v1.2.0
 
 ChatGPT generates a target-project-specific prompt after its own bootstrap is complete. Fill the setup context from inspected evidence; unresolved decisions stay explicit. The new-project default B notice must already be prominent in the ChatGPT setup response, with opt-out/per-task choices; this template alone does not deliver that notice or grant authority.
 

@@ -1,6 +1,6 @@
 # Universal Project Bootstrap Standard
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 
 **Scope:** product-neutral ChatGPT + Codex workflow bootstrap  
 **Mode:** inventory-first, idempotent, conflict-aware
@@ -70,13 +70,13 @@ Research/audit findings are evidence and planning inputs; their recommendations 
 
 ## Own task-branch publication policy
 
-**New projects bootstrapped to v1.1.0 use default B:** explicitly started tasks may commit and push only their dedicated task branch after the task's relevant verification. At setup, prominently deliver this notice in the ChatGPT setup response as well as the onboarding documentation, before relying on the default:
+**New projects bootstrapped to v1.1.0 or later use default B:** explicitly started tasks may commit and push only their dedicated task branch after the task's relevant verification. At setup, prominently deliver this notice in the ChatGPT setup response as well as the onboarding documentation, before relying on the default:
 
 > Own task-branch commit/push is enabled by default for this new project. After an explicitly started task passes its required checks, the executor may commit and push only that task's dedicated branch. This does not authorize push to main/the default branch, another task's branch, merge, release/tag, deployment or production/provider activation, and does not start a recommended follow-up. You can opt out of commit/push or require explicit approval per task. Your effective choice will be recorded in the project's authoritative instructions; stricter project or task restrictions prevail.
 
 Offer the concrete choices **ALLOW_AFTER_CHECKS** (default), **PER_TASK_APPROVAL**, or **DISABLED** for own task-branch commit/push. No affirmative selection is required to use B for a new project once the notice is delivered; an opt-out or per-task choice takes effect before publication. Record the effective policy, the notice delivery and any Owner choice in the target project's existing authoritative instruction structure. Ensure the Codex handoff carries that policy and its source. Do not hide the notice solely in an executor template or silently assume it was delivered.
 
-**Existing projects:** inspect their active authority before reconciliation. Preserve an explicit restrictive commit/push rule until the Owner changes it. If the proposed upgrade would permit currently forbidden publication, classify it as **CONFLICT**, show the existing and proposed behaviors and ask about that concrete change; keep the restriction meanwhile. Existing own-branch permission that satisfies the contract is **EQUIVALENT** and needs no duplicate rule or repeated approval. If authority is absent or unclear, record the gap and obtain an explicit scoped grant before commit/push; silence is never retroactive consent from v1.1.0. Evaluate commit and push separately if the existing policy distinguishes them.
+**Existing projects:** inspect their active authority before reconciliation. Preserve an explicit restrictive commit/push rule until the Owner changes it. If the proposed upgrade would permit currently forbidden publication, classify it as **CONFLICT**, show the existing and proposed behaviors and ask about that concrete change; keep the restriction meanwhile. Existing own-branch permission that satisfies the contract is **EQUIVALENT** and needs no duplicate rule or repeated approval. If authority is absent or unclear, record the gap and obtain an explicit scoped grant before commit/push; silence is never retroactive consent from a standard version. Evaluate commit and push separately if the existing policy distinguishes them.
 
 Every task rechecks its effective authority. A stronger task-specific prohibition wins over standing permission. With opt-out, stop before the prohibited commit/push, preserve the result locally and report actual evidence as LOCAL_COMPLETE or BLOCKED. Missing access or a failed push likewise cannot be reported as remote DONE. No policy authorizes mutation of another task's branch/worktree, main/default-branch push, integration, release or deployment merely because the task is complete.
 
@@ -163,6 +163,14 @@ Substantial results belong in the same durable canonical workflow: include evide
 
 ## Execution and verification
 
+For repositories using GitHub Actions, reconcile the product-neutral
+[CI policy](CI_POLICY.md) and
+[rollout checklist](templates/GITHUB_ACTIONS_CI_CHECKLIST.md) with actual
+workflow triggers, required checks, branch rules, runner usage and the
+project's release contract. Do not copy the Python example into a different
+stack or claim that a private repository has enforceable protection without
+checking its plan. Existing project-specific quality gates remain binding.
+
 Read the current order and applicable instructions, inspect the actual base/worktree and keep changes within authorized scope. Choose checks by task type and risk:
 
 - Reports/documentation: content, source, link, format, scope and privacy review; no invented product tests for an audit-only result.
@@ -218,7 +226,7 @@ The final instructions must preserve universal workflow + project-specific rules
 
 A project may record:
 
-`Universal Project Bootstrap: v1.1.0`
+`Universal Project Bootstrap: v1.2.0`
 
 The marker is evidence only; future upgrades still inspect actual semantics.
 
@@ -257,6 +265,11 @@ Always inspect semantics; never trust only a stored version.
 An upgrade must not erase project-specific additions. An older universal behavior is OUTDATED when the new standard improves it without changing local intent; if the old behavior is an intentional local choice, it is CONFLICT.
 
 For v1.0.0 → v1.1.0, inventory each capability, strengthen evidence/results/lifecycle where intent is preserved, and retain existing publication authority. Do not apply new-project default B retrospectively. Show a restrictive-policy conflict before proposing an Owner change and leave the active restriction effective until that change is explicit. Update the version marker only to describe the actual reconciliation; unresolved areas remain listed, not hidden behind the marker.
+
+For v1.1.0 → v1.2.0, inventory existing CI before adopting the cost-aware
+policy. Keep stricter product/release gates. Apply the checklist to new
+projects and change existing workflow behavior only through a scoped,
+reviewable task. The CI policy grants no merge or deployment authority.
 
 ## Public-standard hygiene
 

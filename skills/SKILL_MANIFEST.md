@@ -1,6 +1,6 @@
 # Universal Skill & Capability Manifest
 
-**Bootstrap standard:** v1.1.0
+**Bootstrap standard:** v1.2.0
 
 This manifest defines reusable capabilities, not assumptions that a named skill is installed. A Markdown file is not automatically an active skill. Bootstrap compares actual behavior and availability.
 
@@ -10,7 +10,7 @@ For each capability, record its trigger, available implementation/fallback, vers
 
 Applicable higher-priority platform/session instructions and current scoped authorization govern use; preserve authoritative local rules and stronger task restrictions. Generic skill stage or finish prompts neither revoke an explicit grant nor create missing authority. New material product/scope/security/cost/provider/architecture intent belongs to the Owner; ordinary authorized mechanics and discoverable facts do not require repetitive approval. A historical grant, another branch or a tool's capability supplies no authority.
 
-For new v1.1.0 projects, use the [standard's publication policy](../UNIVERSAL_PROJECT_BOOTSTRAP.md#own-task-branch-publication-policy) only after prominent setup notice, opt-out/per-task choices and recorded effective policy. Preserve existing restrictive authority; a proposed incompatible grant is CONFLICT, not an automatic upgrade. Every capability operates within that policy and the current task, never implicit main/merge/release/deployment authority.
+For new projects under v1.1.0 or later, use the [standard's publication policy](../UNIVERSAL_PROJECT_BOOTSTRAP.md#own-task-branch-publication-policy) only after prominent setup notice, opt-out/per-task choices and recorded effective policy. Preserve existing restrictive authority; a proposed incompatible grant is CONFLICT, not an automatic upgrade. Every capability operates within that policy and the current task, never implicit main/merge/release/deployment authority.
 
 ## ChatGPT-side capabilities
 

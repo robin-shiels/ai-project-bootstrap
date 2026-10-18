@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.2.0 — Cost-aware GitHub Actions CI — 2026-10-18
+
+- Added a product-neutral CI policy, rollout checklist and optional uv/Python
+  example for private and future repositories.
+- Requires current workflow, runner-minute, check-protection and merge-queue
+  audits before changing CI; avoids duplicate feature-push runs and unsafe
+  cancellation groups.
+- Documents honest documentation-only checks, full code-PR/default-branch
+  verification, least privilege, bounded jobs, measured cache use and
+  scenario-versus-actual savings.
+- Does not change existing projects automatically or grant merge/deploy rights.
+
 ## 1.1.0 — Six-audit consolidation — 2026-09-29
 
 - Strengthened inventory with actual repository/default branch, revision-bound source classes, facts/inference/open/history separation and explicit maturity stages.
