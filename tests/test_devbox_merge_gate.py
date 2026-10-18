@@ -1000,6 +1000,10 @@ class PureHelperTests(unittest.TestCase):
             {"PATH": "/bin", "HOME": "/h", "GH_TOKEN": "x", "SSH_AUTH_SOCK": "s"},
         )
         self.assertEqual(set(env), {"PATH", "HOME", "LANG", "NO_COLOR", "FORCE_COLOR"})
+        env = gate.step_environment(
+            config, {"PATH": "/bin", "XDG_RUNTIME_DIR": "/run/user/1"}
+        )
+        self.assertEqual(env["XDG_RUNTIME_DIR"], "/run/user/1")
 
 
 class TemplateHygieneTests(unittest.TestCase):

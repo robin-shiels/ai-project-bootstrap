@@ -85,7 +85,7 @@ dir = "~/.local/state/devbox-merge-gate/example-repo"   # lock, logs, worktrees
 temp_ref_prefix = "refs/heads/merge-gate/"
 
 [environment]
-# Inherited variables passed to project code (PATH and HOME always are).
+# Inherited variables passed to project code (PATH, HOME and XDG_RUNTIME_DIR always are).
 # Credential-like names are rejected.
 pass = []
 set = { PYTHONDONTWRITEBYTECODE = "1" }

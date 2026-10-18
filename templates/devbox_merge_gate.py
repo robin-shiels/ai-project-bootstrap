@@ -673,7 +673,8 @@ def find_secret_patterns(patterns: Sequence[str], text: str) -> list[str]:
 def step_environment(config: Config, source: Mapping[str, str]) -> dict[str, str]:
     """Minimal environment for project code; never inherits credentials."""
     env = {"LANG": "C.UTF-8", "NO_COLOR": "1", "FORCE_COLOR": "0"}
-    for name in ("PATH", "HOME", *config.env_pass):
+    # XDG_RUNTIME_DIR locates the user service manager for systemd-run scopes.
+    for name in ("PATH", "HOME", "XDG_RUNTIME_DIR", *config.env_pass):
         if name in source and not CREDENTIAL_ENV_RE.search(name):
             env[name] = source[name]
     env.setdefault("PATH", "/usr/local/bin:/usr/bin:/bin")
