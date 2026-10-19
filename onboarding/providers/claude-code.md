@@ -41,7 +41,7 @@ Windows ohne WSL2: Die Desktop-App und die native Windows-CLI laufen direkt unte
 | --- | --- | --- |
 | `claude --version` | Version mit „(Claude Code)“ | `host`/`tool_check` |
 | `claude doctor` | keine Fehler bei Installation und Einstellungen | `host`/`tool_check` |
-| `/status` in der Sitzung | richtiges Konto angemeldet | `host`/`tool_check` |
+| `/status` (tippt der Nutzer) | richtiges Konto angemeldet | `account`/`user_confirmation` |
 | nur Desktop-App: Code-Bereich zeigt den Projektordner | – | `user_confirmation`, nach `handover` per Befehl bestätigt |
 
 Läufst du schon als Claude Code auf dem Computer, prüfe direkt (Befehl ausführen); keine Installationsanleitung zeigen. Ist `claude` nicht im Suchpfad, obwohl die Sitzung läuft (zum Beispiel aus der Desktop-App), ist die laufende Sitzung selbst der Nachweis; die Version nennt der Nutzer aus `/status` oder der App. Dann keine zusätzliche CLI installieren.
@@ -66,7 +66,7 @@ Claude Code liest `CLAUDE.md` (Projekt: `./CLAUDE.md` oder `./.claude/CLAUDE.md`
 | Repository-Anweisungen | eingebautes `CLAUDE.md`/`AGENTS.md`-Lesen (A11) |
 | Merge-/Release-Gate | `templates/devbox_merge_gate.py` (nur nach Projektentscheidung) |
 
-1. **Prüfen:** `claude plugin list` selbst ausführen. Ist `superpowers` installiert und aktiv, weiter mit dem Probeaufruf. Gleichwertige vorhandene Skills (`~/.claude/skills`, `.claude/skills`, A12) behalten, nichts doppelt installieren.
+1. **Prüfen:** `claude plugin list` selbst ausführen (ist `claude` nicht im Suchpfad, weiter mit dem Probeaufruf in Schritt 3). Ist `superpowers` installiert und aktiv, weiter mit dem Probeaufruf. Gleichwertige vorhandene Skills (`~/.claude/skills`, `.claude/skills`, A12) behalten, nichts doppelt installieren.
 2. **Installieren (falls nötig):** `claude plugin install superpowers@claude-plugins-official` selbst ausführen (Kommandozeile; der offizielle Marktplatz wird bei der ersten interaktiven Sitzung automatisch eingetragen). Alternativ tippt der Nutzer `/plugin install superpowers@claude-plugins-official`. Danach eine neue Sitzung (oder der Nutzer tippt `/reload-plugins`).
 3. **Probeaufruf:** In der neuen Sitzung prüfst du deine eigene Liste verfügbarer Skills; sie muss `superpowers:brainstorming` enthalten. Kannst du sie nicht einsehen, tippt der Nutzer `/skills` und nennt dir das Ergebnis. Nur die tatsächliche Liste in der laufenden Sitzung zählt.
 
@@ -97,7 +97,7 @@ Sperrregeln (deny) für Standard und Selbstständig:
 - `bypassPermissions` nicht anbieten; laut Anthropic nur für isolierte Container oder VMs (A9).
 - **Linux und WSL2:** Die Sandbox braucht `bubblewrap` und `socat` (A10). Gehört zum Profil Standard bzw. Selbstständig: `command -v bwrap socat` prüfen; fehlt etwas, `sudo apt-get install -y bubblewrap socat`. Danach selbst prüfen: `bwrap --ro-bind / / --unshare-user --unshare-net true` muss mit Exit 0 enden.
 - Endet diese Prüfung mit `Operation not permitted` oder `setting up uid map: Permission denied`, blockiert unter Ubuntu 24.04 die AppArmor-Sperre für Benutzer-Namensräume `bwrap`. Abhilfe (wie beim Codex-Weg, C15; in einer frischen Ubuntu-24.04-VM geprüft): `sudo apt install apparmor-profiles`, `sudo install -m 0644 /usr/share/apparmor/extra-profiles/bwrap-userns-restrict /etc/apparmor.d/bwrap-userns-restrict`, `sudo apparmor_parser -r /etc/apparmor.d/bwrap-userns-restrict`, dann erneut prüfen. Die systemweite Abschaltung der Sperre bietest du nicht an.
-- Abschließend tippt der Nutzer `/sandbox` und nennt dir den angezeigten Zustand.
+- Geänderte Einstellungen gelten ab der nächsten Claude-Code-Sitzung. Abschließend tippt der Nutzer in einer neuen Sitzung `/sandbox` und nennt dir den angezeigten Zustand.
 - Bestehende Einstellungen vorlesen, nur Abweichungen ansprechen, andere Einträge erhalten. Datei nur nach der Antwort ändern.
 - Prüfung: `~/.claude/settings.json` lesen; den Nutzer `/permissions` bzw. `/sandbox` eintippen lassen; wirksamen Modus nennen.
 - Die Sperrregeln sind eine zusätzliche Sicherung. Die Befugnisgrenzen selbst stehen in den Projektregeln.

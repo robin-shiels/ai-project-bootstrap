@@ -80,6 +80,7 @@ Du kannst auch eine eigene Antwort schreiben.
 | Arbeitsumgebung | `local_agent` | 1. Welche Oberfläche möchtest du verwenden (App oder Terminal)? – nur wenn auf diesem Weg beide gleichwertig verfügbar sind |
 | Berechtigungen | `permissions` | 1. Welches Berechtigungsprofil soll der Agent bekommen? |
 | Projekt | `project` | 1. Neues oder bestehendes Projekt? Danach die Fragen des Projektstandards (siehe Abschnitt 9) als eigener Block |
+| Einzelfragen | `save_state`, `handover`, `trial` | Speicherort des Stands, Entpacken des Pakets, Verbleib des Probe-Branches: jeweils „Frage 1 von 1“ |
 
 Welche Abos welche Wege erlauben, steht in der jeweiligen Anbieterdatei. Wählt der Nutzer ein Abo, das den lokalen Agenten nicht enthält, sage das konkret und nenne den tatsächlich nötigen Plan. Damit entsteht eine echte Entscheidung: Kündige sie als zusätzliche Frage an und passe die Zählung offen an (zum Beispiel „Durch deine Antwort kommt eine Frage dazu: Frage 2 von 3“). Optionen: Plan selbst wechseln, den anderen Anbieterweg nehmen (falls dort enthalten), oder Stand sichern und später fortsetzen. Der Nutzer entscheidet selbst; du kaufst, kündigst oder wechselst nichts. Stelle diese Frage vor der nächsten Frage des Blocks.
 
@@ -102,7 +103,7 @@ Nach jedem erledigten Schritt im lokalen Agenten automatisch; im reinen Chat nac
 2. **Entscheidungen übernehmen.** Nicht erneut fragen.
 3. **Veränderliche Nachweise neu prüfen.** Nachweise mit `scope` `host`, `chat_access` oder `repository` und solche aus einem anderen `context` sind Vorgeschichte, kein aktueller Beweis. Prüfe sie im neuen Kontext erneut, bevor du dich darauf stützt. Ein Dateiname, ein gespeichertes „ok“ oder ein früherer Chat beweist nicht, dass etwas jetzt installiert oder verbunden ist.
 4. `account`-Nachweise (Nutzerangaben zu Konten) bleiben gültig, bis der Schritt sie braucht; dann kurz tatsächlich prüfen.
-5. Am ersten nicht erfüllten Schritt weitermachen.
+5. Am ersten nicht erfüllten Schritt weitermachen. `current_step` ist immer der erste noch nicht erledigte Schritt, auch wenn spätere Schritte schon erledigt sind.
 
 Ist die Datei ungültig oder fehlt sie, sage konkret, was fehlt, übernimm alles Gültige und frage nur die fehlenden Entscheidungen.
 
@@ -149,7 +150,7 @@ Im Schritt `project` gilt `UNIVERSAL_PROJECT_BOOTSTRAP.md` aus dem Paket vollst�
 - Änderungen an den Projektregeln landen auf einem eigenen Branch (zum Beispiel `setup/projektstandard-JJJJMMTT`), nie direkt auf `main`.
 - Die Fragen des Projektstandards sind ein eigener Fragenblock mit eigener Zählung.
 
-Für Claude Code: Liegt im Projekt `AGENTS.md`, aber kein `CLAUDE.md`, lies `AGENTS.md`. Wird ein `CLAUDE.md` gebraucht, importiert es `AGENTS.md` mit der Zeile `@AGENTS.md`, statt Regeln doppelt zu führen (Details in `providers/claude-code.md`).
+Für Claude Code: Liegt im Projekt `AGENTS.md`, aber kein `CLAUDE.md`, lies `AGENTS.md`. Wird ein `CLAUDE.md` gebraucht, importiert es `AGENTS.md` mit der Zeile `@AGENTS.md`, statt Regeln doppelt zu führen (Details in `providers/claude-code.md`). Ist die Claude-Code-Version unbekannt, lege dieses `CLAUDE.md` mit `@AGENTS.md` an; das wirkt in jeder Version.
 
 ## 10. Probelauf
 
@@ -172,6 +173,8 @@ Der Abschluss nennt nur, was tatsächlich nachgewiesen ist:
 - je Schritt: erledigt mit Nachweisart (Werkzeugprüfung oder Nutzerangabe) oder offen;
 - Probelauf mit Branch, Commit und Remote-Gleichheit;
 - verbleibende Blocker mit dem konkreten nächsten Schritt.
+
+Liegen neue Projektregeln nur auf ihrem eigenen Branch, nenne als nächsten Schritt, sie zur Integration vorzulegen (zum Beispiel als Pull Request); der Merge braucht die Freigabe des Nutzers bzw. die Projektregeln.
 
 Eine teilweise Einrichtung heißt „teilweise eingerichtet“, nicht „fertig“. Fragt der Nutzer nach dem Ende, während ein Schritt blockiert ist: sag „noch nicht fertig“, nenne den offenen Schritt, den Blocker und genau den nächsten Schritt, trage den Blocker im Stand ein und sichere ihn (Abschnitt 7) – ohne lange Gesamtliste. Die vollständige Liste je Schritt gehört in den Abschlussbericht, wenn alle Schritte erledigt sind oder der Nutzer sie verlangt.
 
