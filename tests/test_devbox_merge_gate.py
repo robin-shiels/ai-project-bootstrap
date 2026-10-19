@@ -1043,6 +1043,7 @@ class TemplateHygieneTests(unittest.TestCase):
         r"(?m)^\s+(push|pull_request|pull_request_target|merge_group|schedule|workflow_run|"
         r"check_suite|check_run|issue_comment|repository_dispatch|release|deployment)\s*:"
     )
+    ACTIVE_WORKFLOWS = frozenset({"platform-tests.yml"})
 
     def test_workflow_examples_are_dispatch_only(self) -> None:
         workflows = sorted((ROOT / "templates").glob("*.yml")) + sorted(
@@ -1050,13 +1051,17 @@ class TemplateHygieneTests(unittest.TestCase):
         )
         self.assertTrue(workflows, "no workflow example found")
         for path in workflows:
-            if path.parts[-2] == "workflows" and ".github" in path.parts:
-                self.fail(f"this repository must not carry an active workflow: {path}")
             text = "\n".join(
                 line
                 for line in path.read_text().splitlines()
                 if not line.lstrip().startswith("#")
             )
+            if path.parts[-2] == "workflows" and ".github" in path.parts:
+                # The only active workflow is the manual platform test (owner
+                # decision 2026-10-19): read-only, no third-party actions.
+                self.assertIn(path.name, self.ACTIVE_WORKFLOWS, path)
+                self.assertRegex(text, r"(?m)^permissions:\s*\n\s+contents: read\s*$")
+                self.assertNotIn("uses:", text)
             self.assertRegex(text, r"(?m)^on:\s*\n\s+workflow_dispatch:", path.name)
             self.assertIsNone(self.FORBIDDEN_EVENTS.search(text), path.name)
             self.assertNotIn("self-hosted", text)
