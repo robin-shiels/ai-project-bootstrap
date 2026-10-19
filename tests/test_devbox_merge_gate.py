@@ -54,6 +54,11 @@ def git(cwd: Path, *args: str) -> str:
     ).stdout.strip()
 
 
+def toml_path(value: object) -> str:
+    """A path inside a TOML basic string; Windows backslashes are escaped."""
+    return str(value).replace("\\", "\\\\")
+
+
 def config_text(state_dir: Path, **overrides: str) -> str:
     values = {
         "untrusted_code": '"refuse"',
@@ -110,7 +115,7 @@ def config_text(state_dir: Path, **overrides: str) -> str:
         watched_user_services = []
 
         [state]
-        dir = "{state_dir}"
+        dir = "{toml_path(state_dir)}"
         temp_ref_prefix = "refs/heads/merge-gate/"
 
         [environment]
@@ -129,7 +134,7 @@ def config_text(state_dir: Path, **overrides: str) -> str:
 
         [[steps]]
         name = "app tests"
-        argv = ["{sys.executable}", "-c", "{FAIL_STEP}"]
+        argv = ["{toml_path(sys.executable)}", "-c", "{FAIL_STEP}"]
         timeout_s = 60
         plans = ["full", "release"]
         application = true
@@ -747,7 +752,7 @@ class NegativeTests(GateTestCase):
             f"""\
             [[steps]]
             name = "slow"
-            argv = ["{sys.executable}", "-c", "{SLEEP_STEP}"]
+            argv = ["{toml_path(sys.executable)}", "-c", "{SLEEP_STEP}"]
             timeout_s = 1
             plans = ["full", "release"]
             application = false
@@ -802,7 +807,7 @@ class NegativeTests(GateTestCase):
             f"""\
             [[steps]]
             name = "leaky"
-            argv = ["{sys.executable}", "-c", "{LEAK_STEP}"]
+            argv = ["{toml_path(sys.executable)}", "-c", "{LEAK_STEP}"]
             timeout_s = 30
             plans = ["full", "release"]
             application = false
@@ -1068,6 +1073,13 @@ class PlatformPortabilityTests(unittest.TestCase):
             path = Path(tmp) / "gate.toml"
             path.write_text(text)
             return gate.load_config(path)
+
+    def test_config_fixture_accepts_windows_paths(self) -> None:
+        text = config_text(Path("C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\state"))
+        data = gate.tomllib.loads(text)
+        self.assertEqual(
+            data["state"]["dir"], "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\state"
+        )
 
     def test_platform_mapping(self) -> None:
         self.assertEqual(gate.host_platform("linux"), "linux")
