@@ -2,7 +2,7 @@
 
 **Für dich:** Öffne einen neuen Chat mit ChatGPT oder Claude. Lade diese Datei hoch oder kopiere ihren ganzen Inhalt in das Eingabefeld, und schreibe dazu „Start“. Mehr musst du vorher nicht lesen; alles Weitere erklärt dir die KI Schritt für Schritt.
 
-Paket 2.1.0 · Quelle `robin-shiels/ai-project-bootstrap` @ `678c15addaacaa4e5b45149eb8ccdb842f065ca8`
+Paket 2.1.0 · Quelle `robin-shiels/ai-project-bootstrap` @ `fffd4ad17ae62f981e0c8a338f656223ffb4e280`
 
 ---
 
@@ -351,7 +351,7 @@ Ist `ANTHROPIC_API_KEY` gesetzt, rechnet Claude Code über die API ab statt übe
 | Windows | Claude Code CLI **in WSL2** | – | nein |
 | Linux | Claude Code CLI | Desktop-App (Beta, Ubuntu 22.04+/Debian 12+, A7) | nein; CLI empfehlen, Beta nur auf Wunsch |
 
-Windows ohne WSL2: Die Desktop-App und die native Windows-CLI laufen direkt unter Windows. Dort gibt es keine Claude-Code-Sandbox (A10) und kein lokales Merge-Gate (`DEVBOX_GATE_POLICY.md` §10). Deshalb ist der Standard auf Windows die CLI in WSL2. Wünscht der Nutzer trotzdem den nativen Weg, nenne genau diese zwei Folgen und lass ihn entscheiden.
+Windows ohne WSL2: Die Desktop-App und die native Windows-CLI laufen direkt unter Windows. Dort gibt es keine Claude-Code-Sandbox (A10) und kein lokales Merge-Gate (`DEVBOX_GATE_POLICY.md` §10). Deshalb ist der Standard auf Windows die CLI in WSL2. Wünscht der Nutzer trotzdem den nativen Weg, nenne genau diese zwei Folgen und lass ihn entscheiden. Auf dem nativen Weg (`irm https://claude.ai/install.ps1 | iex`) meldet der Installer, wenn `%USERPROFILE%\.local\bin` nicht im PATH steht (auf einem GitHub-Windows-Runner so beobachtet); dann diesen Ordner zum Benutzer-PATH hinzufügen und ein neues Terminal öffnen, bevor `claude --version` geprüft wird.
 
 **Installation CLI (A5):**
 
