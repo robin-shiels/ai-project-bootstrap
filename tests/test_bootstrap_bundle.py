@@ -7,6 +7,7 @@ as they are now, exactly as a real build reads them from a commit.
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import io
 import json
@@ -242,6 +243,41 @@ class BundleTest(unittest.TestCase):
             self.assertEqual(
                 completed.returncode, 0, completed.stdout + completed.stderr
             )
+
+
+class GateHostProbeTest(unittest.TestCase):
+    SCRIPT = ROOT / "scripts" / "probe_gate_host.py"
+
+    def test_probe_runs_on_this_host(self) -> None:
+        completed = subprocess.run(
+            (sys.executable, str(self.SCRIPT)),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if sys.platform.startswith("linux") or sys.platform == "darwin":
+            self.assertEqual(
+                completed.returncode, 0, completed.stdout + completed.stderr
+            )
+            self.assertIn("preflight: ok", completed.stdout)
+            self.assertIn("memory available:", completed.stdout)
+        else:
+            self.assertEqual(completed.returncode, 10, completed.stdout)
+
+    def test_probe_reports_native_windows_stop(self) -> None:
+        import probe_gate_host
+
+        probe_gate_host.load_gate()  # import every dependency on the real platform
+        original = sys.platform
+        sys.platform = "win32"
+        try:
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                code = probe_gate_host.main([])
+        finally:
+            sys.platform = original
+        self.assertEqual(code, 10, out.getvalue())
+        self.assertIn("STOP PRECONDITION", out.getvalue())
+        self.assertIn("WSL 2", out.getvalue())
 
 
 if __name__ == "__main__":

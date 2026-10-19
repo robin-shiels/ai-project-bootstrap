@@ -79,4 +79,5 @@ Je Kombination (ChatGPT/Codex bzw. Claude/Claude Code × macOS/Windows/Linux) re
 2. Installation und Anmeldung des lokalen Agenten (`local_agent`), dann `handover` mit dem gespeicherten Stand (D7).
 3. Schritte bis `permissions` mit tatsächlichen Werkzeugprüfungen (Z08).
 4. P1 gegen ein freigegebenes Test-Repository.
-5. Ergebnis mit OS-/Werkzeugversionen, Paketversion, Quell-SHA, Datum, Prüfer und Nachweisen eintragen.
+5. Gate-Weg: im entpackten Paket `python3 -m unittest discover -s tests` und `python3 scripts/probe_gate_host.py` (Windows: beides in WSL; zusätzlich einmal unter nativem Windows `py scripts\probe_gate_host.py`, erwartet: `STOP PRECONDITION` mit Hinweis auf WSL 2, Exit 10).
+6. Ergebnis mit OS-/Werkzeugversionen, Paketversion, Quell-SHA, Datum, Prüfer und Nachweisen eintragen.

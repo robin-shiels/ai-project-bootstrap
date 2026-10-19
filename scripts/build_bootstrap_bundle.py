@@ -49,6 +49,7 @@ BUNDLE_FILES = (
     "onboarding/platforms/linux.md",
     "scripts/build_bootstrap_bundle.py",
     "scripts/onboarding_state.py",
+    "scripts/probe_gate_host.py",
     "templates/AGENTS_DEVBOX_GATE.md",
     "templates/CLAUDE_DEVBOX_GATE.md",
     "templates/CODEX_BOOTSTRAP_PROMPT.md",
@@ -76,6 +77,7 @@ EMBEDDED = (
 EXECUTABLE = {
     "scripts/build_bootstrap_bundle.py",
     "scripts/onboarding_state.py",
+    "scripts/probe_gate_host.py",
     "templates/devbox_merge_gate.py",
 }
 
