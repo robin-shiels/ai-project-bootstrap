@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.1.0 — Guided personal setup — 2026-10-19
+
+Compatible addition. No existing project rule, publication policy or gate stop condition changes.
+
+- Added the guided personal setup in German ([`onboarding/`](onboarding/ENTRY.md)): shared dialog control (only the current step, check before asking, „Frage X von Y“ with options and a recommendation, short confirmation on success, concrete diagnosis only for actual problems, questions in the same chat with return to the same step), a step catalog with evidence types, and equal paths for ChatGPT/Codex and Claude/Claude Code on macOS, Windows (WSL 2) and Linux. Own computer by default; dev box optional.
+- Added a versioned, secret-free setup state ([schema](onboarding/STATE.schema.json), [example](onboarding/STATE.example.json)) with an actual validator ([`scripts/onboarding_state.py`](scripts/onboarding_state.py)); saved before GitHub exists, re-read in a new chat with decisions kept and access/installations re-checked.
+- Added the deterministic bundle build ([`scripts/build_bootstrap_bundle.py`](scripts/build_bootstrap_bundle.py)): `START_HIER.md`, `AI-Bootstrap-<version>.zip` with `BUNDLE_MANIFEST.json` (version, full source commit, file hashes) and `SHA256SUMS`, built from a Git commit without network access.
+- Gate platforms ([policy §10](DEVBOX_GATE_POLICY.md#10-platforms)): native macOS through a small host adapter (memory from `vm_stat`/`sysctl`, processes from `ps`), with `systemd_scope = true` or watched user services stopping as `PRECONDITION` instead of being ignored; native Windows stops with `PRECONDITION` naming WSL 2, where the Linux reference runs unchanged. Linux behavior is unchanged. This changes the gate script, so adopting projects integrate it through a separately approved gate PR.
+- Single version source [`VERSION`](VERSION); standard, policy, manifest and templates now name v2.1.0. The v2.0.1 entry below stays the gate hardening release; v2.0.0 remains the policy baseline.
+- Mapped the manifest capabilities to verified candidate implementations for both providers and stated the Claude Code equivalence of the Codex roles.
+
+### Migration from v2.0.x
+
+Nothing to change in an adopted project. A project that copied the gate script may adopt the v2.1.0 script through its usual gate PR with owner approval; until then its v2.0.1 copy keeps working on Linux. Update the project's bootstrap marker only after confirming its rules still reconcile.
+
 ## 2.0.1 — Gate template hardening — 2026-10-19
 
 Compatible fixes from the first real gate runs in adopting projects; the policy is unchanged.

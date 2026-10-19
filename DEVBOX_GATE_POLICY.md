@@ -1,6 +1,6 @@
 # Dev-box merge gate policy
 
-**Standard:** Universal Project Bootstrap v2.0.0 · **Policy version:** 1
+**Standard:** Universal Project Bootstrap v2.1.0 · **Policy version:** 1
 
 This is the binding, product-neutral contract for projects that adopt the
 dev-box merge gate. The reference implementation is

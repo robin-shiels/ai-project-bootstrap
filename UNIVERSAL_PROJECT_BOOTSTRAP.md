@@ -1,8 +1,8 @@
 # Universal Project Bootstrap Standard
 
-**Version:** 2.0.0
+**Version:** 2.1.0
 
-**Scope:** product-neutral ChatGPT + Codex workflow bootstrap  
+**Scope:** product-neutral AI workflow bootstrap (ChatGPT + Codex, Claude + Claude Code)  
 **Mode:** inventory-first, idempotent, conflict-aware
 
 ## Purpose
@@ -12,6 +12,12 @@ Bring new and existing projects to a consistent AI-assisted workflow without bli
 Every run follows:
 
 **Inventory → Compare → Classify → Reconcile → Discover missing project specifics → Validate → Generate Codex handoff**
+
+## Provider paths and guided personal setup
+
+This standard names ChatGPT (planning) and Codex (execution). The Claude path is equivalent: the Claude chat or Claude Code's plan mode takes the planning role and Claude Code the execution role; Claude Code reads `CLAUDE.md` and, without one, `AGENTS.md` (import `@AGENTS.md` where both exist). Wherever this standard says "Codex", the same contract applies to Claude Code, and configuring one side never implies the other is configured. Provider details: [`onboarding/providers/`](onboarding/providers/chatgpt-codex.md).
+
+A person without a working personal environment starts with the guided setup ([`onboarding/ENTRY.md`](onboarding/ENTRY.md), delivered as `START_HIER.md`). It establishes the local agent, Git/GitHub access, check tools, skills and a permission profile with actual evidence and a resumable, secret-free state, then hands over to this standard at "Inventory first". The setup grants no authority beyond what this standard and the project's rules grant.
 
 ## Inventory first
 
@@ -233,7 +239,7 @@ The final instructions must preserve universal workflow + project-specific rules
 
 A project may record:
 
-`Universal Project Bootstrap: v2.0.0`
+`Universal Project Bootstrap: v2.1.0`
 
 The marker is evidence only; future upgrades still inspect actual semantics.
 
@@ -272,6 +278,8 @@ Always inspect semantics; never trust only a stored version.
 An upgrade must not erase project-specific additions. An older universal behavior is OUTDATED when the new standard improves it without changing local intent; if the old behavior is an intentional local choice, it is CONFLICT.
 
 For v1.0.0 → v1.1.0, inventory each capability, strengthen evidence/results/lifecycle where intent is preserved, and retain existing publication authority. Do not apply new-project default B retrospectively. Show a restrictive-policy conflict before proposing an Owner change and leave the active restriction effective until that change is explicit. Update the version marker only to describe the actual reconciliation; unresolved areas remain listed, not hidden behind the marker.
+
+For v2.0.x → v2.1.0, no project rule changes: the guided personal setup and the gate's macOS/WSL 2 platform paths are additions. A project may update its marker after confirming its rules still reconcile.
 
 For v1.1.0 → v2.0.0, inventory existing workflows, required checks/rulesets/merge queue and merge rules first. Moving hosted CI to `workflow_dispatch`, adopting the gate and enabling own-task-PR auto-merge are one scoped, reviewable project task following the [rollout checklist](templates/DEVBOX_GATE_ROLLOUT_CHECKLIST.md); its bootstrap PR is never self-merged. Existing stricter merge or release rules are CONFLICT until the owner changes them. A project may record `v2.0.0` only after that reconciliation; recording it does not itself adopt the gate.
 

@@ -113,7 +113,7 @@ class ValidatorTest(unittest.TestCase):
             "ghp_" + "a" * 36,
             "github_pat_" + "b" * 40,
             "sk-ant-" + "c" * 30,
-            "-----BEGIN OPENSSH PRIVATE KEY-----",
+            "-----BEGIN OPENSSH " + "PRIVATE KEY-----",
             "Passwort: hunter2",
         ):
             state = copy.deepcopy(EXAMPLE)

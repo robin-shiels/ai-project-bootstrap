@@ -1,6 +1,6 @@
 # Codex Bootstrap Prompt Template
 
-**Bootstrap standard:** v2.0.0
+**Bootstrap standard:** v2.1.0
 
 ChatGPT generates a target-project-specific prompt after its own bootstrap is complete. Fill the setup context from inspected evidence; unresolved decisions stay explicit. The new-project default B notice must already be prominent in the ChatGPT setup response, with opt-out/per-task choices; this template alone does not deliver that notice or grant authority.
 
@@ -15,6 +15,8 @@ ChatGPT generates a target-project-specific prompt after its own bootstrap is co
 - Dev-box merge gate state (not adopted / bootstrap PR prepared / integrated with revision), hosted-CI triggers, merge exclusions and named project exceptions.
 
 Do not invent missing context or claim Codex is configured because ChatGPT is configured.
+
+**Claude path:** the same prompt bootstraps Claude Code as executor. Replace "Codex" with "Claude Code" and have it read `CLAUDE.md` (or `AGENTS.md` when no `CLAUDE.md` exists; where both exist, `CLAUDE.md` imports `@AGENTS.md`). Configuring the Claude chat does not imply Claude Code is configured.
 
 ## Prompt
 
