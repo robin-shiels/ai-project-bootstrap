@@ -2249,6 +2249,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             f"config valid: {config.slug} {config.integration_ref} sha256 {config.raw_sha256}"
         )
         return int(Code.PASS)
+    if args.mode in ("check-only", "merge-ff"):
+        try:
+            platform_preflight(config)
+        except GateStop as stop:
+            print(f"STOP {stop.code.name}: {stop.message}", file=sys.stderr)
+            return int(stop.code)
     repo_dir = Path(
         run_text(("git", "rev-parse", "--show-toplevel"), cwd=args.repo_dir).strip()
     )
@@ -2287,11 +2293,6 @@ def main(argv: Sequence[str] | None = None) -> int:
             expect_head=args.expect_head,
             confirm_own_task_pr=args.confirm_own_task_pr,
         )
-    try:
-        platform_preflight(config)
-    except GateStop as stop:
-        print(f"STOP {stop.code.name}: {stop.message}", file=sys.stderr)
-        return int(stop.code)
     gate = Gate(
         config,
         options,

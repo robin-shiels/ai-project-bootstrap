@@ -1108,7 +1108,17 @@ class PlatformPortabilityTests(unittest.TestCase):
             gate.sys.platform = "win32"
             try:
                 with contextlib.redirect_stderr(io.StringIO()) as err:
-                    code = gate.main(["--config", str(path), "check-only", "--pr", "1"])
+                    code = gate.main(
+                        [
+                            "--config",
+                            str(path),
+                            "--repo-dir",
+                            tmp,  # deliberately not a Git repository
+                            "check-only",
+                            "--pr",
+                            "1",
+                        ]
+                    )
             finally:
                 gate.sys.platform = original
         self.assertEqual(code, int(gate.Code.PRECONDITION))
