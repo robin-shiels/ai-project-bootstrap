@@ -12,4 +12,3 @@ Quellstand: `678c15addaacaa4e5b45149eb8ccdb842f065ca8` (steht auch in `START_HIE
 
 Status: **PACKAGE_BUILT**, nicht freigegeben. Real geprüft sind nur Teile der beiden Linux-Wege; siehe `docs/results/GUIDED_BOOTSTRAP_V1_ACCEPTANCE.md`. Kein Release, kein Tag.
 
-Hinweis: Das Repository ist seit dem 2026-10-19 privat. Die Dateien sind nur mit Zugriff auf das Repository herunterladbar.
