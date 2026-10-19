@@ -28,7 +28,7 @@ Läufst du bereits als lokaler Agent in WSL (zum Beispiel Codex mit WSL2-Agent o
 - **ChatGPT/Codex:** Desktop-App unter Windows installieren, in den Einstellungen den Agenten auf WSL2 umstellen, App neu starten; oder Codex CLI im WSL-Terminal (siehe Anbieterdatei).
 - **Claude/Claude Code:** Claude Code CLI im WSL-Terminal mit dem Linux-Befehl installieren (siehe Anbieterdatei).
 
-Der Ordner aus dem Schritt `handover` liegt in WSL, zum Beispiel `~/ai-bootstrap`. Die heruntergeladenen Dateien aus dem Windows-Ordner „Downloads“ kopierst du im WSL-Terminal mit `cp /mnt/c/Users/<Windows-Name>/Downloads/AI-Bootstrap-*.zip ~/ai-bootstrap/` (den Namen mit `ls /mnt/c/Users/` feststellen) und entpackst mit `unzip` (bei Bedarf `sudo apt-get install -y unzip`).
+Der Ordner aus dem Schritt `handover` liegt in WSL, zum Beispiel `~/ai-bootstrap`. Die heruntergeladenen Dateien aus dem Windows-Ordner „Downloads“ kopierst du im WSL-Terminal mit `cp /mnt/c/Users/<Windows-Name>/Downloads/AI-Bootstrap-*.zip ~/ai-bootstrap/` (den Namen mit `ls /mnt/c/Users/` feststellen) und entpackst mit `python3 -m zipfile -e ~/ai-bootstrap/AI-Bootstrap-<version>.zip ~/ai-bootstrap/` (kein `unzip` nötig).
 
 ## Alle weiteren Schritte
 

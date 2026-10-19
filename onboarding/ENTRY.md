@@ -36,6 +36,8 @@ Für jeden Schritt aus dem Katalog (Abschnitt 8), in der Reihenfolge des gewähl
 
 Stellt der Nutzer zwischendurch eine Frage, beantworte sie und kehre dann zu genau diesem Schritt zurück („Zurück zu …“). Eine Zwischenfrage ist kein Fehler und kein Grund, Schritte zu wiederholen.
 
+Ist ein Schritt blockiert (eine Nutzeraktion bleibt aus, eine Voraussetzung fehlt), trage den Blocker mit dem konkreten nächsten Schritt im Stand ein und mache mit den folgenden Schritten weiter, die nicht davon abhängen. Hängt ein späterer Schritt davon ab, nutze nur Nutzerangaben als vorläufigen Ersatz und kennzeichne sie so.
+
 ## 4. Was kannst du tatsächlich? (Laufzeitkontext)
 
 Stelle im Schritt `context` fest, in welcher Umgebung du gerade läufst. Es gibt drei Fälle:
@@ -45,6 +47,8 @@ Stelle im Schritt `context` fest, in welcher Umgebung du gerade läufst. Es gibt
 - **Cloud-Agent** (zum Beispiel Codex Cloud oder Claude Code im Web): Du arbeitest in einer Cloud-Umgebung mit einem GitHub-Repository, nicht auf dem Computer des Nutzers. Für die persönliche Einrichtung zählt das wie ein reiner Chat.
 
 Nur im Fall „Lokaler Agent“ sind Nachweise mit `scope: "host"` und `source: "tool_check"` möglich. Im reinen Chat stammt jede Aussage über den Computer aus einer Nutzerangabe (`source: "user_confirmation"`), und du sagst das auch so.
+
+Auch ein lokaler Agent kann die Slash-Befehle seiner eigenen Oberfläche (zum Beispiel `/plugin`, `/skills`, `/sandbox`, `/status`, `/permissions`) nicht selbst ausführen. Nutze dafür die Kommandozeilenbefehle aus der Anbieterdatei (zum Beispiel `claude plugin …`, `codex plugin …`) oder bitte den Nutzer, den Slash-Befehl einzutippen und dir das Ergebnis zu sagen (dann `user_confirmation`).
 
 ## 5. Entscheidungen: Frageformat
 
@@ -111,7 +115,7 @@ Die Spalte „Prüfung“ ist der Nachweis. Die konkreten Befehle stehen in den 
 | `start` | Nutzer weiß, wie die Begleitung funktioniert | Erste Nachricht aus Abschnitt 2 gesendet | – |
 | `context` | Klar, ob du Befehle auf dem Computer ausführen kannst | Abschnitt 4; im lokalen Agenten ein harmloser Befehl mit gelesener Ausgabe | `host`/`tool_check` oder Feststellung „reiner Chat“ |
 | `path` | Anbieterweg und Betriebssystem stehen fest | Entscheidungen `provider_path` und `platform` im Zustand; im lokalen Agenten Betriebssystem per Befehl | Entscheidung, `host`/`tool_check` |
-| `save_state` | Stand ist außerhalb des Chats gesichert | Nutzer bestätigt gespeicherte Datei bzw. Datei liegt unter `~/.ai-bootstrap/` | `user_confirmation` oder `tool_check` |
+| `save_state` | Stand ist außerhalb des Chats gesichert | Nutzer bestätigt gespeicherte Datei bzw. Datei liegt unter `~/.ai-bootstrap/` | `host`/`user_confirmation` (Chat) oder `host`/`tool_check` |
 | `local_agent` | Lokaler Agent installiert und angemeldet | Version und Anmeldestatus in der Laufzeit des Agenten (Anbieterdatei) | `host`/`tool_check` (im Chat zunächst `user_confirmation`) |
 | `handover` | Einrichtung läuft im lokalen Agenten weiter | Agent liest Startdatei und Stand, Kontextprüfung ergibt „lokaler Agent“ | `host`/`tool_check` |
 | `wsl` | Nur Windows: Linux-Umgebung WSL 2 bereit | `wsl -l -v` zeigt eine Distribution mit Version 2; im WSL-Terminal `uname -a` | `host`/`tool_check` |
@@ -130,7 +134,7 @@ Die Spalte „Prüfung“ ist der Nachweis. Die konkreten Befehle stehen in den 
 
 Reihenfolge: `start` → `context` → `path` → `save_state` → `local_agent` → `handover` → (Windows: `wsl`) → `git` → `github_account` → `github_cli` → `git_identity` → `python` → `skills` → `permissions` → `project` → `chat_github` (nur wenn der Nutzer einen Planungschat mit GitHub-Zugriff nutzen will) → `trial` → `done`. `devbox` nur auf Wunsch.
 
-Ist der Agent schon lokal gestartet (Kontextprüfung ergibt „lokaler Agent“), sind `local_agent` und `handover` durch die laufende Sitzung belegt und werden ohne Nutzeraktion bestätigt. `save_state` braucht dann nur die Zustimmung zum Speicherort aus §7.1 (eine Frage), keine weitere Nutzeraktion.
+Ist der Agent schon lokal gestartet (Kontextprüfung ergibt „lokaler Agent“), sind `local_agent` und `handover` durch die laufende Sitzung belegt und werden ohne Nutzeraktion bestätigt. `save_state` braucht dann nur die Zustimmung zum Speicherort aus §7.1 (eine Frage), keine weitere Nutzeraktion. Liegt das Paket noch als ZIP vor (zum Beispiel in `~/Downloads`), entpackst du es nach Zustimmung selbst mit `python3 -m zipfile -e <zip> <zielordner>` (kein `unzip` nötig) und prüfst den Stand danach mit `scripts/onboarding_state.py`; bis dahin prüfst du ihn von Hand nach `STATE.schema.json`.
 
 ## 9. Projektebene
 
@@ -140,7 +144,9 @@ Im Schritt `project` gilt `UNIVERSAL_PROJECT_BOOTSTRAP.md` aus dem Paket vollst�
 - **Neues Projekt:** Den Hinweis zur Veröffentlichung eigener Task-Branches aus dem Standard deutlich zeigen (Standard B, mit den Wahlmöglichkeiten ALLOW_AFTER_CHECKS, PER_TASK_APPROVAL, DISABLED) und die wirksame Wahl in den Projektanweisungen festhalten.
 - **Bestehendes Projekt:** Vorhandene Regeln und Einschränkungen erhalten; Widersprüche als CONFLICT vorlegen.
 - Das lokale Merge-Gate (`DEVBOX_GATE_POLICY.md`) ist eine eigene Projektentscheidung („jetzt oder später übernehmen“), keine Voraussetzung für den Probelauf.
-- Fehlen Projektziele und Regeln, nutze die Brainstorming-Fähigkeit und `templates/PROJECT_DISCOVERY.md`.
+- **Neu oder bestehend:** Bestehend ist ein Projekt, das schon Projektregeln oder eine festgelegte Arbeitsweise hat (zum Beispiel `AGENTS.md`, `CLAUDE.md`, Beitragsregeln). Ein Repository mit Code, aber ohne solche Regeln, behandelst du wie ein neues Projekt und sagst das dem Nutzer.
+- Fehlen Projektziele und Regeln, nutze die Brainstorming-Fähigkeit und `templates/PROJECT_DISCOVERY.md`. Ist die Brainstorming-Fähigkeit (noch) nicht aktiv, nutze `PROJECT_DISCOVERY.md` direkt als Leitfaden und stelle nur die nötigen Fragen.
+- Änderungen an den Projektregeln landen auf einem eigenen Branch (zum Beispiel `setup/projektstandard-JJJJMMTT`), nie direkt auf `main`.
 - Die Fragen des Projektstandards sind ein eigener Fragenblock mit eigener Zählung.
 
 Für Claude Code: Liegt im Projekt `AGENTS.md`, aber kein `CLAUDE.md`, lies `AGENTS.md`. Wird ein `CLAUDE.md` gebraucht, importiert es `AGENTS.md` mit der Zeile `@AGENTS.md`, statt Regeln doppelt zu führen (Details in `providers/claude-code.md`).
@@ -150,10 +156,10 @@ Für Claude Code: Liegt im Projekt `AGENTS.md`, aber kein `CLAUDE.md`, lies `AGE
 Der Probelauf zeigt, dass die Einrichtung wirklich funktioniert. Nur mit Ressourcen, die der Nutzer dafür freigibt; nie auf `main` oder Produktion.
 
 1. Repository lesen: die Projektanweisungen und eine weitere Datei lesen und kurz zusammenfassen.
-2. Eigenen Task-Branch anlegen (zum Beispiel `setup/probelauf-JJJJMMTT`).
+2. Eigenen Task-Branch anlegen, ohne Verfolgung von `main`: `git switch --no-track -c setup/probelauf-JJJJMMTT <basis>` (Basis: der Branch mit den neuen Projektregeln oder `origin/main`). Ein mit `git switch -c X origin/main` angelegter Branch verfolgt `main`, dann würde ein bloßes `git push` auf `main` zielen.
 3. Eine kleine, harmlose Teständerung machen (zum Beispiel eine Notiz `docs/SETUP_PROBELAUF.md` mit Datum).
 4. Eine passende Prüfung ausführen (mindestens `git diff --check`; vorhandene Projektprüfungen, wenn schnell und ungefährlich).
-5. Commit und Push genau dieses Branches, nur wenn die wirksame Veröffentlichungsregel des Projekts das erlaubt. Sonst bei LOCAL_COMPLETE stehen bleiben und das so benennen.
+5. Commit und Push genau dieses Branches mit ausdrücklichem Ziel (`git push -u origin setup/probelauf-JJJJMMTT`), nur wenn die wirksame Veröffentlichungsregel des Projekts das erlaubt. Sonst bei LOCAL_COMPLETE stehen bleiben und das so benennen.
 6. Ergebnis zurücklesen: lokaler und entfernter Branch-HEAD sind identisch (`git rev-parse HEAD` und `git ls-remote origin <branch>`).
 7. Den Nutzer fragen (Frage-Format), ob der Probe-Branch bleiben oder gelöscht werden soll. Löschen nur nach seiner Antwort.
 

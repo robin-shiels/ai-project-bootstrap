@@ -77,7 +77,9 @@ Eigene Beobachtung (Linux-Prüfrechner, 2026-10-19, `tool_check`): `codex plugin
 
 Ubuntu 24.04.4, Kernel 6.8, codex-cli 0.163.0, am 2026-10-19 (`tool_check`):
 
-- Ohne installiertes `bubblewrap` scheitert jeder Befehl in der Codex-Sandbox (`read-only` und `workspace-write`): `bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted`; `codex sandbox -- true` endet mit Exit 1. `kernel.apparmor_restrict_unprivileged_userns = 1`; `unshare --user --net` scheitert ebenso. Das ist genau der in C15 beschriebene Fall. Die Abhilfe nach C15 wurde auf diesem Rechner **nicht** angewendet (Systemänderung mit `sudo`, Owner-Aktion) und ist deshalb hier nicht als wirksam belegt.
+- Ohne installiertes `bubblewrap` scheitert jeder Befehl in der Codex-Sandbox (`read-only` und `workspace-write`): `bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted`; `codex sandbox -- true` endet mit Exit 1. `kernel.apparmor_restrict_unprivileged_userns = 1`; `unshare --user --net` scheitert ebenso. Das ist genau der in C15 beschriebene Fall. Die Abhilfe nach C15 wurde auf diesem Rechner **nicht** angewendet (Systemänderung am Owner-Rechner).
+
+Frische Ubuntu-24.04.5-VM (QEMU/KVM auf dem Prüfrechner, Cloud-Image, Kernel 6.8.0-147, 2026-10-19, `tool_check`): Ohne `bubblewrap` derselbe Fehler; nur `sudo apt install bubblewrap` (0.9.0) reicht **nicht** (weiter Exit 1); erst mit dem Profil `bwrap-userns-restrict` aus `apparmor-profiles` (`apparmor_parser -r`) endet `codex sandbox -- true` mit Exit 0. Danach blockiert die Sandbox Schreiben außerhalb des Arbeitsbereichs und das Netzwerk weiterhin, und `kernel.apparmor_restrict_unprivileged_userns` bleibt `1`. Dasselbe Profil macht `bwrap --ro-bind / / --unshare-user --unshare-net true` (Grundlage der Claude-Code-Sandbox) von Exit 1 zu Exit 0; Claude Codes eigenes `/sandbox` wurde in der VM nicht aufgerufen (keine Anmeldung). `claude plugin install <plugin>@<marktplatz>` und `codex plugin add <plugin>@<marktplatz>` existieren als Kommandozeilenbefehle (Hilfe gelesen).
 
 ## 5. Technische Entscheidungen
 

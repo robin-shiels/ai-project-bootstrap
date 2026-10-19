@@ -47,6 +47,10 @@ Das **Terminal** ist ein Fenster, in dem man Befehle eintippt; unter Ubuntu mit 
 
 Linux ist der Referenzweg des Merge-Gates (`DEVBOX_GATE_POLICY.md` §10). `systemd_scope = true` funktioniert nur, wenn ein systemd-Benutzerdienst läuft (`systemctl --user is-system-running`).
 
+## Paket entpacken
+
+Frisches Ubuntu hat oft kein `unzip`. Entpacken geht ohne Installation mit `python3 -m zipfile -e <zip> <zielordner>`.
+
 ## Speicherort des Einrichtungsstands
 
 `~/.ai-bootstrap/stand.json` (`mkdir -p ~/.ai-bootstrap`).
