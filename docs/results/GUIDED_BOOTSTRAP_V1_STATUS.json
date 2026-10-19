@@ -81,6 +81,7 @@
         "uvx ruff@latest check/format --check: ok",
         "38 Bestandstests + 10 Portabilitätstests OK",
         "probe_gate_host.py real Linux exit 0",
+        "Gate-Tests aus entpacktem ZIP in frischer VM: 63 OK (nach Korrektur F6)",
         "macOS/Windows nur Simulation"
       ],
       "blockers": [
@@ -123,11 +124,13 @@
         "docs/results/GUIDED_BOOTSTRAP_V1_ACCEPTANCE.md"
       ],
       "validation": [
-        "Linux beide Anbieter teilweise real; 4 Wege NOT_TESTED"
+        "Linux beide Anbieter real auf eingerichtetem Rechner und vom Nullzustand in frischer Ubuntu-24.04-VM (Läufe A, B, A2)",
+        "F5-Abhilfe in VM belegt",
+        "4 Wege NOT_TESTED"
       ],
       "blockers": [
-        "Kein macOS-/Windows-Gerät im Zugriff",
-        "Codex-Sandbox auf Ubuntu 24.04 (F5) braucht sudo-Abhilfe durch Owner",
+        "macOS/Windows: keine Geräte; VM auf der Dev-Box nicht machbar (Lizenz bzw. RAM/WSL-Verschachtelung)",
+        "Konto-Anmeldungen und Plugin-Installation im Nullzustand nicht durchgeführt (persönliche Aktionen; Owner testet nicht selbst)",
         "Webchat-Upload ChatGPT/claude.ai nicht real geprüft"
       ]
     },
@@ -148,7 +151,8 @@
       "blockers": []
     }
   ],
-  "next_action": "Owner: reale Abnahme auf macOS/Windows und in den Webchats nach ACCEPTANCE §8; F5-Abhilfe auf dem Linux-Prüfrechner; Owner-Integration des PR (enthält Gate-Änderung)",
+  "next_action": "Owner: Integration von PR #5 (enthält Gate-Änderung) entscheiden; reale macOS-/Windows-/Webchat-Abnahme bleibt offen (ACCEPTANCE §8)",
   "repository_state": "DONE_ON_BRANCH (nach Push; Remote-SHA in ACCEPTANCE §6)",
-  "product_state": "PACKAGE_BUILT"
+  "product_state": "PACKAGE_BUILT",
+  "artifact_source": "678c15addaacaa4e5b45149eb8ccdb842f065ca8"
 }

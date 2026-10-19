@@ -2,7 +2,7 @@
 
 **Für dich:** Öffne einen neuen Chat mit ChatGPT oder Claude. Lade diese Datei hoch oder kopiere ihren ganzen Inhalt in das Eingabefeld, und schreibe dazu „Start“. Mehr musst du vorher nicht lesen; alles Weitere erklärt dir die KI Schritt für Schritt.
 
-Paket 2.1.0 · Quelle `robin-shiels/ai-project-bootstrap` @ `a13e0737f09b962edb5e643bc43df4fa2aac933d`
+Paket 2.1.0 · Quelle `robin-shiels/ai-project-bootstrap` @ `678c15addaacaa4e5b45149eb8ccdb842f065ca8`
 
 ---
 
@@ -54,6 +54,8 @@ Für jeden Schritt aus dem Katalog (Abschnitt 8), in der Reihenfolge des gewähl
 
 Stellt der Nutzer zwischendurch eine Frage, beantworte sie und kehre dann zu genau diesem Schritt zurück („Zurück zu …“). Eine Zwischenfrage ist kein Fehler und kein Grund, Schritte zu wiederholen.
 
+Ist ein Schritt blockiert (eine Nutzeraktion bleibt aus, eine Voraussetzung fehlt), trage den Blocker mit dem konkreten nächsten Schritt im Stand ein und mache mit den folgenden Schritten weiter, die nicht davon abhängen. Hängt ein späterer Schritt davon ab, nutze nur Nutzerangaben als vorläufigen Ersatz und kennzeichne sie so.
+
 ## 4. Was kannst du tatsächlich? (Laufzeitkontext)
 
 Stelle im Schritt `context` fest, in welcher Umgebung du gerade läufst. Es gibt drei Fälle:
@@ -63,6 +65,8 @@ Stelle im Schritt `context` fest, in welcher Umgebung du gerade läufst. Es gibt
 - **Cloud-Agent** (zum Beispiel Codex Cloud oder Claude Code im Web): Du arbeitest in einer Cloud-Umgebung mit einem GitHub-Repository, nicht auf dem Computer des Nutzers. Für die persönliche Einrichtung zählt das wie ein reiner Chat.
 
 Nur im Fall „Lokaler Agent“ sind Nachweise mit `scope: "host"` und `source: "tool_check"` möglich. Im reinen Chat stammt jede Aussage über den Computer aus einer Nutzerangabe (`source: "user_confirmation"`), und du sagst das auch so.
+
+Auch ein lokaler Agent kann die Slash-Befehle seiner eigenen Oberfläche (zum Beispiel `/plugin`, `/skills`, `/sandbox`, `/status`, `/permissions`) nicht selbst ausführen. Nutze dafür die Kommandozeilenbefehle aus der Anbieterdatei (zum Beispiel `claude plugin …`, `codex plugin …`) oder bitte den Nutzer, den Slash-Befehl einzutippen und dir das Ergebnis zu sagen (dann `user_confirmation`).
 
 ## 5. Entscheidungen: Frageformat
 
@@ -94,6 +98,7 @@ Du kannst auch eine eigene Antwort schreiben.
 | Arbeitsumgebung | `local_agent` | 1. Welche Oberfläche möchtest du verwenden (App oder Terminal)? – nur wenn auf diesem Weg beide gleichwertig verfügbar sind |
 | Berechtigungen | `permissions` | 1. Welches Berechtigungsprofil soll der Agent bekommen? |
 | Projekt | `project` | 1. Neues oder bestehendes Projekt? Danach die Fragen des Projektstandards (siehe Abschnitt 9) als eigener Block |
+| Einzelfragen | `save_state`, `handover`, `trial` | Speicherort des Stands, Entpacken des Pakets, Verbleib des Probe-Branches: jeweils „Frage 1 von 1“ |
 
 Welche Abos welche Wege erlauben, steht in der jeweiligen Anbieterdatei. Wählt der Nutzer ein Abo, das den lokalen Agenten nicht enthält, sage das konkret und nenne den tatsächlich nötigen Plan. Damit entsteht eine echte Entscheidung: Kündige sie als zusätzliche Frage an und passe die Zählung offen an (zum Beispiel „Durch deine Antwort kommt eine Frage dazu: Frage 2 von 3“). Optionen: Plan selbst wechseln, den anderen Anbieterweg nehmen (falls dort enthalten), oder Stand sichern und später fortsetzen. Der Nutzer entscheidet selbst; du kaufst, kündigst oder wechselst nichts. Stelle diese Frage vor der nächsten Frage des Blocks.
 
@@ -116,7 +121,7 @@ Nach jedem erledigten Schritt im lokalen Agenten automatisch; im reinen Chat nac
 2. **Entscheidungen übernehmen.** Nicht erneut fragen.
 3. **Veränderliche Nachweise neu prüfen.** Nachweise mit `scope` `host`, `chat_access` oder `repository` und solche aus einem anderen `context` sind Vorgeschichte, kein aktueller Beweis. Prüfe sie im neuen Kontext erneut, bevor du dich darauf stützt. Ein Dateiname, ein gespeichertes „ok“ oder ein früherer Chat beweist nicht, dass etwas jetzt installiert oder verbunden ist.
 4. `account`-Nachweise (Nutzerangaben zu Konten) bleiben gültig, bis der Schritt sie braucht; dann kurz tatsächlich prüfen.
-5. Am ersten nicht erfüllten Schritt weitermachen.
+5. Am ersten nicht erfüllten Schritt weitermachen. `current_step` ist immer der erste noch nicht erledigte Schritt, auch wenn spätere Schritte schon erledigt sind.
 
 Ist die Datei ungültig oder fehlt sie, sage konkret, was fehlt, übernimm alles Gültige und frage nur die fehlenden Entscheidungen.
 
@@ -129,7 +134,7 @@ Die Spalte „Prüfung“ ist der Nachweis. Die konkreten Befehle stehen in den 
 | `start` | Nutzer weiß, wie die Begleitung funktioniert | Erste Nachricht aus Abschnitt 2 gesendet | – |
 | `context` | Klar, ob du Befehle auf dem Computer ausführen kannst | Abschnitt 4; im lokalen Agenten ein harmloser Befehl mit gelesener Ausgabe | `host`/`tool_check` oder Feststellung „reiner Chat“ |
 | `path` | Anbieterweg und Betriebssystem stehen fest | Entscheidungen `provider_path` und `platform` im Zustand; im lokalen Agenten Betriebssystem per Befehl | Entscheidung, `host`/`tool_check` |
-| `save_state` | Stand ist außerhalb des Chats gesichert | Nutzer bestätigt gespeicherte Datei bzw. Datei liegt unter `~/.ai-bootstrap/` | `user_confirmation` oder `tool_check` |
+| `save_state` | Stand ist außerhalb des Chats gesichert | Nutzer bestätigt gespeicherte Datei bzw. Datei liegt unter `~/.ai-bootstrap/` | `host`/`user_confirmation` (Chat) oder `host`/`tool_check` |
 | `local_agent` | Lokaler Agent installiert und angemeldet | Version und Anmeldestatus in der Laufzeit des Agenten (Anbieterdatei) | `host`/`tool_check` (im Chat zunächst `user_confirmation`) |
 | `handover` | Einrichtung läuft im lokalen Agenten weiter | Agent liest Startdatei und Stand, Kontextprüfung ergibt „lokaler Agent“ | `host`/`tool_check` |
 | `wsl` | Nur Windows: Linux-Umgebung WSL 2 bereit | `wsl -l -v` zeigt eine Distribution mit Version 2; im WSL-Terminal `uname -a` | `host`/`tool_check` |
@@ -148,7 +153,7 @@ Die Spalte „Prüfung“ ist der Nachweis. Die konkreten Befehle stehen in den 
 
 Reihenfolge: `start` → `context` → `path` → `save_state` → `local_agent` → `handover` → (Windows: `wsl`) → `git` → `github_account` → `github_cli` → `git_identity` → `python` → `skills` → `permissions` → `project` → `chat_github` (nur wenn der Nutzer einen Planungschat mit GitHub-Zugriff nutzen will) → `trial` → `done`. `devbox` nur auf Wunsch.
 
-Ist der Agent schon lokal gestartet (Kontextprüfung ergibt „lokaler Agent“), sind `local_agent` und `handover` durch die laufende Sitzung belegt und werden ohne Nutzeraktion bestätigt. `save_state` braucht dann nur die Zustimmung zum Speicherort aus §7.1 (eine Frage), keine weitere Nutzeraktion.
+Ist der Agent schon lokal gestartet (Kontextprüfung ergibt „lokaler Agent“), sind `local_agent` und `handover` durch die laufende Sitzung belegt und werden ohne Nutzeraktion bestätigt. `save_state` braucht dann nur die Zustimmung zum Speicherort aus §7.1 (eine Frage), keine weitere Nutzeraktion. Liegt das Paket noch als ZIP vor (zum Beispiel in `~/Downloads`), entpackst du es nach Zustimmung selbst mit `python3 -m zipfile -e <zip> <zielordner>` (kein `unzip` nötig) und prüfst den Stand danach mit `scripts/onboarding_state.py`; bis dahin prüfst du ihn von Hand nach `STATE.schema.json`.
 
 ## 9. Projektebene
 
@@ -158,20 +163,22 @@ Im Schritt `project` gilt `UNIVERSAL_PROJECT_BOOTSTRAP.md` aus dem Paket vollst�
 - **Neues Projekt:** Den Hinweis zur Veröffentlichung eigener Task-Branches aus dem Standard deutlich zeigen (Standard B, mit den Wahlmöglichkeiten ALLOW_AFTER_CHECKS, PER_TASK_APPROVAL, DISABLED) und die wirksame Wahl in den Projektanweisungen festhalten.
 - **Bestehendes Projekt:** Vorhandene Regeln und Einschränkungen erhalten; Widersprüche als CONFLICT vorlegen.
 - Das lokale Merge-Gate (`DEVBOX_GATE_POLICY.md`) ist eine eigene Projektentscheidung („jetzt oder später übernehmen“), keine Voraussetzung für den Probelauf.
-- Fehlen Projektziele und Regeln, nutze die Brainstorming-Fähigkeit und `templates/PROJECT_DISCOVERY.md`.
+- **Neu oder bestehend:** Bestehend ist ein Projekt, das schon Projektregeln oder eine festgelegte Arbeitsweise hat (zum Beispiel `AGENTS.md`, `CLAUDE.md`, Beitragsregeln). Ein Repository mit Code, aber ohne solche Regeln, behandelst du wie ein neues Projekt und sagst das dem Nutzer.
+- Fehlen Projektziele und Regeln, nutze die Brainstorming-Fähigkeit und `templates/PROJECT_DISCOVERY.md`. Ist die Brainstorming-Fähigkeit (noch) nicht aktiv, nutze `PROJECT_DISCOVERY.md` direkt als Leitfaden und stelle nur die nötigen Fragen.
+- Änderungen an den Projektregeln landen auf einem eigenen Branch (zum Beispiel `setup/projektstandard-JJJJMMTT`), nie direkt auf `main`.
 - Die Fragen des Projektstandards sind ein eigener Fragenblock mit eigener Zählung.
 
-Für Claude Code: Liegt im Projekt `AGENTS.md`, aber kein `CLAUDE.md`, lies `AGENTS.md`. Wird ein `CLAUDE.md` gebraucht, importiert es `AGENTS.md` mit der Zeile `@AGENTS.md`, statt Regeln doppelt zu führen (Details in `providers/claude-code.md`).
+Für Claude Code: Liegt im Projekt `AGENTS.md`, aber kein `CLAUDE.md`, lies `AGENTS.md`. Wird ein `CLAUDE.md` gebraucht, importiert es `AGENTS.md` mit der Zeile `@AGENTS.md`, statt Regeln doppelt zu führen (Details in `providers/claude-code.md`). Ist die Claude-Code-Version unbekannt, lege dieses `CLAUDE.md` mit `@AGENTS.md` an; das wirkt in jeder Version.
 
 ## 10. Probelauf
 
 Der Probelauf zeigt, dass die Einrichtung wirklich funktioniert. Nur mit Ressourcen, die der Nutzer dafür freigibt; nie auf `main` oder Produktion.
 
 1. Repository lesen: die Projektanweisungen und eine weitere Datei lesen und kurz zusammenfassen.
-2. Eigenen Task-Branch anlegen (zum Beispiel `setup/probelauf-JJJJMMTT`).
+2. Eigenen Task-Branch anlegen, ohne Verfolgung von `main`: `git switch --no-track -c setup/probelauf-JJJJMMTT <basis>` (Basis: der Branch mit den neuen Projektregeln oder `origin/main`). Ein mit `git switch -c X origin/main` angelegter Branch verfolgt `main`, dann würde ein bloßes `git push` auf `main` zielen.
 3. Eine kleine, harmlose Teständerung machen (zum Beispiel eine Notiz `docs/SETUP_PROBELAUF.md` mit Datum).
 4. Eine passende Prüfung ausführen (mindestens `git diff --check`; vorhandene Projektprüfungen, wenn schnell und ungefährlich).
-5. Commit und Push genau dieses Branches, nur wenn die wirksame Veröffentlichungsregel des Projekts das erlaubt. Sonst bei LOCAL_COMPLETE stehen bleiben und das so benennen.
+5. Commit und Push genau dieses Branches mit ausdrücklichem Ziel (`git push -u origin setup/probelauf-JJJJMMTT`), nur wenn die wirksame Veröffentlichungsregel des Projekts das erlaubt. Sonst bei LOCAL_COMPLETE stehen bleiben und das so benennen.
 6. Ergebnis zurücklesen: lokaler und entfernter Branch-HEAD sind identisch (`git rev-parse HEAD` und `git ls-remote origin <branch>`).
 7. Den Nutzer fragen (Frage-Format), ob der Probe-Branch bleiben oder gelöscht werden soll. Löschen nur nach seiner Antwort.
 
@@ -184,6 +191,8 @@ Der Abschluss nennt nur, was tatsächlich nachgewiesen ist:
 - je Schritt: erledigt mit Nachweisart (Werkzeugprüfung oder Nutzerangabe) oder offen;
 - Probelauf mit Branch, Commit und Remote-Gleichheit;
 - verbleibende Blocker mit dem konkreten nächsten Schritt.
+
+Liegen neue Projektregeln nur auf ihrem eigenen Branch, nenne als nächsten Schritt, sie zur Integration vorzulegen (zum Beispiel als Pull Request); der Merge braucht die Freigabe des Nutzers bzw. die Projektregeln.
 
 Eine teilweise Einrichtung heißt „teilweise eingerichtet“, nicht „fertig“. Fragt der Nutzer nach dem Ende, während ein Schritt blockiert ist: sag „noch nicht fertig“, nenne den offenen Schritt, den Blocker und genau den nächsten Schritt, trage den Blocker im Stand ein und sichere ihn (Abschnitt 7) – ohne lange Gesamtliste. Die vollständige Liste je Schritt gehört in den Abschlussbericht, wenn alle Schritte erledigt sind oder der Nutzer sie verlangt.
 
@@ -270,9 +279,9 @@ Benötigt werden die Fähigkeiten aus `skills/SKILL_MANIFEST.md`. Auf diesem Weg
 | Repository-Anweisungen | eingebautes `AGENTS.md`-Lesen (C9) |
 | Merge-/Release-Gate | `templates/devbox_merge_gate.py` (nur nach Projektentscheidung) |
 
-1. **Prüfen:** `codex plugin list` und die Zeile mit `superpowers` lesen. Steht dort `installed, enabled`, ist der Schritt nach dem Probeaufruf erledigt. Sind gleichwertige Fähigkeiten schon aktiv (eigene Skills unter `~/.agents/skills` oder `.agents/skills`, C10), behalte sie und installiere nichts doppelt.
-2. **Installieren (falls nötig):** App: Bereich „Plugins“ → „Superpowers“ (Kategorie Coding) → „+“. CLI: `/plugins` eingeben, nach „superpowers“ suchen, „Install Plugin“ wählen. Danach eine **neue** Codex-Sitzung starten (C10).
-3. **Probeaufruf:** In der neuen Sitzung `/skills` aufrufen; die Liste muss Superpowers-Skills enthalten (zum Beispiel `brainstorming`). Der Nachweis ist die tatsächliche Liste, nicht der Installationsklick.
+1. **Prüfen:** `codex plugin list` selbst ausführen und die Zeile mit `superpowers` lesen. Steht dort `installed, enabled`, ist der Schritt nach dem Probeaufruf erledigt. Sind gleichwertige Fähigkeiten schon aktiv (eigene Skills unter `~/.agents/skills` oder `.agents/skills`, C10), behalte sie und installiere nichts doppelt.
+2. **Installieren (falls nötig):** selbst mit `codex plugin add superpowers@<marktplatz>`; den Marktplatz-Namen zeigt `codex plugin list` (auf dem Prüfrechner `openai-curated-remote`). Meldet `codex plugin list` „No marketplace plugins found.“, ist Codex noch nicht angemeldet (in einer frischen VM so beobachtet): erst `local_agent` abschließen, dann erneut prüfen. Alternativ der Nutzer: App-Bereich „Plugins“ → „Superpowers“ (Kategorie Coding) → „+“, oder im Terminal `/plugins`. Danach eine **neue** Codex-Sitzung starten (C10).
+3. **Probeaufruf:** In der neuen Sitzung prüfst du deine eigene Liste verfügbarer Skills; sie muss Superpowers-Skills enthalten (zum Beispiel `brainstorming`). Kannst du sie nicht einsehen, tippt der Nutzer `/skills` und nennt dir das Ergebnis. Der Nachweis ist die tatsächliche Liste, nicht der Installationsklick.
 
 Superpowers stammt von Jesse Vincent (obra) und steht im offiziellen Codex-Plugin-Marktplatz (S2, S3). Erkläre das in einem Satz, wenn der Nutzer nach der Herkunft fragt.
 
@@ -291,7 +300,7 @@ Frage 1 von 1: Welches Berechtigungsprofil soll Codex bekommen?
 Empfehlung: Standard, weil Codex damit im Projekt selbstständig arbeiten kann, aber vor Aktionen außerhalb fragt. Netzwerk bei Bedarf im Einzelfall freigeben.
 
 - **Linux und WSL2:** Die Sandbox braucht `bubblewrap` (C15). Prüfe `command -v bwrap`; fehlt es, gehört die Installation zu diesem Schritt: `sudo apt install bubblewrap` (Fedora: `sudo dnf install bubblewrap`). Danach die Sandbox tatsächlich prüfen: `codex sandbox -- true` muss mit Exit 0 enden.
-- Endet `codex sandbox -- true` (oder jeder Befehl in Codex) mit einer Meldung wie `bwrap: … Operation not permitted` bzw. warnt Codex, es könne keinen „user namespace“ anlegen, blockiert unter Ubuntu 24.04 die AppArmor-Sperre für Benutzer-Namensräume die Sandbox. Lösung laut OpenAI (C15): `sudo apt install apparmor-profiles apparmor-utils`, dann `sudo install -m 0644 /usr/share/apparmor/extra-profiles/bwrap-userns-restrict /etc/apparmor.d/bwrap-userns-restrict` und `sudo apparmor_parser -r /etc/apparmor.d/bwrap-userns-restrict`; danach erneut `codex sandbox -- true`. Die systemweite Abschaltung der AppArmor-Sperre bietest du nicht an; hilft das Profil nicht, ist das ein Blocker mit genau dieser Meldung. „Voller Zugriff“ ist keine Lösung für einen Sandbox-Fehler, sondern nur eine eigene Entscheidung des Nutzers.
+- Endet `codex sandbox -- true` (oder jeder Befehl in Codex) mit einer Meldung wie `bwrap: … Operation not permitted` bzw. warnt Codex, es könne keinen „user namespace“ anlegen, blockiert unter Ubuntu 24.04 die AppArmor-Sperre für Benutzer-Namensräume die Sandbox. Lösung laut OpenAI (C15; in einer frischen Ubuntu-24.04-VM geprüft: erst damit `codex sandbox -- true` Exit 0, Schreiben außerhalb des Projekts und Netzwerk bleiben gesperrt): `sudo apt install apparmor-profiles apparmor-utils`, dann `sudo install -m 0644 /usr/share/apparmor/extra-profiles/bwrap-userns-restrict /etc/apparmor.d/bwrap-userns-restrict` und `sudo apparmor_parser -r /etc/apparmor.d/bwrap-userns-restrict`; danach erneut `codex sandbox -- true`. Die systemweite Abschaltung der AppArmor-Sperre bietest du nicht an; hilft das Profil nicht, ist das ein Blocker mit genau dieser Meldung. „Voller Zugriff“ ist keine Lösung für einen Sandbox-Fehler, sondern nur eine eigene Entscheidung des Nutzers.
 - `untrusted` nicht verwenden: Diese Freigaberegel ist entfernt und kann den Start verhindern (C6).
 - Steht in `~/.codex/config.toml` bereits ein Profil, lies es vor und frage nur, ob es so bleiben soll, wenn es vom gewählten Profil abweicht. Ändere die Datei nur nach der Antwort; behalte alle anderen Einträge.
 - Prüfung: Datei bzw. `/permissions` lesen und den wirksamen Wert nennen.
@@ -359,10 +368,10 @@ Windows ohne WSL2: Die Desktop-App und die native Windows-CLI laufen direkt unte
 | --- | --- | --- |
 | `claude --version` | Version mit „(Claude Code)“ | `host`/`tool_check` |
 | `claude doctor` | keine Fehler bei Installation und Einstellungen | `host`/`tool_check` |
-| `/status` in der Sitzung | richtiges Konto angemeldet | `host`/`tool_check` |
+| `/status` (tippt der Nutzer) | richtiges Konto angemeldet | `account`/`user_confirmation` |
 | nur Desktop-App: Code-Bereich zeigt den Projektordner | – | `user_confirmation`, nach `handover` per Befehl bestätigt |
 
-Läufst du schon als Claude Code auf dem Computer, prüfe direkt (Befehl ausführen); keine Installationsanleitung zeigen. Ist `claude` nicht im Suchpfad, weil die Sitzung aus der Desktop-App kommt, ist die laufende Sitzung selbst der Nachweis (Version aus `/status` oder der App); dann keine zusätzliche CLI installieren.
+Läufst du schon als Claude Code auf dem Computer, prüfe direkt (Befehl ausführen); keine Installationsanleitung zeigen. Ist `claude` nicht im Suchpfad, obwohl die Sitzung läuft (zum Beispiel aus der Desktop-App), ist die laufende Sitzung selbst der Nachweis; die Version nennt der Nutzer aus `/status` oder der App. Dann keine zusätzliche CLI installieren.
 
 ## Schritt `handover`: vom Chat in Claude Code wechseln
 
@@ -384,9 +393,9 @@ Claude Code liest `CLAUDE.md` (Projekt: `./CLAUDE.md` oder `./.claude/CLAUDE.md`
 | Repository-Anweisungen | eingebautes `CLAUDE.md`/`AGENTS.md`-Lesen (A11) |
 | Merge-/Release-Gate | `templates/devbox_merge_gate.py` (nur nach Projektentscheidung) |
 
-1. **Prüfen:** `claude plugin list` ausführen bzw. `/plugin` → „Installed“. Ist `superpowers` installiert und aktiv, weiter mit dem Probeaufruf. Gleichwertige vorhandene Skills (`~/.claude/skills`, `.claude/skills`, A12) behalten, nichts doppelt installieren.
-2. **Installieren (falls nötig):** `/plugin install superpowers@claude-plugins-official` (offizieller Marktplatz, wird bei der ersten interaktiven Sitzung automatisch eingetragen). Danach `/reload-plugins` oder eine neue Sitzung.
-3. **Probeaufruf:** `/skills` aufrufen; die Liste muss `superpowers:brainstorming` enthalten. Nur die tatsächliche Liste in dieser Sitzung zählt.
+1. **Prüfen:** `claude plugin list` selbst ausführen (ist `claude` nicht im Suchpfad, weiter mit dem Probeaufruf in Schritt 3). Ist `superpowers` installiert und aktiv, weiter mit dem Probeaufruf. Gleichwertige vorhandene Skills (`~/.claude/skills`, `.claude/skills`, A12) behalten, nichts doppelt installieren.
+2. **Installieren (falls nötig):** `claude plugin install superpowers@claude-plugins-official` selbst ausführen (Kommandozeile; der offizielle Marktplatz wird bei der ersten interaktiven Sitzung automatisch eingetragen). Alternativ tippt der Nutzer `/plugin install superpowers@claude-plugins-official`. Danach eine neue Sitzung (oder der Nutzer tippt `/reload-plugins`).
+3. **Probeaufruf:** In der neuen Sitzung prüfst du deine eigene Liste verfügbarer Skills; sie muss `superpowers:brainstorming` enthalten. Kannst du sie nicht einsehen, tippt der Nutzer `/skills` und nennt dir das Ergebnis. Nur die tatsächliche Liste in der laufenden Sitzung zählt.
 
 Superpowers stammt von Jesse Vincent (obra) und trägt im Plugin-Verzeichnis kein „Anthropic verified“-Kennzeichen (S3). Nenne das in einem Satz, wenn der Nutzer nach der Herkunft fragt.
 
@@ -413,9 +422,11 @@ Sperrregeln (deny) für Standard und Selbstständig:
 - `defaultMode` immer ausdrücklich setzen: Ab v2.1.283 startet das Terminal sonst im Modus `auto` (A9).
 - `auto` wirkt nur aus `~/.claude/settings.json`, nicht aus Projekteinstellungen (A9).
 - `bypassPermissions` nicht anbieten; laut Anthropic nur für isolierte Container oder VMs (A9).
-- Sandbox unter Linux/WSL2 braucht `bubblewrap` und `socat` (`sudo apt-get install bubblewrap socat`); unter Ubuntu 24.04 kann eine AppArmor-Einstellung nötig sein. Behandle das erst, wenn `/sandbox` es tatsächlich meldet (A10).
+- **Linux und WSL2:** Die Sandbox braucht `bubblewrap` und `socat` (A10). Gehört zum Profil Standard bzw. Selbstständig: `command -v bwrap socat` prüfen; fehlt etwas, `sudo apt-get install -y bubblewrap socat`. Danach selbst prüfen: `bwrap --ro-bind / / --unshare-user --unshare-net true` muss mit Exit 0 enden.
+- Endet diese Prüfung mit `Operation not permitted` oder `setting up uid map: Permission denied`, blockiert unter Ubuntu 24.04 die AppArmor-Sperre für Benutzer-Namensräume `bwrap`. Abhilfe (wie beim Codex-Weg, C15; in einer frischen Ubuntu-24.04-VM geprüft): `sudo apt install apparmor-profiles`, `sudo install -m 0644 /usr/share/apparmor/extra-profiles/bwrap-userns-restrict /etc/apparmor.d/bwrap-userns-restrict`, `sudo apparmor_parser -r /etc/apparmor.d/bwrap-userns-restrict`, dann erneut prüfen. Die systemweite Abschaltung der Sperre bietest du nicht an.
+- Geänderte Einstellungen gelten ab der nächsten Claude-Code-Sitzung. Abschließend tippt der Nutzer in einer neuen Sitzung `/sandbox` und nennt dir den angezeigten Zustand.
 - Bestehende Einstellungen vorlesen, nur Abweichungen ansprechen, andere Einträge erhalten. Datei nur nach der Antwort ändern.
-- Prüfung: `~/.claude/settings.json` lesen und `/permissions` bzw. `/sandbox` zeigen lassen; wirksamen Modus nennen.
+- Prüfung: `~/.claude/settings.json` lesen; den Nutzer `/permissions` bzw. `/sandbox` eintippen lassen; wirksamen Modus nennen.
 - Die Sperrregeln sind eine zusätzliche Sicherung. Die Befugnisgrenzen selbst stehen in den Projektregeln.
 
 ## Schritt `chat_github`: Claude-Chat liest das Repository (optional)
@@ -516,7 +527,7 @@ Läufst du bereits als lokaler Agent in WSL (zum Beispiel Codex mit WSL2-Agent o
 - **ChatGPT/Codex:** Desktop-App unter Windows installieren, in den Einstellungen den Agenten auf WSL2 umstellen, App neu starten; oder Codex CLI im WSL-Terminal (siehe Anbieterdatei).
 - **Claude/Claude Code:** Claude Code CLI im WSL-Terminal mit dem Linux-Befehl installieren (siehe Anbieterdatei).
 
-Der Ordner aus dem Schritt `handover` liegt in WSL, zum Beispiel `~/ai-bootstrap`. Die heruntergeladenen Dateien aus dem Windows-Ordner „Downloads“ kopierst du im WSL-Terminal mit `cp /mnt/c/Users/<Windows-Name>/Downloads/AI-Bootstrap-*.zip ~/ai-bootstrap/` (den Namen mit `ls /mnt/c/Users/` feststellen) und entpackst mit `unzip` (bei Bedarf `sudo apt-get install -y unzip`).
+Der Ordner aus dem Schritt `handover` liegt in WSL, zum Beispiel `~/ai-bootstrap`. Die heruntergeladenen Dateien aus dem Windows-Ordner „Downloads“ kopierst du im WSL-Terminal mit `cp /mnt/c/Users/<Windows-Name>/Downloads/AI-Bootstrap-*.zip ~/ai-bootstrap/` (den Namen mit `ls /mnt/c/Users/` feststellen) und entpackst mit `python3 -m zipfile -e ~/ai-bootstrap/AI-Bootstrap-<version>.zip ~/ai-bootstrap/` (kein `unzip` nötig).
 
 ## Alle weiteren Schritte
 
@@ -584,6 +595,10 @@ Das **Terminal** ist ein Fenster, in dem man Befehle eintippt; unter Ubuntu mit 
 ## Gate
 
 Linux ist der Referenzweg des Merge-Gates (`DEVBOX_GATE_POLICY.md` §10). `systemd_scope = true` funktioniert nur, wenn ein systemd-Benutzerdienst läuft (`systemctl --user is-system-running`).
+
+## Paket entpacken
+
+Frisches Ubuntu hat oft kein `unzip`. Entpacken geht ohne Installation mit `python3 -m zipfile -e <zip> <zielordner>`.
 
 ## Speicherort des Einrichtungsstands
 
