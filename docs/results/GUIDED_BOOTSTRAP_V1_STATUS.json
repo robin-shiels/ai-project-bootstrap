@@ -3,15 +3,152 @@
   "order_revision": "e29b3f21eb877f9f1215d29a4bff5d6dfbac6174",
   "source_base": "11d642bcfd8de138da81ac11d7e5fedcc9c0028d",
   "branch": "claude/guided-bootstrap-v1",
-  "last_commit": null,
+  "last_commit": "siehe git log des Branches; Artefakt-Quelle in ACCEPTANCE §6",
   "tasks": [
-    {"id": "GBOOT-01", "state": "running", "dependencies": [], "result_files": ["docs/research/GUIDED_BOOTSTRAP_V1_SOURCE_MATRIX.md", "docs/results/GUIDED_BOOTSTRAP_V1_COVERAGE.md"], "validation": [], "blockers": []},
-    {"id": "GBOOT-02", "state": "running", "dependencies": ["GBOOT-01"], "result_files": ["onboarding/ENTRY.md", "onboarding/STATE.schema.json", "onboarding/STATE.example.json", "scripts/onboarding_state.py", "tests/test_onboarding_state.py"], "validation": [], "blockers": []},
-    {"id": "GBOOT-03", "state": "pending", "dependencies": ["GBOOT-01", "GBOOT-02"], "result_files": [], "validation": [], "blockers": []},
-    {"id": "GBOOT-04", "state": "running", "dependencies": ["GBOOT-01"], "result_files": ["templates/devbox_merge_gate.py", "tests/test_devbox_merge_gate.py", "DEVBOX_GATE_POLICY.md"], "validation": [], "blockers": []},
-    {"id": "GBOOT-05", "state": "pending", "dependencies": ["GBOOT-02", "GBOOT-03", "GBOOT-04"], "result_files": [], "validation": [], "blockers": []},
-    {"id": "GBOOT-06", "state": "pending", "dependencies": ["GBOOT-05"], "result_files": [], "validation": [], "blockers": []},
-    {"id": "GBOOT-07", "state": "pending", "dependencies": ["GBOOT-06"], "result_files": [], "validation": [], "blockers": []}
+    {
+      "id": "GBOOT-01",
+      "state": "done",
+      "dependencies": [],
+      "result_files": [
+        "docs/research/GUIDED_BOOTSTRAP_V1_SOURCE_MATRIX.md",
+        "docs/results/GUIDED_BOOTSTRAP_V1_PLAN.md",
+        "docs/results/GUIDED_BOOTSTRAP_V1_COVERAGE.md"
+      ],
+      "validation": [
+        "Quellen 2026-10-19 abgerufen; UNBELEGTE Aussagen markiert"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "GBOOT-02",
+      "state": "done",
+      "dependencies": [
+        "GBOOT-01"
+      ],
+      "result_files": [
+        "onboarding/ENTRY.md",
+        "onboarding/STATE.schema.json",
+        "onboarding/STATE.example.json",
+        "onboarding/ACCEPTANCE.md",
+        "scripts/onboarding_state.py",
+        "tests/test_onboarding_state.py"
+      ],
+      "validation": [
+        "python3 -m unittest discover -s tests: 81 OK, exit 0",
+        "uvx ruff@latest check/format --check: ok",
+        "Dialogfälle D1-D9 bestanden (nach Korrekturen), siehe ACCEPTANCE §4"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "GBOOT-03",
+      "state": "done",
+      "dependencies": [
+        "GBOOT-01",
+        "GBOOT-02"
+      ],
+      "result_files": [
+        "onboarding/providers/chatgpt-codex.md",
+        "onboarding/providers/claude-code.md",
+        "onboarding/platforms/macos.md",
+        "onboarding/platforms/windows.md",
+        "onboarding/platforms/linux.md",
+        "onboarding/OPTIONAL_DEVBOX.md",
+        "skills/SKILL_MANIFEST.md"
+      ],
+      "validation": [
+        "Real Linux D2/D7 beide Anbieter"
+      ],
+      "blockers": [
+        "macOS/Windows nicht real geprüft (Owner-Geräte)"
+      ]
+    },
+    {
+      "id": "GBOOT-04",
+      "state": "done",
+      "dependencies": [
+        "GBOOT-01"
+      ],
+      "result_files": [
+        "templates/devbox_merge_gate.py",
+        "tests/test_devbox_merge_gate.py",
+        "DEVBOX_GATE_POLICY.md",
+        "templates/devbox_merge_gate.example.toml",
+        "scripts/probe_gate_host.py"
+      ],
+      "validation": [
+        "python3 -m unittest discover -s tests: 81 OK, exit 0",
+        "uvx ruff@latest check/format --check: ok",
+        "38 Bestandstests + 10 Portabilitätstests OK",
+        "probe_gate_host.py real Linux exit 0",
+        "macOS/Windows nur Simulation"
+      ],
+      "blockers": [
+        "Gate-Änderung: keine Selbstintegration, Owner-Integration nötig",
+        "reale macOS-/WSL2-Prüfung offen"
+      ]
+    },
+    {
+      "id": "GBOOT-05",
+      "state": "done",
+      "dependencies": [
+        "GBOOT-02",
+        "GBOOT-03",
+        "GBOOT-04"
+      ],
+      "result_files": [
+        "scripts/build_bootstrap_bundle.py",
+        "tests/test_bootstrap_bundle.py",
+        "VERSION",
+        "README.md",
+        "UNIVERSAL_PROJECT_BOOTSTRAP.md",
+        "CHANGELOG.md",
+        "templates/CODEX_BOOTSTRAP_PROMPT.md",
+        "templates/PROJECT_DISCOVERY.md",
+        "dist/"
+      ],
+      "validation": [
+        "Wiederholungsbau byte-identisch",
+        "sha256sum -c OK"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "GBOOT-06",
+      "state": "blocked",
+      "dependencies": [
+        "GBOOT-05"
+      ],
+      "result_files": [
+        "docs/results/GUIDED_BOOTSTRAP_V1_ACCEPTANCE.md"
+      ],
+      "validation": [
+        "Linux beide Anbieter teilweise real; 4 Wege NOT_TESTED"
+      ],
+      "blockers": [
+        "Kein macOS-/Windows-Gerät im Zugriff",
+        "Codex-Sandbox auf Ubuntu 24.04 (F5) braucht sudo-Abhilfe durch Owner",
+        "Webchat-Upload ChatGPT/claude.ai nicht real geprüft"
+      ]
+    },
+    {
+      "id": "GBOOT-07",
+      "state": "done",
+      "dependencies": [
+        "GBOOT-06"
+      ],
+      "result_files": [
+        "docs/results/GUIDED_BOOTSTRAP_V1_STATUS.json",
+        "docs/results/GUIDED_BOOTSTRAP_V1_ACCEPTANCE.md"
+      ],
+      "validation": [
+        "main erneut geprüft: 11d642b unverändert",
+        "Diff auf Geheimnisse/persönliche Daten geprüft"
+      ],
+      "blockers": []
+    }
   ],
-  "next_action": "GBOOT-03: Anbieter- und Plattformdateien schreiben"
+  "next_action": "Owner: reale Abnahme auf macOS/Windows und in den Webchats nach ACCEPTANCE §8; F5-Abhilfe auf dem Linux-Prüfrechner; Owner-Integration des PR (enthält Gate-Änderung)",
+  "repository_state": "DONE_ON_BRANCH (nach Push; Remote-SHA in ACCEPTANCE §6)",
+  "product_state": "PACKAGE_BUILT"
 }
