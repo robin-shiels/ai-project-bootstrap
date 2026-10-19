@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.1 — Gate template hardening — 2026-10-19
+
+Compatible fixes from the first real gate runs in adopting projects; the policy is unchanged.
+
+- The resource check skips the gate process and **all** its ancestors (previously only itself and its parent). A shell that started the gate and merely mentions a heavy-check pattern such as `pytest` in its command line no longer blocks the run.
+- The reference CLI and its tests satisfy the stricter default rule set of current Ruff (parenthesized implicit string concatenations, explicit `check=` in tests, executable script with shebang), so adopting projects can copy them byte-identically without lint exceptions.
+
 ## 2.0.0 — Dev-box merge gate — 2026-10-18
 
 **Incompatible change.** Owner decision of 2026-10-18: GitHub-hosted CI starts in every project at most through deliberate `workflow_dispatch` for diagnosis, never automatically; the binding merge and release check is a deliberately started local gate; own explicitly mergeable task PRs may be merged automatically once a project's gate is integrated. Earlier versions required separate authority for every merge.

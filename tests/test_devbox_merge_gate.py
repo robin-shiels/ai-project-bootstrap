@@ -972,12 +972,14 @@ class ConfigTests(unittest.TestCase):
             (sys.executable, str(SCRIPT), "--config", str(EXAMPLE)),
             capture_output=True,
             text=True,
+            check=False,
         )
         self.assertEqual(result.returncode, int(gate.Code.USAGE))
         result = subprocess.run(
             (sys.executable, str(SCRIPT), "--config", str(EXAMPLE), "validate-config"),
             capture_output=True,
             text=True,
+            check=False,
         )
         self.assertEqual(result.returncode, 0, result.stderr)
 
@@ -1004,6 +1006,36 @@ class PureHelperTests(unittest.TestCase):
             config, {"PATH": "/bin", "XDG_RUNTIME_DIR": "/run/user/1"}
         )
         self.assertEqual(env["XDG_RUNTIME_DIR"], "/run/user/1")
+
+
+class HeavyProcessTests(unittest.TestCase):
+    def make_proc(self, root: Path, pid: int, ppid: int, cmdline: str) -> None:
+        entry = root / str(pid)
+        entry.mkdir()
+        (entry / "status").write_text(f"Name:\tx\nPPid:\t{ppid}\n")
+        (entry / "cmdline").write_bytes(cmdline.replace(" ", "\0").encode())
+
+    def test_gate_and_its_ancestors_are_skipped(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            proc = Path(tmp)
+            self.make_proc(proc, 1, 0, "init")
+            self.make_proc(proc, 10, 1, "bash -c wait-for-pytest-then-gate")
+            self.make_proc(proc, 11, 10, "timeout 600 python3 gate.py")
+            self.make_proc(proc, 12, 11, "python3 gate.py check-only")
+            self.make_proc(proc, 30, 1, "/venv/bin/python /venv/bin/pytest -q")
+            (proc / "self").mkdir()
+            self.assertEqual(gate.ancestor_pids(12, proc), {12, 11, 10, 1})
+            patterns = [re.compile(r"(^|/)pytest(\s|$)"), re.compile("pytest")]
+            found = gate.find_heavy_processes(patterns, proc, 12)
+            self.assertEqual([line.split(":")[0] for line in found], ["30"])
+
+    def test_ancestor_chain_stops_on_loops_and_missing_entries(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            proc = Path(tmp)
+            self.make_proc(proc, 5, 6, "a")
+            self.make_proc(proc, 6, 5, "b")
+            self.assertEqual(gate.ancestor_pids(5, proc), {5, 6})
+            self.assertEqual(gate.ancestor_pids(99, proc), {99})
 
 
 class TemplateHygieneTests(unittest.TestCase):
