@@ -210,7 +210,7 @@ isolation. Therefore:
 | `NOT_AUTHORIZED` | 13 | no own task PR, draft, missing handoff/merge-ready, blocker, contract not on `B`, self-authorizing gate PR, never-merge branch |
 | `EXCLUDED_PATHS` | 14 | diff touches a merge-excluded path |
 | `ISOLATION_REQUIRED` | 15 | untrusted origin without verified isolation |
-| `RESOURCES` | 16 | lock held, too little memory/swap, other heavy checks running |
+| `RESOURCES` | 16 | lock held, too little memory/swap, other heavy checks running (the gate and its ancestors excluded) |
 | `MERGE_TOPOLOGY` | 17 | conflict, wrong parents or tree |
 | `GATE_FAILED` | 20 | missing, red, timed-out or OOM step; failed teardown; empty plan |
 | `LOG_INTEGRITY` | 21 | secret pattern in the log, changed log before the update |

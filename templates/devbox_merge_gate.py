@@ -712,8 +712,10 @@ def render_summary(record: RunRecord, log_digest: str | None) -> str:
     lines = [
         f"### Dev-box merge gate: {record.result}",
         "",
-        f"- Mode: `{record.mode}`, run `{record.run_id}`, config sha256 "
-        f"`{record.config_sha256[:16]}`",
+        (
+            f"- Mode: `{record.mode}`, run `{record.run_id}`, config sha256 "
+            f"`{record.config_sha256[:16]}`"
+        ),
     ]
     if record.pr is not None:
         lines.append(f"- PR #{record.pr} (`{record.pr_head_ref}`)")
@@ -722,8 +724,10 @@ def render_summary(record: RunRecord, log_digest: str | None) -> str:
         f"- Head `H`: `{record.head}`",
         f"- Checked commit `M`: `{record.merge_commit}`",
         f"- Tree `T`: `{record.tree}`",
-        f"- Classification: `{record.classification}`; application: "
-        f"`{record.application}`; changed paths: {len(record.changed_paths)}",
+        (
+            f"- Classification: `{record.classification}`; application: "
+            f"`{record.application}`; changed paths: {len(record.changed_paths)}"
+        ),
     ]
     if record.handoff is not None:
         lines.append(
@@ -769,9 +773,11 @@ def render_summary(record: RunRecord, log_digest: str | None) -> str:
         lines.append(f"Log checksum (SHA-256 of `SHA256SUMS`): `{log_digest}`")
     lines += [
         "",
-        "Raw logs stay on the dev box. They are owned by the same UID as the "
-        "checks and therefore not tamper-proof; the checksum makes later "
-        "changes detectable.",
+        (
+            "Raw logs stay on the dev box. They are owned by the same UID as the "
+            "checks and therefore not tamper-proof; the checksum makes later "
+            "changes detectable."
+        ),
     ]
     return "\n".join(lines) + "\n"
 
@@ -869,8 +875,10 @@ class GhCli:
                     "-R",
                     self.repository,
                     "--json",
-                    "number,state,isDraft,baseRefName,headRefName,headRefOid,author,"
-                    "isCrossRepository,title,body",
+                    (
+                        "number,state,isDraft,baseRefName,headRefName,headRefOid,"
+                        "author,isCrossRepository,title,body"
+                    ),
                 )
             )
         )
@@ -914,8 +922,10 @@ class GhCli:
                     "api",
                     "graphql",
                     "-f",
-                    "query=query($o: String!, $n: String!) "
-                    "{ repository(owner: $o, name: $n) { id } }",
+                    (
+                        "query=query($o: String!, $n: String!) "
+                        "{ repository(owner: $o, name: $n) { id } }"
+                    ),
                     "-f",
                     f"o={owner}",
                     "-f",
@@ -967,11 +977,51 @@ class Host(Protocol):
     def readable(self, path: str) -> bool: ...
 
 
+def ancestor_pids(pid: int, proc: Path = Path("/proc")) -> set[int]:
+    """The process and all its ancestors along the ``PPid`` chain."""
+    seen: set[int] = set()
+    while pid > 0 and pid not in seen:
+        seen.add(pid)
+        try:
+            status = (proc / str(pid) / "status").read_text()
+        except OSError:
+            break
+        match = re.search(r"(?m)^PPid:\s*(\d+)", status)
+        if match is None:
+            break
+        pid = int(match.group(1))
+    return seen
+
+
+def find_heavy_processes(
+    patterns: Sequence[re.Pattern[str]], proc: Path, own_pid: int
+) -> list[str]:
+    """Other processes whose command line matches a heavy-check pattern.
+
+    The gate and all its ancestors are skipped: the shell that started the
+    gate may mention a pattern in its own command line without running it.
+    """
+    skip = ancestor_pids(own_pid, proc)
+    found: list[str] = []
+    for entry in proc.iterdir():
+        if not entry.name.isdigit() or int(entry.name) in skip:
+            continue
+        try:
+            raw = (entry / "cmdline").read_bytes()
+        except OSError:
+            continue
+        command = raw.replace(b"\0", b" ").decode(errors="replace").strip()
+        if command and any(p.search(command) for p in patterns):
+            found.append(f"{entry.name}: {command[:120]}")
+    return found
+
+
 class LocalHost:
     """Read-only resource, service and permission probe of the local host."""
 
-    def __init__(self, config: Config) -> None:
+    def __init__(self, config: Config, proc: Path = Path("/proc")) -> None:
         self.config = config
+        self.proc = proc
         self.patterns = [re.compile(p) for p in config.heavy_process_patterns]
 
     def resources(self) -> ResourceSnapshot:
@@ -982,7 +1032,7 @@ class LocalHost:
         return ResourceSnapshot(
             mem_available_kib=meminfo.get("MemAvailable", 0),
             swap_free_kib=meminfo.get("SwapFree", 0),
-            heavy_processes=self._heavy_processes(),
+            heavy_processes=find_heavy_processes(self.patterns, self.proc, os.getpid()),
             services={
                 name: self._service_state(name)
                 for name in self.config.watched_user_services
@@ -1003,21 +1053,6 @@ class LocalHost:
         except OSError:
             return False
         return True
-
-    def _heavy_processes(self) -> list[str]:
-        own = {os.getpid(), os.getppid()}
-        found: list[str] = []
-        for entry in Path("/proc").iterdir():
-            if not entry.name.isdigit() or int(entry.name) in own:
-                continue
-            try:
-                raw = (entry / "cmdline").read_bytes()
-            except OSError:
-                continue
-            command = raw.replace(b"\0", b" ").decode(errors="replace").strip()
-            if command and any(p.search(command) for p in self.patterns):
-                found.append(f"{entry.name}: {command[:120]}")
-        return found
 
     @staticmethod
     def _service_state(name: str) -> str:
