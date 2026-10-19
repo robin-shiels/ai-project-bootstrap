@@ -20,7 +20,7 @@ Siehe `linux.md` – identisch auf allen Systemen.
 
 - Prüfen: `gh --version`, dann `gh auth status`.
 - Fehlt `gh`: Ist Homebrew vorhanden (`brew --version`), `brew install gh` (O5). Ohne Homebrew: Den Nutzer fragen, ob Homebrew installiert werden soll (Befehl von https://brew.sh/, O11), oder alternativ das macOS-Paket von https://github.com/cli/cli/releases installieren. Frage-Format verwenden; Empfehlung Homebrew, weil Updates dann einfach sind.
-- Anmelden: `gh auth login` → GitHub.com → HTTPS → im Browser anmelden. Danach `gh auth setup-git`, damit Git die Anmeldung von `gh` nutzt (O5).
+- Anmelden: `gh auth login` → GitHub.com → HTTPS → im Browser anmelden. Danach `gh auth setup-git`, damit Git die Anmeldung von `gh` nutzt (O5). Arbeitet Git bereits über SSH mit diesem Konto, ist das nicht nötig.
 - Nachweis: `gh auth status` zeigt das Konto als angemeldet.
 
 ## Schritt `git_identity`

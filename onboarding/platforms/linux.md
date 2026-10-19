@@ -27,6 +27,7 @@ Das **Terminal** ist ein Fenster, in dem man Befehle eintippt; unter Ubuntu mit 
   - Ubuntu/Debian: offizielle Paketquelle laut https://github.com/cli/cli/blob/trunk/docs/install_linux.md (O5). Den Befehlsblock von dort unverändert verwenden; er richtet den Schlüssel unter `/etc/apt/keyrings/` und die Quelle `https://cli.github.com/packages` ein und installiert `gh`.
   - Fedora: `sudo dnf install dnf5-plugins`, `sudo dnf config-manager addrepo --from-repofile=https://cli.github.com/packages/rpm/gh-cli.repo`, `sudo dnf install gh` (O5).
 - Anmelden: `gh auth login` → GitHub.com → HTTPS → Browser. Ohne Browser (zum Beispiel per SSH) zeigt `gh` einen Code, den der Nutzer auf github.com/login/device eingibt. Danach `gh auth setup-git` (O5).
+- Ist `gh` schon angemeldet und arbeitet Git bereits über SSH (`gh auth status` nennt „Git operations protocol: ssh“ und `ssh -T git@github.com` begrüßt das Konto), ist `gh auth setup-git` nicht nötig; nichts ändern.
 - Nachweis: `gh auth status` zeigt das Konto angemeldet.
 
 ## Schritt `git_identity`

@@ -23,6 +23,7 @@ Die `developers.openai.com/codex/*`-Adressen leiten am Prüftag dauerhaft (308) 
 | C11 | `codex exec` läuft nicht interaktiv, standardmäßig mit `read-only`-Sandbox; `codex --version` zeigt die Version. | https://learn.chatgpt.com/docs/non-interactive-mode | gelesen | – |
 | C12 | Codex Cloud arbeitet mit verbundenen GitHub-Repositories und kann Pull Requests öffnen. | https://learn.chatgpt.com/docs/cloud | gelesen | Planabdeckung von Cloud nicht angegeben. |
 | C13 | ChatGPT-Chat: Upload von Dokumenten, PDF, Bildern, Tabellen und Datenexporten. `.md` und `.zip` nicht ausdrücklich genannt. | https://learn.chatgpt.com/docs/use-chatgpt.md | gelesen | `.md`-Upload, ZIP-Lesen und Plangrenzen UNBELEGT. |
+| C15 | Linux/WSL2: `bubblewrap` mit der Paketverwaltung installieren (`sudo apt install bubblewrap`); ohne `bwrap` im Suchpfad nutzt Codex einen mitgelieferten Helfer, der unprivilegierte Benutzer-Namensräume braucht. Ubuntu 24.04: zusätzlich Profil `bwrap-userns-restrict` aus `apparmor-profiles` installieren und mit `apparmor_parser -r` laden; Ubuntu 25.04 bringt es mit. | https://learn.chatgpt.com/docs/sandboxing | gelesen | Fehlertext `RTM_NEWADDR` nicht genannt; Zuordnung durch eigenen Befund (Abschnitt 6). |
 | C14 | ChatGPT-GitHub-Verbindung über Einstellungen → GitHub, nur lesend. | https://help.openai.com/en/articles/11145903-connecting-github-to-chatgpt | Suchtreffer | UNBELEGT; Menübezeichnungen schwanken. |
 
 ## 2. Anbieter: Claude mit Claude Code
@@ -71,6 +72,12 @@ Eigene Beobachtung (Linux-Prüfrechner, 2026-10-19, `tool_check`): `codex plugin
 | O9 | `fcntl`, `os.getuid`, `os.killpg` und `start_new_session` nur unter Unix/POSIX. | https://docs.python.org/3/library/fcntl.html, https://docs.python.org/3/library/os.html, https://docs.python.org/3/library/subprocess.html | gelesen | – |
 | O10 | macOS: `hw.memsize` (sysctl) und `vm_stat` liefern Speicherangaben. | https://developer.apple.com/library/archive/documentation/Performance/Conceptual/ManagingMemory/Articles/VMPages.html | gelesen (Archiv 2013) | Fehlen von `/proc` auf macOS nicht durch Apple-Quelle belegt; die Implementierung verlässt sich deshalb nicht darauf, sondern wählt den Weg nach `sys.platform`. |
 | O11 | Homebrew: Installationsbefehl auf https://brew.sh/, unterstützt macOS 15+, Linux, WSL. | https://brew.sh/ | gelesen | – |
+
+## 5a. Eigene Befunde auf dem Linux-Prüfrechner
+
+Ubuntu 24.04.4, Kernel 6.8, codex-cli 0.163.0, am 2026-10-19 (`tool_check`):
+
+- Ohne installiertes `bubblewrap` scheitert jeder Befehl in der Codex-Sandbox (`read-only` und `workspace-write`): `bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted`; `codex sandbox -- true` endet mit Exit 1. `kernel.apparmor_restrict_unprivileged_userns = 1`; `unshare --user --net` scheitert ebenso. Das ist genau der in C15 beschriebene Fall. Die Abhilfe nach C15 wurde auf diesem Rechner **nicht** angewendet (Systemänderung mit `sudo`, Owner-Aktion) und ist deshalb hier nicht als wirksam belegt.
 
 ## 5. Technische Entscheidungen
 

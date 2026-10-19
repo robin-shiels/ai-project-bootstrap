@@ -44,7 +44,7 @@ Windows ohne WSL2: Die Desktop-App und die native Windows-CLI laufen direkt unte
 | `/status` in der Sitzung | richtiges Konto angemeldet | `host`/`tool_check` |
 | nur Desktop-App: Code-Bereich zeigt den Projektordner | – | `user_confirmation`, nach `handover` per Befehl bestätigt |
 
-Läufst du schon als Claude Code auf dem Computer, prüfe direkt (Befehl ausführen); keine Installationsanleitung zeigen.
+Läufst du schon als Claude Code auf dem Computer, prüfe direkt (Befehl ausführen); keine Installationsanleitung zeigen. Ist `claude` nicht im Suchpfad, weil die Sitzung aus der Desktop-App kommt, ist die laufende Sitzung selbst der Nachweis (Version aus `/status` oder der App); dann keine zusätzliche CLI installieren.
 
 ## Schritt `handover`: vom Chat in Claude Code wechseln
 

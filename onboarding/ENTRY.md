@@ -130,7 +130,7 @@ Die Spalte „Prüfung“ ist der Nachweis. Die konkreten Befehle stehen in den 
 
 Reihenfolge: `start` → `context` → `path` → `save_state` → `local_agent` → `handover` → (Windows: `wsl`) → `git` → `github_account` → `github_cli` → `git_identity` → `python` → `skills` → `permissions` → `project` → `chat_github` (nur wenn der Nutzer einen Planungschat mit GitHub-Zugriff nutzen will) → `trial` → `done`. `devbox` nur auf Wunsch.
 
-Ist der Agent schon lokal gestartet (Kontextprüfung ergibt „lokaler Agent“), sind `save_state`, `local_agent` und `handover` durch die laufende Sitzung prüfbar und werden ohne Nutzeraktion bestätigt.
+Ist der Agent schon lokal gestartet (Kontextprüfung ergibt „lokaler Agent“), sind `local_agent` und `handover` durch die laufende Sitzung belegt und werden ohne Nutzeraktion bestätigt. `save_state` braucht dann nur die Zustimmung zum Speicherort aus §7.1 (eine Frage), keine weitere Nutzeraktion.
 
 ## 9. Projektebene
 

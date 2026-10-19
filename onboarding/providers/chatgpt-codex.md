@@ -85,6 +85,8 @@ Frage 1 von 1: Welches Berechtigungsprofil soll Codex bekommen?
 
 Empfehlung: Standard, weil Codex damit im Projekt selbstständig arbeiten kann, aber vor Aktionen außerhalb fragt. Netzwerk bei Bedarf im Einzelfall freigeben.
 
+- **Linux und WSL2:** Die Sandbox braucht `bubblewrap` (C15). Prüfe `command -v bwrap`; fehlt es, gehört die Installation zu diesem Schritt: `sudo apt install bubblewrap` (Fedora: `sudo dnf install bubblewrap`). Danach die Sandbox tatsächlich prüfen: `codex sandbox -- true` muss mit Exit 0 enden.
+- Endet `codex sandbox -- true` (oder jeder Befehl in Codex) mit einer Meldung wie `bwrap: … Operation not permitted` bzw. warnt Codex, es könne keinen „user namespace“ anlegen, blockiert unter Ubuntu 24.04 die AppArmor-Sperre für Benutzer-Namensräume die Sandbox. Lösung laut OpenAI (C15): `sudo apt install apparmor-profiles apparmor-utils`, dann `sudo install -m 0644 /usr/share/apparmor/extra-profiles/bwrap-userns-restrict /etc/apparmor.d/bwrap-userns-restrict` und `sudo apparmor_parser -r /etc/apparmor.d/bwrap-userns-restrict`; danach erneut `codex sandbox -- true`. Die systemweite Abschaltung der AppArmor-Sperre bietest du nicht an; hilft das Profil nicht, ist das ein Blocker mit genau dieser Meldung. „Voller Zugriff“ ist keine Lösung für einen Sandbox-Fehler, sondern nur eine eigene Entscheidung des Nutzers.
 - `untrusted` nicht verwenden: Diese Freigaberegel ist entfernt und kann den Start verhindern (C6).
 - Steht in `~/.codex/config.toml` bereits ein Profil, lies es vor und frage nur, ob es so bleiben soll, wenn es vom gewählten Profil abweicht. Ändere die Datei nur nach der Antwort; behalte alle anderen Einträge.
 - Prüfung: Datei bzw. `/permissions` lesen und den wirksamen Wert nennen.
@@ -100,5 +102,5 @@ Nur wenn der Nutzer im ChatGPT-Chat planen möchte. Die GitHub-Verbindung wird i
 | --- | --- | --- | --- |
 | `local_agent` | `codex --version`, `codex login status` | im WSL-Terminal bzw. in der App mit WSL2-Agent: dieselben Befehle | dieselben Befehle |
 | `skills` | `codex plugin list`, `/skills` | wie macOS, in der WSL2-Sitzung | wie macOS |
-| `permissions` | `~/.codex/config.toml` lesen | `~/.codex/config.toml` in WSL lesen (App: gewählter Modus) | wie macOS |
+| `permissions` | `~/.codex/config.toml` lesen | `~/.codex/config.toml` in WSL lesen (App: gewählter Modus); `codex sandbox -- true` | `~/.codex/config.toml`; `codex sandbox -- true` |
 | alle anderen | `../platforms/macos.md` | `../platforms/windows.md` | `../platforms/linux.md` |
