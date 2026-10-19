@@ -29,6 +29,7 @@ rec "Paket laden" "0" bash -c "for f in START_HIER.md AI-Bootstrap-2.1.0.zip SHA
 rec "Prüfsummen" "0" bash -c 'shasum -a 256 -c SHA256SUMS'
 rec "Entpacken (python3 -m zipfile)" "0" python3 -m zipfile -e AI-Bootstrap-2.1.0.zip pkg
 cd pkg/AI-Bootstrap-2.1.0 || exit 1
+rec "Paket-Quelle (Manifest)" "Info" python3 -c "import json; m=json.load(open('BUNDLE_MANIFEST.json')); print(m['source_commit'])"
 rec "Gebündelte Tests (alle)" "0" python3 -m unittest discover -s tests
 rec "Gate-Hostprobe (systemd_scope=false)" "0" python3 scripts/probe_gate_host.py
 rec "Gate-Hostprobe mit systemd_scope=true" "10 (PRECONDITION)" python3 scripts/probe_gate_host.py --config templates/devbox_merge_gate.example.toml
