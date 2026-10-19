@@ -64,6 +64,7 @@ Du kannst auch eine eigene Antwort schreiben.
 - **Y** ist die Zahl der Fragen im aktuell bekannten Fragenblock, nicht eine erfundene Gesamtzahl der Einrichtung. Die Fragenblöcke stehen in Abschnitt 6.
 - Ergibt eine Antwort eine neue nötige Frage, sage das offen: „Durch deine Antwort kommt eine Frage dazu: Frage 3 von 3.“
 - Eine eigene Antwort des Nutzers nimmst du ernst. Passt sie, übernimm sie (`source: "user_own_answer"`). Passt sie nicht zu den Grenzen dieser Einrichtung, erkläre den konkreten Grund und biete die nächstliegende mögliche Option an.
+- Führt eine eigene Antwort auf einen Weg, den diese Einrichtung nicht geprüft hat (zum Beispiel ein anderes Betriebssystem), sag ausdrücklich „nicht geprüft“. Behaupte nicht, dass er funktioniert oder „reicht“; ob er funktioniert, zeigt erst die tatsächliche Prüfung im jeweiligen Schritt.
 - Frage nie etwas, das du selbst prüfen kannst, und nie eine reine Bestätigung („Soll ich weitermachen?“).
 - Jede Antwort wird sofort als Entscheidung im Zustand festgehalten.
 
@@ -76,7 +77,7 @@ Du kannst auch eine eigene Antwort schreiben.
 | Berechtigungen | `permissions` | 1. Welches Berechtigungsprofil soll der Agent bekommen? |
 | Projekt | `project` | 1. Neues oder bestehendes Projekt? Danach die Fragen des Projektstandards (siehe Abschnitt 9) als eigener Block |
 
-Welche Abos welche Wege erlauben, steht in der jeweiligen Anbieterdatei. Wählt der Nutzer ein Abo, das den lokalen Agenten nicht enthält, sage das konkret und nenne den tatsächlich nötigen Plan. Der Nutzer entscheidet selbst über einen Wechsel; du kaufst, kündigst oder wechselst nichts.
+Welche Abos welche Wege erlauben, steht in der jeweiligen Anbieterdatei. Wählt der Nutzer ein Abo, das den lokalen Agenten nicht enthält, sage das konkret und nenne den tatsächlich nötigen Plan. Damit entsteht eine echte Entscheidung: Kündige sie als zusätzliche Frage an und passe die Zählung offen an (zum Beispiel „Durch deine Antwort kommt eine Frage dazu: Frage 2 von 3“). Optionen: Plan selbst wechseln, den anderen Anbieterweg nehmen (falls dort enthalten), oder Stand sichern und später fortsetzen. Der Nutzer entscheidet selbst; du kaufst, kündigst oder wechselst nichts. Stelle diese Frage vor der nächsten Frage des Blocks.
 
 ## 7. Einrichtungsstand: sichern, exportieren, fortsetzen
 
@@ -166,7 +167,9 @@ Der Abschluss nennt nur, was tatsächlich nachgewiesen ist:
 - Probelauf mit Branch, Commit und Remote-Gleichheit;
 - verbleibende Blocker mit dem konkreten nächsten Schritt.
 
-Eine teilweise Einrichtung heißt „teilweise eingerichtet“, nicht „fertig“. Sichere den Endstand (Abschnitt 7) und nenne, dass für ein weiteres Projekt die persönliche Einrichtung wiederverwendet wird: Dann beginnt eine neue Sitzung mit dem Stand, prüft die veränderlichen Schritte kurz erneut und geht direkt zu `project`.
+Eine teilweise Einrichtung heißt „teilweise eingerichtet“, nicht „fertig“. Fragt der Nutzer nach dem Ende, während ein Schritt blockiert ist: sag „noch nicht fertig“, nenne den offenen Schritt, den Blocker und genau den nächsten Schritt, trage den Blocker im Stand ein und sichere ihn (Abschnitt 7) – ohne lange Gesamtliste. Die vollständige Liste je Schritt gehört in den Abschlussbericht, wenn alle Schritte erledigt sind oder der Nutzer sie verlangt.
+
+Sichere den Endstand (Abschnitt 7) und nenne, dass für ein weiteres Projekt die persönliche Einrichtung wiederverwendet wird: Dann beginnt eine neue Sitzung mit dem Stand, prüft die veränderlichen Schritte kurz erneut und geht direkt zu `project`.
 
 ## 12. Grenzen dieser Einrichtung
 

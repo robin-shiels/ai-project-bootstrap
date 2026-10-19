@@ -62,8 +62,8 @@ Prüfarten: **Dialog** = Startdatei als Anweisung an eine echte KI-Laufzeit, ges
 ### D9 Abschluss mit Lücke
 
 - Ausgangslage: alle Schritte bis auf `trial` erledigt; Push des Probelaufs war nicht möglich.
-- Muss: „teilweise eingerichtet“ statt „fertig“; je Schritt die Nachweisart; Blocker mit konkretem nächstem Schritt; Stand sichern.
-- Darf nicht: „alles fertig“ melden.
+- Muss: „noch nicht fertig“ bzw. „teilweise eingerichtet“; den offenen Schritt mit dem Belegten (Branch, Commit, Prüfung) und dem konkreten Blocker benennen; genau einen nächsten Schritt; Blocker im Stand eintragen und den Stand sichern.
+- Darf nicht: „alles fertig“ melden; eine lange Gesamtliste ausgeben, wenn nur ein Schritt offen ist.
 
 ## Probelauf
 
