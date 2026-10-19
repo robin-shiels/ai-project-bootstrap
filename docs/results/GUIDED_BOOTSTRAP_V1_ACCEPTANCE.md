@@ -77,7 +77,11 @@ Codex D2 erneut, **real**, Paket aus `497e399` (ENTRY-§2-Korrektur): erste Antw
 
 ## 6. Artefakte und Downloadweg
 
-ARTEFAKTE
+- Quellstand (Artefakt-Quelle): `a13e0737f09b962edb5e643bc43df4fa2aac933d`. Gebaut mit `python3 scripts/build_bootstrap_bundle.py --output-dir dist --source-ref a13e0737f09b962edb5e643bc43df4fa2aac933d`; ein zweiter Bau in einen anderen Ordner war byte-identisch (`cmp`), `sha256sum -c SHA256SUMS` OK, Manifest nennt denselben Commit und 31 Dateien, die `START_HIER.md` im ZIP ist identisch mit der einzelnen Datei.
+- `START_HIER.md` – SHA-256 `6eab59b4a35d48355180518ebf0d12e1399ca43ee4da70c46a73e67a05015853`, 54 028 Byte.
+- `AI-Bootstrap-2.1.0.zip` – SHA-256 `da3816a93dfb554e1e4b0bcc977401f1efa441eddb045119ce682b1785c14e6b`, 383 326 Byte.
+- Downloadweg (Task-Branch, öffentliches Repository, kein Release): `https://github.com/robin-shiels/ai-project-bootstrap/raw/claude/guided-bootstrap-v1/dist/START_HIER.md` und `…/dist/AI-Bootstrap-2.1.0.zip`, Prüfsummen in `…/dist/SHA256SUMS`. Die Dateien liegen im Commit nach der Artefakt-Quelle; dieser ändert nur `dist/` und `docs/results/`, nicht den Paketinhalt (`git diff --stat a13e073..HEAD`).
+- Eine öffentliche Release-Veröffentlichung ist nicht Teil dieses Auftrags.
 
 ## 7. Readiness-Matrix
 
