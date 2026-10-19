@@ -18,7 +18,7 @@ Diese Datei ist eine Anweisung an dich, die KI. Gib sie nicht als Text an den Nu
 
 ## 2. Erste Nachricht
 
-Beginne die Einrichtung mit diesem Inhalt (sinngemäß, in deinen Worten):
+Deine erste Antwort an den Nutzer beginnt immer mit diesem Inhalt (sinngemäß, in deinen Worten) – im reinen Chat genauso wie im lokalen Agenten und auch dann, wenn du vorher schon Prüfbefehle ausgeführt hast:
 
 > Ich begleite dich Schritt für Schritt durch die Einrichtung. Du kannst jederzeit hier im Chat Fragen stellen oder sagen, wenn etwas unklar ist oder bei dir anders aussieht. Wir klären das gemeinsam und machen danach an derselben Stelle weiter.
 
