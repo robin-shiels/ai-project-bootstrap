@@ -8,6 +8,7 @@ GitHub ref, no hosted runner minutes and no host services are used.
 
 from __future__ import annotations
 
+import contextlib
 import importlib.util
 import io
 import os
@@ -1036,6 +1037,143 @@ class HeavyProcessTests(unittest.TestCase):
             self.make_proc(proc, 6, 5, "b")
             self.assertEqual(gate.ancestor_pids(5, proc), {5, 6})
             self.assertEqual(gate.ancestor_pids(99, proc), {99})
+
+
+VM_STAT_SAMPLE = """\
+Mach Virtual Memory Statistics: (page size of 16384 bytes)
+Pages free:                               10000.
+Pages active:                            200000.
+Pages inactive:                           90000.
+Pages speculative:                         5000.
+Pages wired down:                         80000.
+Pages purgeable:                           3000.
+"""
+PS_SAMPLE = """\
+    1     0 /sbin/launchd
+   10     1 /bin/zsh -c wait-for-pytest-then-gate
+   12    10 python3 gate.py check-only
+   30     1 /venv/bin/python /venv/bin/pytest -q
+   31     1 /usr/bin/vim notes.txt
+"""
+
+
+class PlatformPortabilityTests(unittest.TestCase):
+    """Platform selection and the macOS host adapter (simulated host output only)."""
+
+    def config(self, **resources: str) -> object:
+        with tempfile.TemporaryDirectory() as tmp:
+            text = config_text(Path(tmp) / "state")
+            for key, value in resources.items():
+                text = re.sub(rf"(?m)^{key} = .*$", f"{key} = {value}", text)
+            path = Path(tmp) / "gate.toml"
+            path.write_text(text)
+            return gate.load_config(path)
+
+    def test_platform_mapping(self) -> None:
+        self.assertEqual(gate.host_platform("linux"), "linux")
+        self.assertEqual(gate.host_platform("darwin"), "macos")
+        self.assertEqual(gate.host_platform("win32"), "unsupported")
+        self.assertEqual(gate.host_platform("cygwin"), "unsupported")
+
+    def test_native_windows_stops_with_named_precondition(self) -> None:
+        with self.assertRaises(gate.GateStop) as stop:
+            gate.platform_preflight(self.config(), "win32")
+        self.assertEqual(stop.exception.code, gate.Code.PRECONDITION)
+        self.assertIn("WSL 2", stop.exception.message)
+
+    def test_macos_refuses_systemd_scope_instead_of_ignoring_it(self) -> None:
+        with self.assertRaises(gate.GateStop) as stop:
+            gate.platform_preflight(self.config(systemd_scope="true"), "darwin")
+        self.assertEqual(stop.exception.code, gate.Code.PRECONDITION)
+        self.assertIn("systemd_scope", stop.exception.message)
+
+    def test_macos_refuses_watched_user_services(self) -> None:
+        with self.assertRaises(gate.GateStop) as stop:
+            gate.platform_preflight(
+                self.config(watched_user_services='["db"]'), "darwin"
+            )
+        self.assertIn("watched_user_services", stop.exception.message)
+
+    def test_supported_configurations_pass_preflight(self) -> None:
+        self.assertIsNone(gate.platform_preflight(self.config(), "darwin"))
+        self.assertIsNone(
+            gate.platform_preflight(self.config(systemd_scope="true"), "linux")
+        )
+
+    def test_main_stops_before_any_run_on_native_windows(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "gate.toml"
+            path.write_text(config_text(Path(tmp) / "state"))
+            original = gate.sys.platform
+            gate.sys.platform = "win32"
+            try:
+                with contextlib.redirect_stderr(io.StringIO()) as err:
+                    code = gate.main(["--config", str(path), "check-only", "--pr", "1"])
+            finally:
+                gate.sys.platform = original
+        self.assertEqual(code, int(gate.Code.PRECONDITION))
+        self.assertIn("STOP PRECONDITION", err.getvalue())
+        self.assertFalse((Path(tmp) / "state").exists())
+
+    def test_macos_memory_is_a_conservative_estimate(self) -> None:
+        self.assertEqual(gate.parse_vm_stat(VM_STAT_SAMPLE), (10000 + 90000) * 16)
+        self.assertEqual(
+            gate.parse_swapusage(
+                "total = 2048.00M  used = 1081.25M  free = 966.75M  (encrypted)"
+            ),
+            int(966.75 * 1024),
+        )
+        self.assertEqual(
+            gate.parse_swapusage("total = 0.00M  used = 0.00M  free = 0.00M"), 0
+        )
+        with self.assertRaises(gate.GateStop):
+            gate.parse_vm_stat("unexpected")
+
+    def test_macos_process_scan_skips_the_gate_and_its_ancestors(self) -> None:
+        patterns = [re.compile(r"(^|/)pytest(\s|$)"), re.compile("pytest")]
+        found = gate.heavy_processes_from_ps(PS_SAMPLE, patterns, 12)
+        self.assertEqual([line.split(":")[0] for line in found], ["30"])
+
+    def test_macos_host_reads_resources_through_commands(self) -> None:
+        outputs = {
+            ("vm_stat",): VM_STAT_SAMPLE,
+            (
+                "sysctl",
+                "-n",
+                "vm.swapusage",
+            ): "total = 1024.00M  used = 0.00M  free = 1024.00M",
+            ("ps", "-axww", "-o", "pid=,ppid=,command="): PS_SAMPLE.replace(
+                "   12    10", f"{os.getpid():5d}    10"
+            ),
+        }
+        calls: list[tuple[str, ...]] = []
+
+        def fake_run(argv: tuple[str, ...]) -> str:
+            calls.append(tuple(argv))
+            return outputs[tuple(argv)]
+
+        host = gate.LocalHost(
+            self.config(heavy_process_patterns='["pytest"]'),
+            system="darwin",
+            run=fake_run,
+        )
+        snapshot = host.resources()
+        self.assertEqual(snapshot.mem_available_kib, 1_600_000)
+        self.assertEqual(snapshot.swap_free_kib, 1024 * 1024)
+        self.assertEqual(
+            [line.split(":")[0] for line in snapshot.heavy_processes], ["30"]
+        )
+        self.assertEqual(snapshot.services, {})
+        self.assertEqual(len(calls), 3)
+
+    def test_macos_tool_failure_stops_instead_of_passing(self) -> None:
+        def broken(argv: tuple[str, ...]) -> str:
+            raise OSError("vm_stat missing")
+
+        host = gate.LocalHost(self.config(), system="darwin", run=broken)
+        with self.assertRaises(gate.GateStop) as stop:
+            host.resources()
+        self.assertEqual(stop.exception.code, gate.Code.ERROR)
 
 
 class TemplateHygieneTests(unittest.TestCase):

@@ -253,5 +253,20 @@ GitHub only offers manual runs for workflows on the default branch
   stay in force: own-branch push is not merge authority. Merge authority comes
   only from this separate contract once the project has adopted it.
 
+## 10. Platforms
+
+The contract above is the same on every platform; no platform gets a weaker
+gate.
+
+| Platform | Gate path | Notes |
+| --- | --- | --- |
+| Linux | native, reference implementation | `systemd_scope` and `watched_user_services` available where a user systemd instance runs |
+| macOS | native | memory from `vm_stat` (free + inactive pages, a conservative estimate) and `sysctl vm.swapusage`, processes from `ps`; `systemd_scope = true` or non-empty `watched_user_services` stop with `PRECONDITION` instead of being ignored |
+| Windows | inside WSL 2 only | the Linux path runs unchanged in the WSL distribution; the repository lives in the Linux file system; started natively on Windows the gate stops with `PRECONDITION` before reading the configuration's state directory |
+
+A platform that cannot provide a configured protection is a named stop, never
+a silent downgrade. Unit tests simulate the macOS and Windows host answers; a
+simulation is not a test on that operating system.
+
 GitHub references: [`updateRefs` and `RefUpdate`](https://docs.github.com/en/graphql/reference/git)
 (`beforeOid`, `afterOid`, `force`).

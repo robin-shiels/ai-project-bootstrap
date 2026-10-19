@@ -1,0 +1,17 @@
+{
+  "order": "docs/tasks/GUIDED_BOOTSTRAP_V1.md",
+  "order_revision": "e29b3f21eb877f9f1215d29a4bff5d6dfbac6174",
+  "source_base": "11d642bcfd8de138da81ac11d7e5fedcc9c0028d",
+  "branch": "claude/guided-bootstrap-v1",
+  "last_commit": null,
+  "tasks": [
+    {"id": "GBOOT-01", "state": "running", "dependencies": [], "result_files": ["docs/research/GUIDED_BOOTSTRAP_V1_SOURCE_MATRIX.md", "docs/results/GUIDED_BOOTSTRAP_V1_COVERAGE.md"], "validation": [], "blockers": []},
+    {"id": "GBOOT-02", "state": "running", "dependencies": ["GBOOT-01"], "result_files": ["onboarding/ENTRY.md", "onboarding/STATE.schema.json", "onboarding/STATE.example.json", "scripts/onboarding_state.py", "tests/test_onboarding_state.py"], "validation": [], "blockers": []},
+    {"id": "GBOOT-03", "state": "pending", "dependencies": ["GBOOT-01", "GBOOT-02"], "result_files": [], "validation": [], "blockers": []},
+    {"id": "GBOOT-04", "state": "running", "dependencies": ["GBOOT-01"], "result_files": ["templates/devbox_merge_gate.py", "tests/test_devbox_merge_gate.py", "DEVBOX_GATE_POLICY.md"], "validation": [], "blockers": []},
+    {"id": "GBOOT-05", "state": "pending", "dependencies": ["GBOOT-02", "GBOOT-03", "GBOOT-04"], "result_files": [], "validation": [], "blockers": []},
+    {"id": "GBOOT-06", "state": "pending", "dependencies": ["GBOOT-05"], "result_files": [], "validation": [], "blockers": []},
+    {"id": "GBOOT-07", "state": "pending", "dependencies": ["GBOOT-06"], "result_files": [], "validation": [], "blockers": []}
+  ],
+  "next_action": "GBOOT-03: Anbieter- und Plattformdateien schreiben"
+}
