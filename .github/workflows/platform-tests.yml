@@ -1,0 +1,55 @@
+name: platform-tests
+
+# Manual platform test of the AI Bootstrap bundle on GitHub-hosted macOS and
+# Windows runners (owner decision 2026-10-19, docs/PLATFORM_TESTS.md).
+# Only manual start, no repository secrets, no third-party actions; the job
+# token can only read repository contents.
+on:
+  workflow_dispatch:
+    inputs:
+      bundle_commit:
+        description: "Commit whose dist/ is tested"
+        required: true
+        default: "2feaecca2118f015ead69dbe85524a13d06d00b6"
+
+permissions:
+  contents: read
+
+jobs:
+  macos:
+    name: macos-latest
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - name: Load test script of this run's commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          curl -fsSL -H "Authorization: Bearer $GH_TOKEN"
+          -H "Accept: application/vnd.github.raw" -o posix.sh
+          "https://api.github.com/repos/${GITHUB_REPOSITORY}/contents/scripts/platform_tests/posix.sh?ref=${GITHUB_SHA}"
+      - name: Test
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUNDLE_COMMIT: ${{ inputs.bundle_commit }}
+        run: bash posix.sh
+
+  windows:
+    name: windows-latest
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Load test script of this run's commit
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          Invoke-WebRequest -UseBasicParsing -OutFile windows.ps1
+          -Headers @{ Authorization = "Bearer $env:GH_TOKEN"; Accept = "application/vnd.github.raw" }
+          -Uri "https://api.github.com/repos/$env:GITHUB_REPOSITORY/contents/scripts/platform_tests/windows.ps1?ref=$env:GITHUB_SHA"
+      - name: Test
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUNDLE_COMMIT: ${{ inputs.bundle_commit }}
+        run: ./windows.ps1
