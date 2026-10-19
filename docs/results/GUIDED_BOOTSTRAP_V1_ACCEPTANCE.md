@@ -9,7 +9,7 @@ Paketversion 2.1.0. Die Artefakt-Quelle (Commit, aus dem die Dateien gebaut wurd
 | Achse | Status | Begründung |
 | --- | --- | --- |
 | Repository | DONE_ON_BRANCH (nach Push, Nachweis in Abschnitt 6) | auf eigenem Branch committet und gepusht; nicht in main integriert |
-| Produkt | **PACKAGE_BUILT** | `START_HIER.md` und ZIP gebaut, deterministisch, Paket- und Dialogtests bestanden. Beide Linux-Wege wurden zusätzlich vom Nullzustand in einer frischen Ubuntu-24.04-VM durchlaufen; der Codex-Sandbox-Befund F5 und seine Abhilfe sind dort real belegt. **Nicht READY**: die vier macOS-/Windows-Wege sind nicht real geprüft (keine Geräte, in einer VM auf der Dev-Box nicht machbar, Abschnitt 4b), die Webchats (ChatGPT, claude.ai) mit Datei-Upload sind nicht real geprüft, und die Konto-Anmeldungen (Claude, ChatGPT/Codex, GitHub) sowie die Plugin-Installation im Nullzustand sind persönliche Aktionen, die nicht ausgeführt wurden. |
+| Produkt | **PACKAGE_BUILT** | `START_HIER.md` und ZIP gebaut, deterministisch, Paket- und Dialogtests bestanden. Beide Linux-Wege wurden zusätzlich vom Nullzustand in einer frischen Ubuntu-24.04-VM durchlaufen; der Codex-Sandbox-Befund F5 und seine Abhilfe sind dort real belegt. **Nicht READY**: die vier macOS-/Windows-Wege sind nur technisch auf GitHub-Runnern geprüft (Installer, Gate, Codex-Sandbox; Abschnitt 4c), ohne Anmeldung, Dialog und Probelauf, und der Windows-Standardweg über WSL 2 ist noch offen, die Webchats (ChatGPT, claude.ai) mit Datei-Upload sind nicht real geprüft, und die Konto-Anmeldungen (Claude, ChatGPT/Codex, GitHub) sowie die Plugin-Installation im Nullzustand sind persönliche Aktionen, die nicht ausgeführt wurden. |
 
 Die Aussage „alle sechs Wege einsatzbereit“ wird **nicht** getroffen.
 
@@ -78,6 +78,31 @@ Ausgangszustand jeder VM: Git 2.43.0 und Python 3.12.3 vorhanden; `gh`, `unzip`,
 
 **Windows und macOS in einer VM:** nicht durchgeführt. macOS darf laut Apple-Lizenz nur auf Apple-Hardware virtualisiert werden. Eine Windows-11-VM braucht mindestens 4 GB RAM, die Dev-Box (selbst eine KVM-VM mit 7,9 GB) hatte rund 4 GB frei, und WSL 2 in dieser VM wäre eine dritte Virtualisierungsebene. Diese vier Wege bleiben NOT_TESTED.
 
+## 4c. GitHub-gehostete macOS- und Windows-Runner
+
+Owner-Entscheidung 2026-10-19: manueller Workflow `platform-tests` in diesem Repository (PR #6, gemergt auf Owner-Auftrag als `0b15ebb`), vom Owner von Hand gestartet. Nur Leserecht, keine Secrets, keine fremden Actions, keine Anmeldung. Ein Runner ist eine frisch bereitgestellte VM des Anbieters (macOS auf Apple-Hardware), kein privater Rechner eines Nutzers.
+
+**Lauf 39307007243** (2026-10-19 18:58 UTC, `workflow_dispatch`, Workflow-Stand `0b15ebb`, Paket aus `dist/` von `2feaecc` = Quelle `678c15a`; beide Jobs abgeschlossen):
+
+| Prüfung | macOS 26.6.2 (arm64), Python 3.15.0 | Windows Server 2025 Datacenter (10.0.26100), Python 3.12.10 |
+| --- | --- | --- |
+| Paket laden, `SHA256SUMS` | OK | OK |
+| Entpacken mit `python -m zipfile` | OK | OK |
+| Gebündelte Tests | **63 OK** | Einrichtungsstand-Tests OK; Gate-Plattformtests **1 Fehler + 6 Errors** → Befund F7 (Test-Hilfsmittel) |
+| Gate-Hostprobe | Exit 0, `gate platform: macos`, MemAvailable 3036 MiB (real `vm_stat`) | Exit 10, `STOP PRECONDITION … run the gate inside WSL 2` |
+| Gate-Stopp bei unpassender Konfiguration | `systemd_scope = true` → Exit 10 `PRECONDITION` | `check-only` außerhalb eines Repositories → Exit 10 (F6 real bestätigt) |
+| `validate-config`, Zustands-Validator | Exit 0 / Exit 0 | Exit 0 / Exit 0 |
+| Claude Code installieren | `install.sh` Exit 0, `2.1.303 (Claude Code)`, `claude doctor` ohne Installationsfehler | `install.ps1` Exit 0, 2.1.303; Installer meldet `.local\bin` fehlt im PATH (Notiz ergänzt) |
+| Codex installieren | `install.sh` Exit 0, `codex-cli 0.163.0`, nicht angemeldet | `install.ps1` Exit 0, 0.163.0, nicht angemeldet |
+| Codex-Sandbox | `codex sandbox -- true` Exit 0; read-only: Schreiben gesperrt; workspace-write: im Projekt erlaubt, außerhalb `Operation not permitted` | `codex sandbox -- cmd /c exit 0` Exit 0 (Sperrwirkung nicht geprüft) |
+| WSL | – | `wsl --status`: „Default Version: 2“; keine Distribution installiert; WSL-2-Weg nicht geprüft |
+
+Befund F7: Das Test-Hilfsmittel `config_text` schrieb Windows-Pfade (`C:\Users\…`) und `sys.executable` ungeschützt in TOML-Zeichenketten (`Invalid hex value`); das Gate selbst wurde dadurch gar nicht erreicht. Behoben in `fffd4ad` (Pfade escaped, Regressionstest); auf echtem Windows erst mit einem zweiten Lauf bestätigt (Abschnitt 4d).
+
+## 4d. Zweiter Runner-Lauf
+
+LAUF_2
+
 ## 5. Befunde und Behebung
 
 | ID | Quelle | Befund | Behebung | Erneut geprüft |
@@ -91,6 +116,9 @@ Ausgangszustand jeder VM: Git 2.43.0 und Python 3.12.3 vorhanden; `gh`, `unzip`,
 | F3 | D7 Claude | `gh auth setup-git` pauschal verlangt trotz funktionierendem SSH | linux.md, macos.md | nicht erneut gelaufen |
 | F6 | VM: Gate-Tests im entpackten ZIP | `main()` löste das Repository vor der Plattformprüfung auf; natives Windows außerhalb eines Repositories hätte mit Traceback statt `STOP PRECONDITION` geendet; Test hing vom Arbeitsordner ab | Preflight vor Repository-Auflösung; Test mit Nicht-Repo-`--repo-dir` (9494504) | 63 gebündelte Tests OK in der VM |
 | V1–V11 | VM-Lauf A | u. a.: Agent kann eigene Slash-Befehle nicht ausführen; Claude-Sandbox unter Ubuntu 24.04 ohne konkrete Abhilfe; `git switch -c X origin/main` verfolgt main; Weiterarbeit nach Blocker ungeregelt; neu/bestehend nicht abgegrenzt; `unzip` fehlt; Entpacken bei laufendem Agenten | ENTRY §3, §4, §8, §9, §10; claude-code.md; chatgpt-codex.md; linux.md; windows.md (08d44e7) | VM-Lauf B bestätigt Weiterarbeit und Branch ohne Verfolgung; Lauf A2 |
+| F7 | Runner-Lauf 39307007243, Windows | Test-Hilfsmittel schrieb Windows-Pfade ungeschützt in TOML; 7 Gate-Plattformtests scheiterten vor dem Gate | `toml_path()` im Test, Regressionstest (fffd4ad) | zweiter Runner-Lauf (4d) |
+| W1 | Runner-Lauf 39307007243, Windows | Claude-Installer: `%USERPROFILE%\.local\bin` nicht im PATH | Notiz zum nativen Windows-Weg in claude-code.md (fffd4ad) | – (nativer Weg ist nicht Standard) |
+| P1 | Commit `8d0467f` (PR #5) | README-Link auf `docs/PLATFORM_TESTS.md` liegt außerhalb des Pakets → Pakettest rot; wurde wegen einer Befehlskette ohne `pipefail` trotzdem gepusht | absoluter Link (36dda5f); Prüfungen seither mit `pipefail` | 81 Tests grün, auch zusammen mit main |
 | VB1 | VM-Lauf B | leere Codex-Plugin-Liste ohne Anmeldung ohne Hinweis | chatgpt-codex.md (d91d87f) | – |
 | **F5** | **D1/D2/D7 Codex Runde 1** | **Codex-Sandbox (`read-only`, `workspace-write`) scheitert auf Ubuntu 24.04: `bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted`; `codex sandbox -- true` Exit 1; `kernel.apparmor_restrict_unprivileged_userns = 1`, kein `bubblewrap` installiert** | chatgpt-codex.md: `bubblewrap` als Teil von `permissions` auf Linux/WSL2, Prüfung `codex sandbox -- true`, AppArmor-Profil `bwrap-userns-restrict` laut OpenAI (Quelle C15); keine systemweite Abschaltung | **in frischer VM real belegt** (Abschnitt 4b; Lauf B wendet die Abhilfe selbst an). Auf dem Owner-Rechner nicht angewendet; Codex-Läufe dort deshalb mit der vorhandenen Nutzerkonfiguration `danger-full-access` in Testordnern |
 | F4 | D2 Codex | Begrüßungshinweis fehlte im lokalen Agenten | ENTRY §2 „erste Antwort immer“ | siehe Abschnitt 4a |
@@ -111,11 +139,11 @@ Codex D2 erneut, **real**, Paket aus `497e399` (ENTRY-§2-Korrektur): erste Antw
 
 | Weg | OS/Tools | Ausgangszustand | Konto/Verbindung | Skills | Berechtigungen | Gate | Probelauf | Ergebnis | Nachweis | Blocker |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| ChatGPT/Codex × macOS | – | – | – | – | – | Simulation | – | **NOT_TESTED** | – | kein Mac; VM lizenzrechtlich nicht zulässig |
-| ChatGPT/Codex × Windows | – | – | – | – | – | Simulation (nativer Stopp); WSL-Weg = Linux-Code, in WSL nicht gelaufen | – | **NOT_TESTED** | – | kein Windows-Rechner; Windows-VM mit WSL 2 auf der Dev-Box nicht machbar (RAM, dritte Virtualisierungsebene) |
+| ChatGPT/Codex × macOS | GitHub-Runner macOS 26.6.2 arm64, Python 3.15.0, codex-cli 0.163.0 | frische Runner-VM | keine Anmeldung | nicht prüfbar ohne Anmeldung | Codex-Sandbox real: Exit 0, Schreiben außerhalb gesperrt | 63 Tests + Hostprobe real, `systemd_scope`-Stopp real | – | **TEILWEISE (technisch)** | Abschnitt 4c | Dialog, Anmeldungen, Plugins, Probelauf nicht auf macOS; kein Desktop-Nutzerrechner |
+| ChatGPT/Codex × Windows | GitHub-Runner Windows Server 2025, Python 3.12.10, codex-cli 0.163.0 | frische Runner-VM, nativ | keine Anmeldung | nicht prüfbar | `codex sandbox` startet (Sperrwirkung nicht geprüft) | nativer Gate-Stopp real; WSL-2-Weg offen (4d) | – | **TEILWEISE (technisch)** | Abschnitt 4c | Standardweg WSL 2 nicht geprüft; Windows Server statt Windows 11; keine Anmeldung/Dialog |
 | ChatGPT/Codex × Linux | (a) Prüfrechner Ubuntu 24.04.4, codex-cli 0.163.0; (b) frische VM Ubuntu 24.04.5, codex-cli 0.163.0, gh 2.102.0, bubblewrap 0.9.0 | (a) eingerichteter Rechner; (b) **Nullzustand** | (a) Codex und gh angemeldet; (b) Anmeldungen nicht durchgeführt (persönliche Aktion) | (a) Superpowers 6.4.2 aktiv; (b) ohne Anmeldung nicht installierbar | (a) Sandbox defekt (F5, nicht geändert); (b) Standardprofil, Sandbox nach Abhilfe Exit 0 | (a) Hostprobe real; (b) 63 gebündelte Tests + Hostprobe real | (a) P1 PASS; (b) Lauf B PASS (lokales Test-Remote) | **TEILWEISE** | Abschnitte 3–5, 4b | Konto-Anmeldungen und Plugin-Installation im Nullzustand nicht durchgeführt; ChatGPT-Webchat mit Upload nicht real geprüft; Push zu GitHub im Probelauf nicht geprüft |
-| Claude/Claude Code × macOS | – | – | – | – | – | Simulation | – | **NOT_TESTED** | – | kein Mac; VM lizenzrechtlich nicht zulässig |
-| Claude/Claude Code × Windows | – | – | – | – | – | Simulation | – | **NOT_TESTED** | – | kein Windows-Rechner; Windows-VM mit WSL 2 auf der Dev-Box nicht machbar |
+| Claude/Claude Code × macOS | GitHub-Runner macOS 26.6.2 arm64, Claude Code 2.1.303 | frische Runner-VM | keine Anmeldung | nicht prüfbar | `/sandbox` nicht aufrufbar | 63 Tests + Hostprobe real | – | **TEILWEISE (technisch)** | Abschnitt 4c | Desktop-App, Anmeldung, Dialog, Probelauf nicht auf macOS |
+| Claude/Claude Code × Windows | GitHub-Runner Windows Server 2025, Claude Code 2.1.303 (nativ) | frische Runner-VM, nativ | keine Anmeldung | nicht prüfbar | – | nativer Gate-Stopp real; WSL-2-Weg offen (4d) | – | **TEILWEISE (technisch)** | Abschnitt 4c | Standardweg (Claude Code in WSL 2) nicht geprüft; keine Anmeldung/Dialog |
 | Claude/Claude Code × Linux | (a) Prüfrechner Ubuntu 24.04.4, Claude Code 2.1.299 (Desktop-App); (b) frische VM Ubuntu 24.04.5, Claude Code 2.1.303 (installiert), gh 2.102.0 | (a) eingerichteter Rechner; (b) **Nullzustand** | (a) gh angemeldet, Push dieses Task-Branches zu GitHub aus dieser Laufzeit; (b) Anmeldungen nicht durchgeführt | (a) `superpowers:*` in der Sitzung; (b) nicht prüfbar ohne Anmeldung | (b) Standardprofil geschrieben, `bwrap`-Grundlage nach AppArmor-Abhilfe Exit 0; `/sandbox` selbst nicht aufgerufen | wie oben | (a) P1 PASS; (b) Lauf A/A2 (lokales Test-Remote) | **TEILWEISE** | Abschnitte 3–5, 4b | Konto-Anmeldungen, Plugin-Installation und `/sandbox` im Nullzustand nicht durchgeführt; claude.ai-Webchat mit Upload nicht real geprüft |
 
 ## 8. Reproduzierbare offene Schritte
