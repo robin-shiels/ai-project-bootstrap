@@ -10,7 +10,7 @@ on:
       bundle_commit:
         description: "Commit or branch whose dist/ is tested"
         required: true
-        default: "claude/guided-bootstrap-v1"
+        default: "main"
 
 permissions:
   contents: read

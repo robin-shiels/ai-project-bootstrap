@@ -17,7 +17,7 @@ It checks the downloadable AI Bootstrap bundle on GitHub-hosted **macOS** and
 - On Windows the run finally tries to install Ubuntu 24.04 in WSL 2 and to
   run the gate tests there; each step has a timeout. Whether WSL 2 works on
   a hosted runner is recorded, not assumed.
-- The default input is the branch `claude/guided-bootstrap-v1`; the run prints
+- The default input is `main`; the run prints
   the bundle's source commit from `BUNDLE_MANIFEST.json`.
 - Standard hosted runners are free for public repositories; while the
   repository is private, minutes count against the account's Actions quota
