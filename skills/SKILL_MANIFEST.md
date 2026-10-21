@@ -76,18 +76,20 @@ Return compact STATUS, BASE_COMMIT, BRANCH, COMMIT, REMOTE_COMMIT_VERIFIED, RESU
 ### Skill authoring — optional until needed
 Reusable Codex skills should be created only when they improve recurring execution and should be versioned/reconciled rather than duplicated.
 
-## Verified implementations (v2.1.0)
+## Verified implementations (v3.0.0)
 
-Recorded for the guided setup (`onboarding/providers/`), with sources in the repository's source matrix. They are candidates to check, not proof of availability in a given runtime; the setup verifies each in the runtime that will use it and keeps already present equivalent capabilities.
+Recorded for the guided setup (`plugins/ai-bootstrap/skills/einrichtung/references/`), with sources in the repository's source matrix. They are candidates to check, not proof of availability in a given runtime; the setup verifies each in the runtime that will use it and keeps already present equivalent capabilities.
 
 | Capability | ChatGPT / Codex | Claude / Claude Code |
 | --- | --- | --- |
 | Brainstorming, planning, systematic debugging, testing/verification, Git isolation, completion | Superpowers plugin from the Codex plugin marketplace | Superpowers plugin (`superpowers@claude-plugins-official`) |
 | Research / audit | built-in web search | built-in web search |
 | Repository instruction discovery | built-in `AGENTS.md` loading | built-in `CLAUDE.md` / `AGENTS.md` loading |
-| Merge / release gate | `templates/devbox_merge_gate.py` once adopted | same |
+| Guided setup, project start, working rules (question format, explaining, merge/deployment procedure) | skills `einrichtung`, `projekt-start`, `arbeitsweise` from `plugins/ai-bootstrap` as personal skills in `~/.agents/skills` | plugin `ai-bootstrap@ai-bootstrap` from this repository's marketplace |
+| Merge and deployment | LIGHT procedure of the skill `arbeitsweise` (`gh pr merge --match-head-commit`) | same |
+| Merge / release gate | `templates/devbox_merge_gate.py` once a project adopts GATE | same |
 
-A generic finishing or merge prompt of such a skill never replaces the effective publication policy or the gate contract.
+A generic finishing or merge prompt of such a skill never replaces the effective publication policy or the project's merge and deployment policy.
 
 ## Reconciliation
 

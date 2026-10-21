@@ -15,9 +15,9 @@ Every run follows:
 
 ## Provider paths and guided personal setup
 
-This standard names ChatGPT (planning) and Codex (execution). The Claude path is equivalent: the Claude chat or Claude Code's plan mode takes the planning role and Claude Code the execution role; Claude Code reads `CLAUDE.md` and, without one, `AGENTS.md` (import `@AGENTS.md` where both exist). Wherever this standard says "Codex", the same contract applies to Claude Code, and configuring one side never implies the other is configured. Provider details: [`onboarding/providers/`](onboarding/providers/chatgpt-codex.md).
+This standard names ChatGPT (planning) and Codex (execution). The Claude path is equivalent: the Claude chat or Claude Code's plan mode takes the planning role and Claude Code the execution role; Claude Code reads `CLAUDE.md` and, without one, `AGENTS.md` (import `@AGENTS.md` where both exist). Wherever this standard says "Codex", the same contract applies to Claude Code, and configuring one side never implies the other is configured. Provider details: [`plugins/ai-bootstrap/skills/einrichtung/references/`](plugins/ai-bootstrap/skills/einrichtung/references/chatgpt-codex.md).
 
-A person without a working personal environment starts with the guided setup ([`onboarding/ENTRY.md`](onboarding/ENTRY.md), delivered as `START_HIER.md`). It establishes the local agent, Git/GitHub access, check tools, skills and a permission profile with actual evidence and a resumable, secret-free state, then hands over to this standard at "Inventory first". The setup grants no authority beyond what this standard and the project's rules grant.
+A person without a working personal environment starts with the guided setup (skill [`einrichtung`](plugins/ai-bootstrap/skills/einrichtung/SKILL.md) of the plugin `ai-bootstrap`, delivered through `START_HIER.md`). It assumes the ChatGPT or Claude desktop app and a subscription and establishes GitHub access, the skills, the personal working rules and a permission profile with actual evidence and a resumable, secret-free state, then hands over to this standard at "Inventory first" (skill `projekt-start`). The setup grants no authority beyond what this standard and the project's rules grant; a project's merge and deployment authority comes only from its recorded policy.
 
 ## Inventory first
 

@@ -22,6 +22,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(
+    0, str(ROOT / "plugins" / "ai-bootstrap" / "skills" / "einrichtung" / "scripts")
+)
 
 import build_bootstrap_bundle as bundle
 import onboarding_state
@@ -139,22 +142,24 @@ class BundleTest(unittest.TestCase):
             ).stdout
             self.assertEqual(self.files[path], blob, path)
 
-    def test_start_file_embeds_entry_and_paths(self) -> None:
+    def test_start_file_names_commit_and_existing_skill_paths(self) -> None:
         start = self.files["START_HIER.md"].decode("utf-8")
-        for path in bundle.EMBEDDED:
-            source = (ROOT / path).read_text(encoding="utf-8").rstrip("\n")
-            self.assertIn(f"<!-- BEGIN {path} -->", start)
-            self.assertIn(source, start, path)
         self.assertIn(self.commit, start)
+        self.assertIn(f"checkout --detach {self.commit}", start)
+        for path in (bundle.ENTRY_SKILL, bundle.SKILLS + "/arbeitsweise/SKILL.md"):
+            self.assertIn(path, start)
+            self.assertIn(path, self.files)
 
-    def test_start_file_first_step_needs_no_repository_or_zip(self) -> None:
+    def test_start_file_is_short_and_first_step_needs_no_github(self) -> None:
         start = self.files["START_HIER.md"].decode("utf-8")
-        head = start.split("<!-- BEGIN", 1)[0]
+        self.assertLess(len(start.splitlines()), 150)
+        head = start.split("## Anweisungen für die KI", 1)[0]
         self.assertIn("Lade diese Datei", head)
         self.assertIn("kopiere ihren ganzen Inhalt", head)
         self.assertNotRegex(head, r"(?i)github|repository verbinden")
-        self.assertIn("Fragen stellen", start)
+        self.assertIn("Fragen", start)
         self.assertIn("Frage X von Y", start)
+        self.assertIn("reiner Chat", start)
         self.assertIn("Behaupte nicht, das ZIP gelesen zu haben", start)
 
     def test_internal_links_resolve_inside_the_bundle(self) -> None:
@@ -232,9 +237,13 @@ class BundleTest(unittest.TestCase):
                 (
                     sys.executable,
                     "-I",
-                    str(base / "scripts" / "onboarding_state.py"),
+                    str(base / bundle.STATE_TOOL),
                     "validate",
-                    str(base / "onboarding" / "STATE.example.json"),
+                    str(
+                        base
+                        / bundle.SKILLS
+                        / "einrichtung/references/STATE.example.json"
+                    ),
                 ),
                 capture_output=True,
                 text=True,

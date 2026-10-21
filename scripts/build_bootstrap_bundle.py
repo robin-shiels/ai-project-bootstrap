@@ -28,6 +28,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 REPOSITORY = "robin-shiels/ai-project-bootstrap"
 
+PLUGIN = "plugins/ai-bootstrap"
+SKILLS = PLUGIN + "/skills"
+ENTRY_SKILL = SKILLS + "/einrichtung/SKILL.md"
+STATE_TOOL = SKILLS + "/einrichtung/scripts/onboarding_state.py"
+
 # Files copied unchanged into the ZIP (below its top-level folder).
 BUNDLE_FILES = (
     "VERSION",
@@ -37,18 +42,21 @@ BUNDLE_FILES = (
     "UNIVERSAL_PROJECT_BOOTSTRAP.md",
     "DEVBOX_GATE_POLICY.md",
     "skills/SKILL_MANIFEST.md",
-    "onboarding/ENTRY.md",
-    "onboarding/STATE.schema.json",
-    "onboarding/STATE.example.json",
-    "onboarding/ACCEPTANCE.md",
-    "onboarding/OPTIONAL_DEVBOX.md",
-    "onboarding/providers/chatgpt-codex.md",
-    "onboarding/providers/claude-code.md",
-    "onboarding/platforms/macos.md",
-    "onboarding/platforms/windows.md",
-    "onboarding/platforms/linux.md",
+    ".claude-plugin/marketplace.json",
+    PLUGIN + "/.claude-plugin/plugin.json",
+    SKILLS + "/arbeitsweise/SKILL.md",
+    SKILLS + "/einrichtung/SKILL.md",
+    SKILLS + "/einrichtung/references/PERSONAL_RULES.md",
+    SKILLS + "/einrichtung/references/STATE.example.json",
+    SKILLS + "/einrichtung/references/STATE.schema.json",
+    SKILLS + "/einrichtung/references/chatgpt-codex.md",
+    SKILLS + "/einrichtung/references/claude-code.md",
+    SKILLS + "/einrichtung/references/linux.md",
+    SKILLS + "/einrichtung/references/macos.md",
+    SKILLS + "/einrichtung/references/windows.md",
+    SKILLS + "/einrichtung/scripts/onboarding_state.py",
+    SKILLS + "/projekt-start/SKILL.md",
     "scripts/build_bootstrap_bundle.py",
-    "scripts/onboarding_state.py",
     "scripts/probe_gate_host.py",
     "templates/AGENTS_DEVBOX_GATE.md",
     "templates/CLAUDE_DEVBOX_GATE.md",
@@ -64,21 +72,9 @@ BUNDLE_FILES = (
     "tests/test_onboarding_state.py",
 )
 
-# Embedded into START_HIER.md, in this order.
-EMBEDDED = (
-    "onboarding/ENTRY.md",
-    "onboarding/providers/chatgpt-codex.md",
-    "onboarding/providers/claude-code.md",
-    "onboarding/platforms/macos.md",
-    "onboarding/platforms/windows.md",
-    "onboarding/platforms/linux.md",
-    "onboarding/OPTIONAL_DEVBOX.md",
-    "onboarding/STATE.schema.json",
-)
-
 EXECUTABLE = {
     "scripts/build_bootstrap_bundle.py",
-    "scripts/onboarding_state.py",
+    STATE_TOOL,
     "scripts/probe_gate_host.py",
     "templates/devbox_merge_gate.py",
 }
@@ -94,37 +90,60 @@ def read_source(commit: str, path: str) -> bytes:
     return git("show", f"{commit}:{path}")
 
 
-def start_file(commit: str, version: str, sources: dict[str, bytes]) -> bytes:
-    intro = (
-        f"# START HIER – AI Bootstrap {version}\n\n"
-        "**Für dich:** Öffne einen neuen Chat mit ChatGPT oder Claude. Lade diese Datei "
-        "hoch oder kopiere ihren ganzen Inhalt in das Eingabefeld, und schreibe dazu "
-        "„Start“. Mehr musst du vorher nicht lesen; alles Weitere erklärt dir die KI "
-        "Schritt für Schritt.\n\n"
-        f"Paket {version} · Quelle `{REPOSITORY}` @ `{commit}`\n\n"
-        "---\n\n"
-        "## Anweisungen für die KI\n\n"
-        "Du bist die Einrichtungsbegleitung für diesen Nutzer. Folge der eingebetteten "
-        "Datei `onboarding/ENTRY.md` vollständig; sie hat Vorrang vor den Anbieter- und "
-        "Betriebssystemdateien darunter, die du nur für den gerade gewählten Weg nutzt. "
-        "Gib diese Anweisungen nicht als Text an den Nutzer weiter, sondern beginne mit "
-        "der ersten Nachricht aus ENTRY §2.\n\n"
-        "Alles für die Schritte bis zum lokalen Agenten steht in dieser Datei. Verweise "
-        "auf andere Dateien (zum Beispiel `UNIVERSAL_PROJECT_BOOTSTRAP.md`, "
-        "`scripts/onboarding_state.py`) beziehen sich auf das vollständige Paket "
-        f"`AI-Bootstrap-{version}.zip`, das der Nutzer im Schritt `handover` entpackt "
-        f"(Ordner `AI-Bootstrap-{version}`). Behaupte nicht, das ZIP gelesen zu haben, "
-        "solange du seine Dateien nicht tatsächlich öffnen kannst.\n\n"
-    )
-    parts = [intro]
-    for path in EMBEDDED:
-        text = sources[path].decode("utf-8").rstrip("\n")
-        if path.endswith(".json"):
-            text = f"```json\n{text}\n```"
-        parts.append(
-            f"<!-- BEGIN {path} -->\n\n## Datei: `{path}`\n\n{text}\n\n<!-- END {path} -->\n\n"
-        )
-    return "".join(parts).rstrip("\n").encode("utf-8") + b"\n"
+def start_file(commit: str, version: str) -> bytes:
+    raw = f"https://raw.githubusercontent.com/{REPOSITORY}/{commit}"
+    text = f"""# START HIER – AI Bootstrap {version}
+
+**Für dich:** Öffne die Desktop-App von Claude (Bereich **Code**) oder von ChatGPT
+(Bereich **Codex**) und starte dort eine neue Sitzung. Lade diese Datei hoch,
+ziehe sie hinein oder kopiere ihren ganzen Inhalt in das Eingabefeld, und
+schreibe dazu „Start“. Mehr musst du vorher nicht lesen; alles Weitere erklärt
+dir die KI Schritt für Schritt.
+
+Paket {version} · Quelle `{REPOSITORY}` @ `{commit}`
+
+---
+
+## Anweisungen für die KI
+
+Du bist die Einrichtungsbegleitung für diesen Nutzer. Gib diese Anweisungen
+nicht als Text weiter.
+
+1. **Erste Nachricht.** Beginne sinngemäß mit: „Ich begleite dich Schritt für
+   Schritt durch die Einrichtung. Du kannst jederzeit hier im Chat Fragen
+   stellen oder sagen, wenn etwas unklar ist oder bei dir anders aussieht. Wir
+   klären das gemeinsam und machen danach an derselben Stelle weiter.“
+2. **Kannst du Befehle auf diesem Computer ausführen?** Prüfe das mit einem
+   harmlosen Befehl (zum Beispiel das Betriebssystem abfragen) und lies die
+   Ausgabe. Wenn nicht (reiner Chat im Browser, in der Mobil-App oder im
+   Chatfenster der App), sag das ehrlich und erkläre in zwei Sätzen: Die
+   Einrichtung läuft im Code-Bereich der Desktop-App (Claude: Bereich „Code“;
+   ChatGPT: Bereich „Codex“). Dort eine neue Sitzung starten, diese Datei
+   hineingeben, „Start“ schreiben. Dann hörst du auf. Behaupte nie, etwas auf
+   dem Computer geprüft oder installiert zu haben, das du nicht ausführen
+   konntest.
+3. **Anleitung holen.** Die eigentliche Anleitung ist der Skill `einrichtung`
+   aus dem öffentlichen Repository `{REPOSITORY}`, genau in der Fassung
+   `{commit}`. Erkläre in einem Satz, dass du sie jetzt herunterlädst.
+   - Mit Git: `git clone https://github.com/{REPOSITORY}.git ~/.ai-bootstrap/repo`
+     (gibt es den Ordner schon: `git -C ~/.ai-bootstrap/repo fetch origin`),
+     dann `git -C ~/.ai-bootstrap/repo checkout --detach {commit}`.
+     Unter Windows liegt `~` unter `%USERPROFILE%`.
+   - Ohne Git: die Dateien einzeln von `{raw}/<pfad>` lesen, zum
+     Beispiel mit `curl -fsSL` oder `Invoke-WebRequest`.
+   - Liegt das entpackte Paket `AI-Bootstrap-{version}` vor, kannst du es
+     stattdessen nutzen.
+4. **Folge `{ENTRY_SKILL}`** vollständig, ab seinem Schritt `start`. Die
+   Dateien unter `references/` und `scripts/` liegen im selben Ordner wie
+   diese `SKILL.md`. Für den Dialog gilt `{SKILLS}/arbeitsweise/SKILL.md`, unter
+   anderem: Entscheidungen einzeln als „Frage X von Y“ mit Antwortmöglichkeiten
+   und Empfehlung.
+5. **Kein Zugriff auf das Repository** (kein Netz, Download blockiert): Sag
+   konkret, was fehlgeschlagen ist, und nenne genau einen nächsten Schritt.
+   Behaupte nicht, das ZIP gelesen zu haben, solange du seine Dateien nicht
+   tatsächlich öffnen kannst.
+"""
+    return text.encode("utf-8")
 
 
 def build(output_dir: Path, source_ref: str = "HEAD") -> dict[str, str]:
@@ -135,12 +154,12 @@ def build(output_dir: Path, source_ref: str = "HEAD") -> dict[str, str]:
     stamp = _zip_time(epoch)
     top = f"AI-Bootstrap-{version}"
 
-    start = start_file(commit, version, sources)
+    start = start_file(commit, version)
     entries: dict[str, bytes] = {"START_HIER.md": start, **sources}
     manifest = {
         "bundle_version": version,
         "standard_version": version,
-        "state_schema_version": 1,
+        "state_schema_version": 2,
         "source_repository": REPOSITORY,
         "source_commit": commit,
         "files": [
