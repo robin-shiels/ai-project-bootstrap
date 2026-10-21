@@ -126,12 +126,13 @@
       "validation": [
         "Linux beide Anbieter real auf eingerichtetem Rechner und vom Nullzustand in frischer Ubuntu-24.04-VM (Läufe A, B, A2)",
         "F5-Abhilfe in VM belegt",
-        "4 Wege NOT_TESTED"
+        "GitHub-Runner Lauf 39307007243 und 39598344708: macOS 26 (64 Tests, Gate-Adapter, Installer, Codex-Sandbox), Windows Server 2025 nativ (Stopp, Installer) und WSL 2 Ubuntu 24.04 (64 Tests, Gate-Hostprobe)"
       ],
       "blockers": [
-        "macOS/Windows: keine Geräte; VM auf der Dev-Box nicht machbar (Lizenz bzw. RAM/WSL-Verschachtelung)",
-        "Konto-Anmeldungen und Plugin-Installation im Nullzustand nicht durchgeführt (persönliche Aktionen; Owner testet nicht selbst)",
-        "Webchat-Upload ChatGPT/claude.ai nicht real geprüft"
+        "Konto-Anmeldungen, Plugin-Installation, Einrichtungsdialog und Probelauf auf macOS/Windows nicht durchgeführt (persönliche Aktionen; Owner testet nicht selbst)",
+        "Agenten (Claude Code, Codex) nicht innerhalb von WSL 2 installiert/geprüft",
+        "Webchat-Upload ChatGPT/claude.ai nicht real geprüft",
+        "Windows 11 (Desktop) nicht geprüft, nur Windows Server 2025"
       ]
     },
     {
@@ -151,7 +152,7 @@
       "blockers": []
     }
   ],
-  "next_action": "Owner: Integration von PR #5 (enthält Gate-Änderung) entscheiden; reale macOS-/Windows-/Webchat-Abnahme bleibt offen (ACCEPTANCE §8)",
+  "next_action": "Owner: Integration von PR #5 entscheiden (enthält Gate-Änderung); vollständige Einrichtung mit Anmeldung auf macOS/Windows bleibt offen (ACCEPTANCE §8)",
   "repository_state": "DONE_ON_BRANCH (nach Push; Remote-SHA in ACCEPTANCE §6)",
   "product_state": "PACKAGE_BUILT",
   "artifact_source": "678c15addaacaa4e5b45149eb8ccdb842f065ca8"
