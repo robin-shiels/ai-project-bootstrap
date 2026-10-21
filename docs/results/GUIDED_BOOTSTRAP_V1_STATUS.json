@@ -155,5 +155,5 @@
   "next_action": "Owner: Integration von PR #5 entscheiden (enthält Gate-Änderung); vollständige Einrichtung mit Anmeldung auf macOS/Windows bleibt offen (ACCEPTANCE §8)",
   "repository_state": "DONE_ON_BRANCH (nach Push; Remote-SHA in ACCEPTANCE §6)",
   "product_state": "PACKAGE_BUILT",
-  "artifact_source": "678c15addaacaa4e5b45149eb8ccdb842f065ca8"
+  "artifact_source": "91c305b753adb9ff2b0a659f2e8232259add2a74"
 }

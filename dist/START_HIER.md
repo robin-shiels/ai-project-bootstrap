@@ -2,7 +2,7 @@
 
 **Für dich:** Öffne einen neuen Chat mit ChatGPT oder Claude. Lade diese Datei hoch oder kopiere ihren ganzen Inhalt in das Eingabefeld, und schreibe dazu „Start“. Mehr musst du vorher nicht lesen; alles Weitere erklärt dir die KI Schritt für Schritt.
 
-Paket 2.1.0 · Quelle `robin-shiels/ai-project-bootstrap` @ `fffd4ad17ae62f981e0c8a338f656223ffb4e280`
+Paket 2.1.0 · Quelle `robin-shiels/ai-project-bootstrap` @ `91c305b753adb9ff2b0a659f2e8232259add2a74`
 
 ---
 
