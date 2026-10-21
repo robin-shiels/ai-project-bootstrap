@@ -36,6 +36,14 @@ Die v1-Einrichtung hat 18 Schritte und eine 746 Zeilen lange `START_HIER.md`. Si
 
 Für den Fall, dass die Installation scheitert, trägt die Startdatei eine eingebettete Kurzfassung des Ablaufs. Das ZIP bleibt als Offline-Weg und enthält das Plugin.
 
+### Abweichungen in der Umsetzung (2026-10-21)
+
+- **Keine eingebettete Kurzfassung.** Die Startdatei liest die Skills aus dem öffentlichen Repository exakt am Quellcommit (Clone + Checkout, ohne Git über die Rohdatei-Adressen, sonst das ZIP) und folgt ihnen sofort in derselben Sitzung. Das ist kürzer (50 statt geplant unter 150 Zeilen) und an genau einen Stand gebunden. Das Plugin wird erst im Schritt `skills` dauerhaft installiert.
+- **Claude-Marktplatz ohne Commit-Pin.** Ein Commit-SHA als Ref funktioniert real nicht (frisches Ubuntu 24.04, Claude Code 2.1.306); nach der Installation wird die Plugin-Version geprüft.
+- **Codex über persönliche Skill-Ordner** (`~/.agents/skills`) statt eigenem Codex-Marktplatz, weil dessen Format (`policy`-Werte) nicht belegt ist.
+- **Probelauf mit dem echten Regel-PR.** Statt einer Testnotiz übernimmt der Probelauf den PR mit den Projektregeln aus `projekt`. Weil er die Merge-Regeln festlegt (LIGHT-Bedingung 6), fragt die KI dafür einmal ausdrücklich und führt den Merge dann mit genau den LIGHT-Schritten aus.
+- **Schema und Validator** liegen im Skill (`references/`, `scripts/`), damit sie nach einer Plugin-Installation verfügbar sind; `onboarding/` entfällt, die Abnahmefälle stehen in `docs/GUIDED_SETUP_ACCEPTANCE.md`.
+
 ## Ablauf (Skill `einrichtung`)
 
 Steuerung wie in v1: prüfen → erfüllt? kurz bestätigen : erklären und selbst ausführen bzw. genau eine Nutzeraktion anleiten → erneut prüfen → Stand still sichern. Nur der aktuelle Schritt wird gezeigt.

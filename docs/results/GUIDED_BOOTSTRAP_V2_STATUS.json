@@ -1,0 +1,145 @@
+{
+  "order": "docs/tasks/GUIDED_BOOTSTRAP_V2.md",
+  "source_base": "566f56c04342f9a3eb1a657f9d00eb36d48e7b85",
+  "branch": "claude/guided-bootstrap-v2",
+  "last_commit": "(siehe git log des Branches)",
+  "tasks": [
+    {
+      "id": "GB2-01",
+      "state": "done",
+      "dependencies": [],
+      "result_files": [
+        "docs/research/GUIDED_BOOTSTRAP_V1_SOURCE_MATRIX.md"
+      ],
+      "validation": [
+        "Quellen 2026-10-21 abgerufen (V1–V13, E8)",
+        "codex execpolicy check lokal",
+        "gh pr merge/update-branch --help lokal"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "GB2-02",
+      "state": "done",
+      "dependencies": [
+        "GB2-01"
+      ],
+      "result_files": [
+        "UNIVERSAL_PROJECT_BOOTSTRAP.md",
+        "DEVBOX_GATE_POLICY.md",
+        "skills/SKILL_MANIFEST.md",
+        "templates/AGENTS_MERGE_LIGHT.md",
+        "templates/CLAUDE_MERGE_LIGHT.md",
+        "templates/CODEX_BOOTSTRAP_PROMPT.md",
+        "templates/PROJECT_DISCOVERY.md",
+        "CHANGELOG.md",
+        "VERSION",
+        "README.md"
+      ],
+      "validation": [
+        "python3 -m unittest discover -s tests: OK",
+        "Gate-Skript und Gate-Tests unverändert"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "GB2-03",
+      "state": "done",
+      "dependencies": [
+        "GB2-01",
+        "GB2-02"
+      ],
+      "result_files": [
+        ".claude-plugin/marketplace.json",
+        "plugins/ai-bootstrap//.claude-plugin/plugin.json",
+        "plugins/ai-bootstrap/skills/einrichtung/SKILL.md",
+        "plugins/ai-bootstrap/skills/projekt-start/SKILL.md",
+        "plugins/ai-bootstrap/skills/arbeitsweise/SKILL.md",
+        "plugins/ai-bootstrap/skills/einrichtung/references/PERSONAL_RULES.md",
+        "tests/test_plugin.py"
+      ],
+      "validation": [
+        "Claude Code 2.1.306: Plugin aus Repository-Marktplatz installiert und aktiv (frisches Ubuntu 24.04, ohne Anmeldung)",
+        "Codex 0.163.0: Skills in ~/.agents/skills, Befehlsregeln mit execpolicy geprüft"
+      ],
+      "blockers": [
+        "Skill-Liste in einer angemeldeten Sitzung nicht geprüft (Anmeldung ist persönliche Aktion)"
+      ]
+    },
+    {
+      "id": "GB2-04",
+      "state": "done",
+      "dependencies": [
+        "GB2-03"
+      ],
+      "result_files": [
+        "plugins/ai-bootstrap/skills/einrichtung/references/",
+        "plugins/ai-bootstrap/skills/einrichtung/scripts/onboarding_state.py",
+        "tests/test_onboarding_state.py"
+      ],
+      "validation": [
+        "Zustand v2 + Migration: Tests OK, im Container real OK"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "GB2-05",
+      "state": "done",
+      "dependencies": [
+        "GB2-03",
+        "GB2-04"
+      ],
+      "result_files": [
+        "scripts/build_bootstrap_bundle.py",
+        "tests/test_bootstrap_bundle.py",
+        "dist/"
+      ],
+      "validation": [
+        "START_HIER.md 50 Zeilen",
+        "Wiederholungsbau byte-identisch (Test)",
+        "sha256sum -c im Container OK"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "GB2-06",
+      "state": "done",
+      "dependencies": [
+        "GB2-05"
+      ],
+      "result_files": [
+        "docs/GUIDED_SETUP_ACCEPTANCE.md",
+        "docs/results/GUIDED_BOOTSTRAP_V2_ACCEPTANCE.md"
+      ],
+      "validation": [
+        "R1 Linux-Nullzustand real (Container ubuntu:24.04)",
+        "14 Dialogfälle mit Claude und GPT, nach Runde 2 alle bestanden",
+        "Befunde B1–B7 behoben bzw. als Grenze dokumentiert"
+      ],
+      "blockers": [
+        "P1 Probelauf mit echtem Merge auf GitHub nicht ausgeführt: Token darf kein Repository anlegen (B7)",
+        "macOS, Windows 11, Webchat-Upload NOT_TESTED"
+      ]
+    },
+    {
+      "id": "GB2-07",
+      "state": "done",
+      "dependencies": [
+        "GB2-06"
+      ],
+      "result_files": [
+        "docs/results/GUIDED_BOOTSTRAP_V2_ACCEPTANCE.md",
+        "docs/results/GUIDED_BOOTSTRAP_V2_STATUS.json",
+        "dist/"
+      ],
+      "validation": [
+        "Diff auf Geheimnisse/persönliche Daten geprüft",
+        "main seit Basis unverändert geprüft"
+      ],
+      "blockers": []
+    }
+  ],
+  "next_action": "Owner: PR prüfen und integrieren (ändert den Befugnisvertrag). Danach P1 mit einem bereitgestellten Test-Repository und Plattformläufe auf echten Geräten.",
+  "repository_state": "DONE_ON_BRANCH",
+  "product_state": "PACKAGE_BUILT"
+}

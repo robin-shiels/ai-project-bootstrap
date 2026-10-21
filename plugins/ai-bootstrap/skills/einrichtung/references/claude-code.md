@@ -4,7 +4,7 @@ Quellen: `docs/research/GUIDED_BOOTSTRAP_V1_SOURCE_MATRIX.md` (A1–A16, S1, S3,
 
 ## Voraussetzung
 
-Claude Code braucht Pro, Max, Team oder Enterprise (oder ein Console-Konto mit API-Abrechnung); der kostenlose Plan enthält es nicht (A1, A3). Hat der Nutzer nur den kostenlosen Plan, sag das konkret. Über einen Wechsel entscheidet er selbst. Ist `ANTHROPIC_API_KEY` gesetzt, rechnet Claude Code über die API ab (A2); prüfe nur, ob die Variable gesetzt ist, gib den Wert nie aus, und erwähne es nur, wenn sie gesetzt ist.
+Claude Code braucht Pro, Max, Team oder Enterprise (oder ein Console-Konto mit API-Abrechnung); der kostenlose Plan enthält es nicht (A1, A3). Hat der Nutzer nur den kostenlosen Plan, sag das konkret und lege die Entscheidung im Frageformat vor: 1. selbst auf einen Plan mit Claude Code wechseln, 2. den Weg mit ChatGPT und Codex nehmen (Codex ist auch in den kostenlosen ChatGPT-Plänen enthalten, nur für kleine Aufgaben), 3. später fortsetzen. Empfehlung je nach dem, was er schon nutzt. Du kaufst und wechselst nichts; den Stand sicherst du, wenn du Befehle ausführen kannst. Ist `ANTHROPIC_API_KEY` gesetzt, rechnet Claude Code über die API ab (A2); prüfe nur, ob die Variable gesetzt ist, gib den Wert nie aus, und erwähne es nur, wenn sie gesetzt ist.
 
 Läufst du in der Desktop-App (Bereich Code), ist `claude` oft nicht im Suchpfad. Die laufende Sitzung ist dann der Nachweis; installiere keine zusätzliche Kommandozeile nur dafür. Plugin-Befehle tippt in diesem Fall der Nutzer als Slash-Befehl.
 
@@ -20,6 +20,7 @@ Läufst du in der Desktop-App (Bereich Code), ist `claude` oft nicht im Suchpfad
    - `claude plugin install superpowers@claude-plugins-official`
    - `claude plugin marketplace add robin-shiels/ai-project-bootstrap` und `claude plugin install ai-bootstrap@ai-bootstrap`
    - Ohne `claude` im Suchpfad tippt der Nutzer: `/plugin install superpowers@claude-plugins-official`, `/plugin marketplace add robin-shiels/ai-project-bootstrap`, `/plugin install ai-bootstrap@ai-bootstrap`.
+   Der Marktplatz folgt dem Hauptzweig des Repositorys; ein Festlegen auf einen Commit (`#<sha>`) funktioniert nicht (in einem frischen Ubuntu 24.04 mit Claude Code 2.1.306 geprüft). Prüfe deshalb nach der Installation die Version: `claude plugin list` zeigt bei `ai-bootstrap@ai-bootstrap` die Version aus dem Paket, mit dem die Einrichtung begonnen hat. Weicht sie ab, sag es in einem Satz; neuer ist in Ordnung, älter nicht.
 3. **Wirksam** ab der nächsten Sitzung oder nach `/reload-plugins` (tippt der Nutzer).
 4. **Probeaufruf:** Deine Skill-Liste enthält `superpowers:brainstorming` und `ai-bootstrap:arbeitsweise`. Kannst du sie nicht einsehen, tippt der Nutzer `/skills` und nennt das Ergebnis.
 

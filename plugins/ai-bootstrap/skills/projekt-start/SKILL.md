@@ -25,7 +25,7 @@ Ein Repository mit Code, aber ohne Regeln, behandelst du wie ein neues Projekt u
 
 ## 2. Repository
 
-- **Neu:** Frage nach einem kurzen Namen und einem Satz, worum es geht. Lege es nach Zustimmung an: `gh repo create <name> --private --clone` (Empfehlung privat, weil ein öffentliches Repository für alle lesbar ist). Wechsle in den Ordner.
+- **Neu:** Frage nach einem kurzen Namen und einem Satz, worum es geht. Lege es nach Zustimmung an: `gh repo create <name> --private --clone` (Empfehlung privat, weil ein öffentliches Repository für alle lesbar ist). Wechsle in den Ordner. Meldet `gh` dabei `HTTP 403: Resource not accessible by personal access token`, darf die vorhandene Anmeldung keine Repositories anlegen. Dann legt der Nutzer es selbst unter https://github.com/new an (privat, ohne weitere Dateien), und du klonst es mit `gh repo clone <konto>/<name>`.
 - **Bestehend:** klonen, falls nötig (`gh repo clone <owner>/<name>`), und die vorhandenen Regeln lesen.
 
 ## 3. Projekt in der App anlegen und verbinden

@@ -134,7 +134,7 @@ Abgerufen am 2026-10-21 für [GUIDED_BOOTSTRAP_V2](../tasks/GUIDED_BOOTSTRAP_V2.
 | # | Belegte Aussage | Quelle | Status | Grenzen |
 | --- | --- | --- | --- | --- |
 | V1 | Claude-Marktplatz: `<repo>/.claude-plugin/marketplace.json` mit `name`, `owner.name`, `plugins[]` (je `name`, `source`); Plugin im selben Repository mit relativer Quelle `./plugins/<name>`; `plugin.json` unter `<plugin>/.claude-plugin/` (nur `name` Pflicht); Skills unter `<plugin>/skills/<name>/SKILL.md`. | https://code.claude.com/docs/en/plugins/marketplace-reference, https://code.claude.com/docs/en/plugins-reference | gelesen | – |
-| V2 | `claude plugin marketplace add owner/repo` (Ref mit `owner/repo#ref` oder `@ref`), `--scope user` Standard; `claude plugin install name@marketplace`; wirksam ab nächster Sitzung oder nach `/reload-plugins`. | https://code.claude.com/docs/en/plugins/cli-reference | gelesen | lokal nicht geprüft; Commit-SHA als Ref UNBELEGT |
+| V2 | `claude plugin marketplace add owner/repo` (Ref mit `owner/repo#ref` oder `@ref`), `--scope user` Standard; `claude plugin install name@marketplace`; wirksam ab nächster Sitzung oder nach `/reload-plugins`. | https://code.claude.com/docs/en/plugins/cli-reference | gelesen; real geprüft 2026-10-21 (frisches Ubuntu 24.04, Claude Code 2.1.306, ohne Anmeldung) | Branch-Ref funktioniert; **Commit-SHA als Ref scheitert** („Please make sure you have the correct access rights…“) |
 | V3 | `SKILL.md`: `name` (Standard: Ordnername) und `description` empfohlen; claude.ai-Upload erlaubt nur `name`, `description`, `license`, `compatibility`, `metadata`, `allowed-tools`. | https://code.claude.com/docs/en/skills | gelesen | – |
 | V4 | Codex-Skills: persönlich `$HOME/.agents/skills`, Projekt `.agents/skills`; `SKILL.md` mit `name` und `description` Pflicht (gleiches Format); neue Skills werden erkannt, sonst Neustart. | https://learn.chatgpt.com/docs/build-skills | gelesen | – |
 | V5 | Codex-Plugin-Marktplätze aus Git: `codex plugin marketplace add owner/repo[@ref]` mit `--ref`; Marktplatzdatei `.agents/plugins/marketplace.json` (Einträge mit `policy` und `category`); `.claude-plugin/marketplace.json` wird „legacy-compatible“ gelesen. | https://developers.openai.com/plugins/build/plugins; lokal `codex plugin marketplace add --help` | gelesen, lokal geprüft (CLI) | Werte für `policy` und Lesen eines reinen Claude-Marktplatzes durch die CLI UNBELEGT → Skill-Ordner-Weg gewählt |
@@ -149,7 +149,7 @@ Abgerufen am 2026-10-21 für [GUIDED_BOOTSTRAP_V2](../tasks/GUIDED_BOOTSTRAP_V2.
 
 ### E8 Entscheidungen v2
 
-- **Claude:** eigener Marktplatz aus diesem Repository (V1, V2). Gepinnt wird auf den Quellcommit des Pakets; gelingt das nicht, ohne Ref und dann die Plugin-Version prüfen.
+- **Claude:** eigener Marktplatz aus diesem Repository (V1, V2), ohne Ref (Hauptzweig); danach die Plugin-Version prüfen, weil ein Commit-SHA als Ref nicht funktioniert. Die Startdatei selbst liest die Skills exakt am Quellcommit (Clone + Checkout bzw. Rohdatei-Adresse).
 - **Codex:** Repository nach `~/.ai-bootstrap/repo` klonen und die drei Skill-Ordner nach `~/.agents/skills/` kopieren (V4). Der Codex-Plugin-Marktplatz (V5) wird erst genutzt, wenn sein Format belegt ist.
 - **Persönliche Regeln:** `~/.claude/CLAUDE.md` bzw. `~/.codex/AGENTS.md` (A11, V6) mit markiertem Block.
 - **Sperren:** Claude `permissions.deny` (V8); Codex `prefix_rule(..., decision="forbidden")` (V7).

@@ -13,7 +13,7 @@ Diese Regeln gelten in jeder Sitzung, nicht nur während der Einrichtung. Projek
 - **Begleitend erklären:** Vor jeder Aktion ein Satz, was du jetzt tust und warum. Danach ein Satz zum Ergebnis. Keine Romane, keine Vorschau auf alles Kommende.
 - **Erfolg kurz bestätigen.** Keine vorsorglichen Hinweise, was schiefgehen könnte.
 - **Probleme erst behandeln, wenn sie da sind.** Dann die konkrete Meldung lesen, die wahrscheinliche Ursache nennen und genau eine Lösung vorschlagen. Danach erneut prüfen.
-- **Ehrlich bleiben.** Behaupte nur, was du in dieser Sitzung tatsächlich geprüft hast. Was du nicht prüfen kannst, nennst du „nicht geprüft“.
+- **Ehrlich bleiben.** Behaupte nur, was du in dieser Sitzung tatsächlich geprüft hast. Ein Befehl ist erst erledigt, wenn du seine Ausgabe gelesen hast; vorher sagst du „ich führe … aus“, nicht „ich habe … eingestellt“. Was du nicht prüfen kannst, nennst du „nicht geprüft“.
 
 ## 2. Fragen
 
@@ -71,7 +71,11 @@ Danach: `main` holen und kurz prüfen, ob er noch funktioniert.
 - derselbe Fehler kommt wieder,
 - mehrere Aufgaben laufen parallel an denselben Dateien.
 
-Dann sprich es an und prüfe mit dem Nutzer im Frageformat die strengeren Varianten: GATE (lokales Merge-Gate) oder PER_CHANGE_APPROVAL (Freigabe pro Merge und Deploy). Stelle nie still um.
+Dann gilt, in dieser Reihenfolge:
+
+1. **Keine weiteren Merges oder Deploys**, bis `main` wieder funktioniert.
+2. **Reparatur vorschlagen:** Rücknahme der verursachenden Änderung auf eigenem Branch („Revert“) oder gezielte Reparatur, im Frageformat mit Empfehlung (meist die Rücknahme, weil sie am schnellsten wieder einen funktionierenden Stand bringt).
+3. **Regel besprechen:** Prüfe mit dem Nutzer im Frageformat die strengeren Varianten GATE (lokales Merge-Gate) oder PER_CHANGE_APPROVAL (Freigabe pro Merge und Deploy), und ob LIGHT bleiben kann. Stelle nie still um. Die gewählte Regel landet in den Projektanweisungen.
 
 ### GATE
 
