@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.0.0 — LIGHT merge and deployment, guided setup v2 — 2026-10-21
+
+**Incompatible change of the authority contract.** Owner decision of 2026-10-21: new projects use the LIGHT merge and deployment policy by default. Existing projects keep their effective rules.
+
+- Added the [merge and deployment policy](UNIVERSAL_PROJECT_BOOTSTRAP.md#merge-and-deployment-policy) with the choices LIGHT (default for new projects), GATE (the dev-box merge gate, unchanged) and PER_CHANGE_APPROVAL. LIGHT merges only own task PRs without open decision after the project's checks passed locally on the current head that contains the current default branch, rechecks when the default branch moved, binds the merge to the checked commit and never merges foreign or fork PRs or PRs that change the policy or a gate. Deployment runs only to a recorded target with a recorded command and a result check; production with real user data needs one Owner decision per project.
+- Escalation rule: signs that LIGHT is not enough (broken default branch after a merge, rollback, recurring defect, overlapping parallel tasks) are raised with the Owner, who evaluates GATE and PER_CHANGE_APPROVAL together with the executor; the policy is never switched silently.
+- Added rule texts [`templates/AGENTS_MERGE_LIGHT.md`](templates/AGENTS_MERGE_LIGHT.md) and [`templates/CLAUDE_MERGE_LIGHT.md`](templates/CLAUDE_MERGE_LIGHT.md); reconciled the gate policy, skill manifest, discovery template, Codex prompt and README. The gate's script, schema and tests are unchanged.
+
+### Migration from v2.1.0
+
+Nothing changes in an existing project until the Owner chooses a policy. A project with an integrated gate records GATE (EQUIVALENT). A project without gate and without merge grant records PER_CHANGE_APPROVAL as its current behavior; offering LIGHT there is a CONFLICT for the Owner. Update the bootstrap marker only after the effective policy is recorded.
+
 ## 2.1.0 — Guided personal setup — 2026-10-19
 
 Compatible addition. No existing project rule, publication policy or gate stop condition changes.

@@ -1,7 +1,7 @@
 # Guided Bootstrap v2 — Designentwurf
 
 Stand: 2026-10-21
-Status: Richtung im Chat vom Owner bestätigt; schriftlicher Entwurf zur Durchsicht. Keine Umsetzungsfreigabe.
+Status: vom Owner am 2026-10-21 bestätigt; Umsetzung freigegeben (Auftragskette GUIDED_BOOTSTRAP_V2). Version 3.0.0.
 Basis: main, 566f56c (Standard v2.1.0, Produktstand PACKAGE_BUILT)
 Vorgänger: [Designentwurf v1](2026-10-19-guided-bootstrap-design.md)
 
@@ -129,7 +129,7 @@ Punkt 3 und 4 fangen den Hauptnachteil gegenüber dem Gate (Änderung von `main`
 
 **Bestehende Projekte.** Strengere vorhandene Regeln bleiben, insbesondere ein integriertes Merge-Gate. Ein Widerspruch wird als CONFLICT vorgelegt, nie still überschrieben.
 
-**Verhältnis zum Standard.** Bisher gilt: Merge nur über das Gate oder eine eigene Freigabe, Deploy folgt nie aus dem Standard. „Leicht“ ändert das für neue Projekte und muss deshalb sichtbar in Standard, Manifest, Gate-Richtlinie und CHANGELOG stehen. Weil sich damit der Befugnisvertrag ändert, schlägt dieser Entwurf **Version 3.0.0** vor (statt 2.2.0); für bestehende Projekte ändert sich nichts, solange sie nicht ausdrücklich wechseln.
+**Verhältnis zum Standard.** Bisher gilt: Merge nur über das Gate oder eine eigene Freigabe, Deploy folgt nie aus dem Standard. „Leicht“ ändert das für neue Projekte und muss deshalb sichtbar in Standard, Manifest, Gate-Richtlinie und CHANGELOG stehen. Weil sich damit der Befugnisvertrag ändert, gilt **Version 3.0.0** (Owner-Entscheidung 2026-10-21); für bestehende Projekte ändert sich nichts, solange sie nicht ausdrücklich wechseln.
 
 ## Projekt anlegen (Skill `projekt-start`)
 

@@ -1,6 +1,6 @@
 # Dev-box merge gate policy
 
-**Standard:** Universal Project Bootstrap v2.1.0 · **Policy version:** 1
+**Standard:** Universal Project Bootstrap v3.0.0 · **Policy version:** 1
 
 This is the binding, product-neutral contract for projects that adopt the
 dev-box merge gate. The reference implementation is
@@ -12,6 +12,12 @@ Rule texts for project instructions are in
 [`templates/CLAUDE_DEVBOX_GATE.md`](templates/CLAUDE_DEVBOX_GATE.md); the rollout
 steps are in
 [`templates/DEVBOX_GATE_ROLLOUT_CHECKLIST.md`](templates/DEVBOX_GATE_ROLLOUT_CHECKLIST.md).
+
+From v3.0.0 this gate is the **GATE** choice of the standard's
+[merge and deployment policy](UNIVERSAL_PROJECT_BOOTSTRAP.md#merge-and-deployment-policy).
+New projects default to **LIGHT** and move to GATE by Owner decision, for
+example when LIGHT proved too error-prone. The rules below apply unchanged to
+every project that adopted the gate.
 
 "Dev box" means the project's own deliberately operated development machine.
 Nothing in this policy installs, registers or starts anything on it.

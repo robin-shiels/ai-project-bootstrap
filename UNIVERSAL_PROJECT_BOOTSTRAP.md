@@ -1,6 +1,6 @@
 # Universal Project Bootstrap Standard
 
-**Version:** 2.1.0
+**Version:** 3.0.0
 
 **Scope:** product-neutral AI workflow bootstrap (ChatGPT + Codex, Claude + Claude Code)\
 **Mode:** inventory-first, idempotent, conflict-aware
@@ -86,7 +86,32 @@ Offer the concrete choices **ALLOW_AFTER_CHECKS** (default), **PER_TASK_APPROVAL
 
 Every task rechecks its effective authority. A stronger task-specific prohibition wins over standing permission. With opt-out, stop before the prohibited commit/push, preserve the result locally and report actual evidence as LOCAL_COMPLETE or BLOCKED. Missing access or a failed push likewise cannot be reported as remote DONE. No policy authorizes mutation of another task's branch/worktree, main/default-branch push, integration, release or deployment merely because the task is complete.
 
-This publication policy covers **branch push only**. Merge authority is a separate contract: see [Dev-box merge gate](#dev-box-merge-gate). Do not read "publication excludes merge" as "this project never auto-merges", and do not read the merge gate as extra push authority.
+This publication policy covers **branch push only**. Merge and deployment authority is a separate contract: see [Merge and deployment policy](#merge-and-deployment-policy). Do not read "publication excludes merge" as "this project never auto-merges", and do not read a merge policy as extra push authority.
+
+## Merge and deployment policy
+
+From v3.0.0 a new project chooses one merge and deployment policy at setup. This is a deliberate, incompatible change of the authority contract: earlier versions granted merge only through an integrated dev-box gate or a separate grant, and never granted deployment.
+
+**New projects bootstrapped to v3.0.0 or later use LIGHT by default.** At setup, prominently deliver this notice before relying on the default:
+
+> This new project uses the LIGHT merge and deployment policy by default. The executor may merge its own task pull request after the project's checks passed locally on the PR's current head rebased on or merged with the current default branch, binding the merge to that checked commit. If the project defines a deployment target, the executor may deploy after such a merge and must verify the result. A production deployment that serves real user data needs one explicit Owner decision per project before it runs automatically. Foreign, unknown and fork PRs are never merged under this policy. You can choose the dev-box gate or approval per merge/deployment instead. Your effective choice will be recorded in the project's authoritative instructions; stricter project or task restrictions prevail.
+
+Offer the concrete choices **LIGHT** (default), **GATE** (merge only through an integrated [dev-box merge gate](#dev-box-merge-gate), deployment as a separate decision) or **PER_CHANGE_APPROVAL** (every merge and deployment needs explicit approval). Record the effective policy, the notice delivery, any Owner choice, the deployment target and command, and the production decision in the target project's authoritative instructions.
+
+**LIGHT merge conditions.** All must hold, otherwise stop and report:
+
+1. the PR is the executor's own task PR in this repository, not a foreign, unknown or fork PR;
+2. no open decision, requested review or explicit hold is recorded for the PR;
+3. immediately before the merge the PR head contains the current default branch; if the default branch moved since the last check, update the branch, rerun the checks and only then continue;
+4. the project's required checks passed locally on exactly that head commit; skipped, red or timed-out checks are not passed;
+5. the merge is bound to the checked commit (for example `gh pr merge --match-head-commit <sha>`), so nothing unchecked is merged;
+6. the PR does not change this policy, the project's authority rules or a configured gate; such PRs always need explicit Owner integration.
+
+**LIGHT deployment.** Only to the recorded deployment target with the recorded command, from the merged default-branch commit, followed by a recorded result check (for example the service answers or the deployment reports the commit). A failed deployment check is a stop and is reported; rollback follows the project's recorded procedure.
+
+**Escalation.** The executor watches for signs that LIGHT is not enough for a project: the default branch is broken after a merge, a deployment had to be rolled back, the same defect recurs, or several tasks run in parallel on overlapping files. Then it raises this with the Owner and evaluates GATE and PER_CHANGE_APPROVAL together with them, in the usual question format. It never switches the policy silently in either direction.
+
+**Existing projects** keep their effective merge and deployment rules, including an integrated gate. A proposed LIGHT grant that would permit currently forbidden merges or deployments is **CONFLICT** until the Owner changes it; silence is never consent.
 
 ## Dev-box merge gate
 
@@ -95,9 +120,9 @@ From v2.0.0 the standard includes the [dev-box merge gate policy](DEVBOX_GATE_PO
 - **Gate as binding check.** A project that adopts the gate checks each PR on its actual merge commit (`B` + `H` = `M`, tree `T`) and every release candidate on the exact current integration commit, locally on its development machine. Reference CLI, schema, rule texts, checklist and tests: [`templates/devbox_merge_gate.py`](templates/devbox_merge_gate.py), [`templates/devbox_merge_gate.example.toml`](templates/devbox_merge_gate.example.toml), [`templates/AGENTS_DEVBOX_GATE.md`](templates/AGENTS_DEVBOX_GATE.md), [`templates/CLAUDE_DEVBOX_GATE.md`](templates/CLAUDE_DEVBOX_GATE.md), [`templates/DEVBOX_GATE_ROLLOUT_CHECKLIST.md`](templates/DEVBOX_GATE_ROLLOUT_CHECKLIST.md).
 - **No automatic hosted CI.** GitHub-hosted workflows start at most through deliberate `workflow_dispatch` for diagnosis, never automatically. A red executed diagnosis run is a stop signal; a job that failed before its first step is no test result.
 - **Standard auto-merge for own task PRs.** Once the gate contract is integrated on the integration branch, own task PRs that are explicitly marked mergeable and have no open decision may be integrated automatically by the gate's compare-and-swap after a complete green run. Foreign, unknown and fork PRs never are; they are checked only in a verifiably isolated environment.
-- **No self-authorization, no deployment.** The first gate PR and every PR that changes the gate need a concrete owner approval with exact evidence. No project receives deployment authority from this standard; deployment stays a separate project decision with its own gate run on the exact current commit.
+- **No self-authorization, no implied deployment.** The first gate PR and every PR that changes the gate need a concrete owner approval with exact evidence. The gate grants no deployment authority; under GATE, deployment stays a separate project decision with its own gate run on the exact current commit.
 
-**New projects** adopt the auto-merge contract only after the gate is set up and its bootstrap PR is integrated; until then the earlier rule applies (no merge without separate authority). **Existing projects** keep stricter merge prohibitions, open owner questions, infrastructure/migration exclusions and binding branch rules: show an incompatible rule as CONFLICT with its practical consequence and do not overwrite it silently. A binding GitHub status rule that cannot be met without a hosted check stops the rollout for that project until the owner decides.
+From v3.0.0 the gate is the **GATE** choice of the [merge and deployment policy](#merge-and-deployment-policy), the stronger option for projects where LIGHT proved too error-prone or the Owner wants it from the start. **New projects** choosing GATE adopt the auto-merge contract only after the gate is set up and its bootstrap PR is integrated; until then no merge happens without separate authority. **Existing projects** keep stricter merge prohibitions, open owner questions, infrastructure/migration exclusions and binding branch rules: show an incompatible rule as CONFLICT with its practical consequence and do not overwrite it silently. A binding GitHub status rule that cannot be met without a hosted check stops the rollout for that project until the owner decides.
 
 ## Autonomous ChatGPT planning/research
 
@@ -239,7 +264,7 @@ The final instructions must preserve universal workflow + project-specific rules
 
 A project may record:
 
-`Universal Project Bootstrap: v2.1.0`
+`Universal Project Bootstrap: v3.0.0`
 
 The marker is evidence only; future upgrades still inspect actual semantics.
 
@@ -253,6 +278,7 @@ Before ChatGPT bootstrap is complete verify:
 - project-specific rules preserved;
 - source classes/revisions and fact/inference/open/history distinctions recorded;
 - new-project default B notice prominently delivered with opt-out/per-task choices and effective policy recorded, or existing authority preserved with gaps/conflicts explicit;
+- new-project LIGHT merge and deployment notice delivered with GATE/PER_CHANGE_APPROVAL choices and effective policy, deployment target and production decision recorded, or existing merge/deployment rules preserved with conflicts explicit;
 - conflicts resolved or explicitly blocked;
 - required capabilities/skills assessed;
 - durable order/result and short handoff behavior established;
@@ -279,6 +305,8 @@ An upgrade must not erase project-specific additions. An older universal behavio
 
 For v1.0.0 → v1.1.0, inventory each capability, strengthen evidence/results/lifecycle where intent is preserved, and retain existing publication authority. Do not apply new-project default B retrospectively. Show a restrictive-policy conflict before proposing an Owner change and leave the active restriction effective until that change is explicit. Update the version marker only to describe the actual reconciliation; unresolved areas remain listed, not hidden behind the marker.
 
+For v2.1.0 → v3.0.0, existing projects keep their effective merge and deployment rules; nothing changes unless the Owner chooses a policy. A project with an integrated gate records GATE as EQUIVALENT. A project without gate and without merge grant records PER_CHANGE_APPROVAL as its current behavior; offering LIGHT there is a CONFLICT the Owner decides. The marker may move to v3.0.0 once the effective policy is recorded.
+
 For v2.0.x → v2.1.0, no project rule changes: the guided personal setup and the gate's macOS/WSL 2 platform paths are additions. A project may update its marker after confirming its rules still reconcile.
 
 For v1.1.0 → v2.0.0, inventory existing workflows, required checks/rulesets/merge queue and merge rules first. Moving hosted CI to `workflow_dispatch`, adopting the gate and enabling own-task-PR auto-merge are one scoped, reviewable project task following the [rollout checklist](templates/DEVBOX_GATE_ROLLOUT_CHECKLIST.md); its bootstrap PR is never self-merged. Existing stricter merge or release rules are CONFLICT until the owner changes them. A project may record `v2.0.0` only after that reconciliation; recording it does not itself adopt the gate.
@@ -298,6 +326,7 @@ Report briefly:
 - MISSING areas added;
 - CONFLICT areas/owner decisions;
 - effective commit/push policy, prominent notice delivery for new projects, opt-out/per-task choice and existing restrictions preserved;
+- effective merge and deployment policy (LIGHT / GATE / PER_CHANGE_APPROVAL), notice delivery, deployment target and production decision;
 - merge-gate state (not adopted / bootstrap PR prepared / integrated), hosted-CI triggers and any merge-rule CONFLICT;
 - skills/capabilities reconciled;
 - project-specific discovery performed or not needed;

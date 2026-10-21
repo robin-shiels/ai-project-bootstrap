@@ -1,6 +1,6 @@
 # Project Discovery Coverage Template
 
-**Bootstrap standard:** v2.1.0
+**Bootstrap standard:** v3.0.0
 
 Use this only when project-specific instructions are missing or materially incomplete. It is a coverage guide, not a questionnaire to ask mechanically.
 
@@ -20,7 +20,7 @@ Establish, as needed:
 - test and quality expectations;
 - effective commit and push authority, including existing restrictions, opt-out/per-task choice and stronger task prohibitions;
 - Git/branch/integration expectations and evidence required for each lifecycle stage;
-- deployment and production authority;
+- merge and deployment policy (LIGHT by default for new projects), deployment target and command, and whether production serves real user data;
 - operational constraints;
 - project-specific skills or workflows.
 
@@ -44,7 +44,11 @@ For an **existing project**, inspect and preserve effective authority first. A p
 
 Keep the effective choice in the existing authoritative instructions rather than a competing file. With opt-out/per-task approval, the executor stops before any unapproved commit/push and reports LOCAL_COMPLETE or BLOCKED with actual local evidence. A branch DONE handoff requires exact remote SHA verification and a clean owned worktree; it does not establish integration/deployment.
 
-## Merge gate at setup
+## Merge and deployment policy at setup
+
+For a **new project**, deliver the standard's LIGHT notice ([merge and deployment policy](../UNIVERSAL_PROJECT_BOOTSTRAP.md#merge-and-deployment-policy)) and offer **LIGHT** (default), **GATE** and **PER_CHANGE_APPROVAL**. Record the effective choice, the deployment target and command if one exists, and ask once whether a production deployment that serves real user data may run automatically. Without a deployment target, record "no deployment" and revisit it when one is added. For an **existing project**, preserve its effective merge and deployment rules; an incompatible LIGHT grant is CONFLICT.
+
+## Merge gate at setup (GATE only)
 
 Ask only what the repository does not answer: whether the project adopts the [dev-box merge gate](../DEVBOX_GATE_POLICY.md) now or later, its integration branch, the checks and runtime versions its gate must run, merge-excluded paths, which own branches count as task branches, whether an isolated environment for foreign code exists, and the separate deployment authority (none by default). Tell the Owner that hosted CI then runs only by manual dispatch and that own explicitly mergeable task PRs are merged automatically only after the gate's bootstrap PR is integrated.
 

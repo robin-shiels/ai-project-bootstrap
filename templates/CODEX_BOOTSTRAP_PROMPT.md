@@ -1,6 +1,6 @@
 # Codex Bootstrap Prompt Template
 
-**Bootstrap standard:** v2.1.0
+**Bootstrap standard:** v3.0.0
 
 ChatGPT generates a target-project-specific prompt after its own bootstrap is complete. Fill the setup context from inspected evidence; unresolved decisions stay explicit. The new-project default B notice must already be prominent in the ChatGPT setup response, with opt-out/per-task choices; this template alone does not deliver that notice or grant authority.
 
@@ -12,7 +12,7 @@ ChatGPT generates a target-project-specific prompt after its own bootstrap is co
 - For a new project: delivered B notice/date and Owner choice, or disclosed ALLOW_AFTER_CHECKS default. Alternatives: PER_TASK_APPROVAL or DISABLED (opt out of commit/push).
 - Existing restrictive rules, task-specific prohibitions, unresolved conflicts/authority gaps.
 - Exact task artifact/reference and authorized scope, branch convention, relevant checks, integration/deployment boundaries.
-- Dev-box merge gate state (not adopted / bootstrap PR prepared / integrated with revision), hosted-CI triggers, merge exclusions and named project exceptions.
+- Effective merge and deployment policy (LIGHT / GATE / PER_CHANGE_APPROVAL) with its source, deployment target/command and production decision; dev-box merge gate state where GATE applies (not adopted / bootstrap PR prepared / integrated with revision), hosted-CI triggers, merge exclusions and named project exceptions.
 
 Do not invent missing context or claim Codex is configured because ChatGPT is configured.
 
@@ -56,11 +56,13 @@ Check the effective publication policy independently against active instructions
 - Existing equivalent permission: preserve it without duplicate rules or repeated approval. Missing/unclear authority is a gap, not retroactive consent; obtain a scoped grant before publication. Respect separate commit/push restrictions where present.
 - Any stronger task prohibition prevails. No publication policy above authorizes main/default-branch push, another task's branch/worktree, merge, release/tag, deployment, production/provider activation or recommendation-only follow-up.
 
-Check the merge contract separately (DEVBOX_GATE_POLICY.md):
+Check the merge and deployment contract separately (standard section "Merge and deployment policy"):
 
-- Gate integrated on the integration branch: own task PRs with `STATUS: DONE`, matching `COMMIT`, `BLOCKER: none` and `MERGE_READY: yes` may be merged only through the gate's `merge-ff` compare-and-swap after a complete green run on the actual merge commit. Never plain push, force, admin bypass or the PR merge API.
+- LIGHT: merge only own task PRs without open decision, after the project's checks passed locally on the current head that contains the current default branch, bound to that commit (`gh pr merge --match-head-commit <sha>`); rerun checks if the default branch moved. Never merge foreign/fork PRs or PRs that change the policy, authority rules or a gate. Deploy only to the recorded target with the recorded command and verify the result; production with real user data only after the recorded Owner decision. Raise escalation signs (broken default branch, rollback, recurring defect, overlapping parallel tasks) with the Owner instead of switching policy.
+- PER_CHANGE_APPROVAL: no merge or deployment without explicit approval for that change.
+- GATE (DEVBOX_GATE_POLICY.md), gate integrated on the integration branch: own task PRs with `STATUS: DONE`, matching `COMMIT`, `BLOCKER: none` and `MERGE_READY: yes` may be merged only through the gate's `merge-ff` compare-and-swap after a complete green run on the actual merge commit. Never plain push, force, admin bypass or the PR merge API.
 - Gate not integrated, bootstrap PR, PRs changing the gate, foreign/fork PRs, drafts, open decisions and merge-excluded paths: no merge; present exact `B`/`H`/`T` evidence and ask the Owner.
-- Hosted CI only by deliberate `workflow_dispatch`; never add automatic triggers or self-hosted runners. A merge never grants deployment.
+- Hosted CI only by deliberate `workflow_dispatch`; never add automatic triggers or self-hosted runners. Under GATE and PER_CHANGE_APPROVAL a merge never grants deployment.
 
 Ensure at minimum that Codex has coherent contracts for:
 - reading repository instructions;

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "bundle_version": "2.1.0",
+  "bundle_version": "3.0.0",
   "provider_path": "claude-code",
   "platform": "linux",
   "current_step": "github_cli",

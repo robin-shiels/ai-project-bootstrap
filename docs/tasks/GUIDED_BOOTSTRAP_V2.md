@@ -23,7 +23,7 @@ Gewöhnliche technische Detailentscheidungen anhand vorhandener Regeln und offiz
 
 Siehe Spec, Abschnitt „Owner-Entscheidungen“. Kurz: Desktop-App und Abo vorausgesetzt; nur essenzielle Dienste; Windows nativ; reiner Chat bekommt einen Kurzhinweis; Arbeitsweise = Berechtigungen + persönliche Regeln + erstes Projekt; Merge/Deploy „Leicht“ mit gemeinsamer Eskalation; Plugin mit drei Skills.
 
-Offen und vor GB2-02 vorzulegen: Versionsnummer 3.0.0 (Empfehlung) oder 2.2.0.
+Versionsnummer: **3.0.0** (Owner-Entscheidung 2026-10-21, weil sich der Befugnisvertrag ändert). Umsetzung vom Owner am 2026-10-21 freigegeben.
 
 ## Review Focus
 
@@ -53,7 +53,7 @@ Offen und vor GB2-02 vorzulegen: Versionsnummer 3.0.0 (Empfehlung) oder 2.2.0.
 
 ## GB2-02 — Standard und Befugnisvertrag „Leicht“
 
-**Abhängigkeit:** 01 und Owner-Entscheidung zur Versionsnummer.
+**Abhängigkeit:** 01. Version 3.0.0.
 
 - [ ] `UNIVERSAL_PROJECT_BOOTSTRAP.md`: Merge-/Deploy-Modell „Leicht“ als Standard für neue Projekte, mit Bedingungen, Deploy-Regel, Einmal-Frage für Produktion mit echten Nutzerdaten, Eskalationsregel und Bestandsschutz für strengere Projekte.
 - [ ] `DEVBOX_GATE_POLICY.md` und `skills/SKILL_MANIFEST.md`: Gate als stärkere Option statt einziger Merge-Weg; Verweise abgleichen.

@@ -2,11 +2,13 @@
 
 A reusable, product-neutral standard for consistent AI planning and execution workflows across new and existing projects — ChatGPT with Codex and Claude with Claude Code, on macOS, Windows and Linux.
 
-**Current standard:** v2.1.0 (single version source: [`VERSION`](VERSION))
+**Current standard:** v3.0.0 (single version source: [`VERSION`](VERSION))
 
 > **New here? Start with the guided setup.** Download `START_HIER.md` (and the matching `AI-Bootstrap-<version>.zip`) and paste or upload `START_HIER.md` into a new ChatGPT or Claude chat. It guides you in simple German, one current step at a time, from an AI subscription to a working personal environment on your own computer and a bootstrapped project. See [Guided personal setup](#guided-personal-setup).
 
 > **New-project default: own task-branch commit/push is enabled.** After an explicitly started task passes its required checks, the executor may commit and push only that task's dedicated branch. This does not permit main/default-branch push, another task's branch, merge, release/tag, deployment or production/provider activation, and does not start a recommended follow-up. At setup you can choose **DISABLED** (opt out of commit/push) or **PER_TASK_APPROVAL** instead of **ALLOW_AFTER_CHECKS**. ChatGPT must prominently repeat this notice in its setup response and record the effective policy in your authoritative project instructions before relying on it. Existing projects keep their active restrictions; a standard version does not grant permission retrospectively.
+
+> **v3.0.0: LIGHT merge and deployment by default for new projects.** The executor merges its own task PRs after the project's checks passed locally on the current head (rechecked if `main` moved, merge bound to the checked commit) and deploys to the project's recorded target; production with real user data needs one Owner decision per project. Foreign and fork PRs are never merged. If LIGHT proves too error-prone, the executor raises it and the Owner chooses **GATE** or **PER_CHANGE_APPROVAL**. Existing projects keep their rules. See [merge and deployment policy](UNIVERSAL_PROJECT_BOOTSTRAP.md#merge-and-deployment-policy).
 
 > **v2.0.0: dev-box merge gate and no automatic hosted CI.** Projects check PRs on their actual merge result and releases on the exact current commit with a deliberately started local gate. GitHub-hosted CI starts at most through manual `workflow_dispatch` for diagnosis. Once a project's gate is integrated, its own explicitly mergeable task PRs without open decisions may be merged automatically by the gate; foreign PRs never are, and deployment always stays a separate project decision. See [`DEVBOX_GATE_POLICY.md`](DEVBOX_GATE_POLICY.md). Branch push authority above is still not merge authority.
 
@@ -60,7 +62,7 @@ The standard covers reusable workflow behavior such as:
 - durable canonical orders and results (normally Git-tracked) plus short execution prompts;
 - visible own-branch publication policy with opt-out and existing-rule preservation;
 - task-appropriate checks and distinct local, branch, integration and deployment states;
-- a local merge/release gate on the actual merge result, own-task-PR auto-merge after adoption, and hosted CI only by manual dispatch;
+- a merge and deployment policy per project (LIGHT by default, the local dev-box gate as the stronger option), and hosted CI only by manual dispatch;
 - recommendation-only next-chat guidance;
 - compact current-work status before recommendations;
 - parallel-work awareness;
@@ -108,7 +110,7 @@ ChatGPT and Codex remain separate layers: configuring one does not falsely imply
 
 ## Dev-box merge gate
 
-[`DEVBOX_GATE_POLICY.md`](DEVBOX_GATE_POLICY.md) is the contract. It runs natively on Linux (reference) and macOS and inside WSL 2 on Windows ([platforms](DEVBOX_GATE_POLICY.md#10-platforms)). The reference CLI [`templates/devbox_merge_gate.py`](templates/devbox_merge_gate.py) (Python 3.12+, standard library, `git` and `gh`) is configured by a strictly validated TOML file ([example](templates/devbox_merge_gate.example.toml)); its tests run with `python3 -m unittest discover -s tests` against temporary repositories and fakes only (the same command also runs the setup-state and bundle tests). Adopt it per project with the [rollout checklist](templates/DEVBOX_GATE_ROLLOUT_CHECKLIST.md) and the [AGENTS.md](templates/AGENTS_DEVBOX_GATE.md) / [CLAUDE.md](templates/CLAUDE_DEVBOX_GATE.md) rule texts. An optional manual diagnosis workflow is in [`templates/github-actions-diagnose.example.yml`](templates/github-actions-diagnose.example.yml). This repository itself has no runner and one workflow: the manually started [platform test](https://github.com/robin-shiels/ai-project-bootstrap/blob/main/docs/PLATFORM_TESTS.md) for macOS and native Windows (owner decision 2026-10-19).
+The gate is the **GATE** choice of the merge and deployment policy, the stronger option next to the LIGHT default. [`DEVBOX_GATE_POLICY.md`](DEVBOX_GATE_POLICY.md) is the contract. It runs natively on Linux (reference) and macOS and inside WSL 2 on Windows ([platforms](DEVBOX_GATE_POLICY.md#10-platforms)). The reference CLI [`templates/devbox_merge_gate.py`](templates/devbox_merge_gate.py) (Python 3.12+, standard library, `git` and `gh`) is configured by a strictly validated TOML file ([example](templates/devbox_merge_gate.example.toml)); its tests run with `python3 -m unittest discover -s tests` against temporary repositories and fakes only (the same command also runs the setup-state and bundle tests). Adopt it per project with the [rollout checklist](templates/DEVBOX_GATE_ROLLOUT_CHECKLIST.md) and the [AGENTS.md](templates/AGENTS_DEVBOX_GATE.md) / [CLAUDE.md](templates/CLAUDE_DEVBOX_GATE.md) rule texts. An optional manual diagnosis workflow is in [`templates/github-actions-diagnose.example.yml`](templates/github-actions-diagnose.example.yml). This repository itself has no runner and one workflow: the manually started [platform test](https://github.com/robin-shiels/ai-project-bootstrap/blob/main/docs/PLATFORM_TESTS.md) for macOS and native Windows (owner decision 2026-10-19).
 
 ## Repository structure
 
@@ -153,11 +155,11 @@ The `.gitignore` only excludes Python bytecode of the reference CLI and its test
 
 The standard uses semantic versions. A target project may record its last reconciled version, for example:
 
-`Universal Project Bootstrap: v2.1.0`
+`Universal Project Bootstrap: v3.0.0`
 
 That marker is useful but never replaces semantic inspection on a future upgrade.
 
-When upgrading from v2.0.x to v2.1.0, nothing in an existing project's rules changes; the guided setup is new and optional for people who already have a working environment, and the gate gains macOS and WSL 2 support. When upgrading from v1.1.0 to v2.0.0, inventory workflows, branch rules and merge rules first and adopt the gate through a scoped project task; existing stricter merge rules stay CONFLICT until the owner changes them. When upgrading from v1.0.0, reconcile behavior rather than replacing local instructions. Preserve existing restrictive commit/push rules until an explicit Owner change; show the concrete conflict with a proposed default B policy. Already equivalent own-branch permission stays intact without re-approval. See [CHANGELOG.md](CHANGELOG.md) for migration details. Branch completion does not claim integration or deployment; recheck current main and affected gates before any separately authorized integration.
+When upgrading from v2.1.0 to v3.0.0, an existing project keeps its effective merge and deployment rules: a project with an integrated gate records GATE, one without merge grant records PER_CHANGE_APPROVAL, and switching to LIGHT is an Owner decision. When upgrading from v2.0.x to v2.1.0, nothing in an existing project's rules changes; the guided setup is new and optional for people who already have a working environment, and the gate gains macOS and WSL 2 support. When upgrading from v1.1.0 to v2.0.0, inventory workflows, branch rules and merge rules first and adopt the gate through a scoped project task; existing stricter merge rules stay CONFLICT until the owner changes them. When upgrading from v1.0.0, reconcile behavior rather than replacing local instructions. Preserve existing restrictive commit/push rules until an explicit Owner change; show the concrete conflict with a proposed default B policy. Already equivalent own-branch permission stays intact without re-approval. See [CHANGELOG.md](CHANGELOG.md) for migration details. Branch completion does not claim integration or deployment; recheck current main and affected gates before any separately authorized integration.
 
 ## Relationship to automation/software factories
 

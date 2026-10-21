@@ -1,6 +1,6 @@
 # Universal Skill & Capability Manifest
 
-**Bootstrap standard:** v2.1.0
+**Bootstrap standard:** v3.0.0
 
 This manifest defines reusable capabilities, not assumptions that a named skill is installed. A Markdown file is not automatically an active skill. Bootstrap compares actual behavior and availability.
 
@@ -10,7 +10,7 @@ For each capability, record its trigger, available implementation/fallback, vers
 
 Applicable higher-priority platform/session instructions and current scoped authorization govern use; preserve authoritative local rules and stronger task restrictions. Generic skill stage or finish prompts neither revoke an explicit grant nor create missing authority. New material product/scope/security/cost/provider/architecture intent belongs to the Owner; ordinary authorized mechanics and discoverable facts do not require repetitive approval. A historical grant, another branch or a tool's capability supplies no authority.
 
-For new projects on v1.1.0 or later, use the [standard's publication policy](../UNIVERSAL_PROJECT_BOOTSTRAP.md#own-task-branch-publication-policy) only after prominent setup notice, opt-out/per-task choices and recorded effective policy. Preserve existing restrictive authority; a proposed incompatible grant is CONFLICT, not an automatic upgrade. Every capability operates within that policy and the current task, never implicit main/merge/release/deployment authority. Merge authority exists only through a project's integrated [dev-box merge gate](../DEVBOX_GATE_POLICY.md) for own explicitly mergeable task PRs, or through a separate scoped grant; deployment never follows from either.
+For new projects on v1.1.0 or later, use the [standard's publication policy](../UNIVERSAL_PROJECT_BOOTSTRAP.md#own-task-branch-publication-policy) only after prominent setup notice, opt-out/per-task choices and recorded effective policy. Preserve existing restrictive authority; a proposed incompatible grant is CONFLICT, not an automatic upgrade. Every capability operates within that policy and the current task, never implicit main/merge/release/deployment authority. Merge and deployment authority exists only through the project's recorded [merge and deployment policy](../UNIVERSAL_PROJECT_BOOTSTRAP.md#merge-and-deployment-policy): LIGHT (own task PRs after local checks on the current head, deployment to the recorded target), GATE (an integrated [dev-box merge gate](../DEVBOX_GATE_POLICY.md), deployment as a separate decision) or PER_CHANGE_APPROVAL.
 
 ## ChatGPT-side capabilities
 
@@ -62,7 +62,10 @@ Use task/risk-based checks appropriate to the repository. Reports need content/s
 ### Git isolation / parallel execution — required when parallel work is used
 Planning identifies only a candidate; execution rechecks actual code/contracts/dependencies/migrations, shared resources, in-flight work and reconciliation cost. Use dedicated branches/worktrees or the project's equivalent isolation; concurrency count is not a goal. Before separately authorized integration, review textual/semantic current-main changes since base and rerun affected checks, broadening for shared contracts or uncertainty. Update shared status/docs from current canonical content and preserve unrelated transitions.
 
-### Merge/release gate — required once a project adopts it
+### Merge and deployment — required per the project's recorded policy
+Under LIGHT, follow the standard's merge conditions exactly (own task PR, no open decision, checks green on the current head containing the default branch, merge bound to that commit), deploy only to the recorded target and verify the result, and raise escalation signs with the Owner. Under PER_CHANGE_APPROVAL, ask per change.
+
+### Merge/release gate — required once a project adopts GATE
 Run the project's configured gate deliberately: `check-only --pr` on the actual merge commit before review/merge, `check-only --main` on the exact current commit before a separately authorized release. Merge only own task PRs through `merge-ff` under the policy's conditions; stop and report on every stop code. Never start hosted CI automatically, never self-merge a PR that changes the gate and never treat a fake-repository test as a real merge.
 
 ### Completion reporting — required

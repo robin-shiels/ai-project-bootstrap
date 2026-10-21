@@ -52,6 +52,8 @@ BUNDLE_FILES = (
     "scripts/probe_gate_host.py",
     "templates/AGENTS_DEVBOX_GATE.md",
     "templates/CLAUDE_DEVBOX_GATE.md",
+    "templates/AGENTS_MERGE_LIGHT.md",
+    "templates/CLAUDE_MERGE_LIGHT.md",
     "templates/CODEX_BOOTSTRAP_PROMPT.md",
     "templates/DEVBOX_GATE_ROLLOUT_CHECKLIST.md",
     "templates/PROJECT_DISCOVERY.md",
