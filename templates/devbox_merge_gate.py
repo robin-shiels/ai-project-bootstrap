@@ -28,6 +28,12 @@ prevents accidental credential use; it is no isolation boundary. Code of
 untrusted origin is therefore refused with ``ISOLATION_REQUIRED`` unless the
 configuration declares an isolated check-only environment whose isolation the
 gate verifies before running anything.
+
+Platforms: Linux is the reference. macOS runs natively through a small host
+adapter (memory from ``vm_stat``/``sysctl``, processes from ``ps``) and
+refuses systemd-only options instead of ignoring them. Native Windows is not
+supported; the gate stops with ``PRECONDITION`` and names WSL 2, where the
+Linux path runs unchanged.
 """
 
 from __future__ import annotations
@@ -35,7 +41,6 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import enum
-import fcntl
 import fnmatch
 import hashlib
 import json
@@ -56,6 +61,11 @@ from contextlib import contextmanager
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import IO, Protocol
+
+try:
+    import fcntl
+except ImportError:  # native Windows: platform_preflight() stops before any use
+    fcntl = None  # type: ignore[assignment]
 
 SCHEMA_VERSION = 1
 ZERO_OID = "0" * 40
@@ -1016,15 +1026,107 @@ def find_heavy_processes(
     return found
 
 
+def host_platform(system: str | None = None) -> str:
+    """``linux``, ``macos`` or ``unsupported`` for a ``sys.platform`` value."""
+    system = sys.platform if system is None else system
+    if system.startswith("linux"):
+        return "linux"
+    if system == "darwin":
+        return "macos"
+    return "unsupported"
+
+
+def platform_preflight(config: Config, system: str | None = None) -> None:
+    """Stop on a host that cannot provide every configured protection."""
+    system = sys.platform if system is None else system
+    kind = host_platform(system)
+    if kind == "unsupported":
+        raise GateStop(
+            Code.PRECONDITION,
+            f"platform {system!r} is not supported natively; on Windows run the gate "
+            "inside WSL 2, otherwise use Linux or macOS",
+        )
+    if kind == "macos":
+        if config.systemd_scope:
+            raise GateStop(
+                Code.PRECONDITION,
+                "systemd_scope = true needs systemd (Linux); set systemd_scope = false "
+                "on macOS or run the gate on Linux",
+            )
+        if config.watched_user_services:
+            raise GateStop(
+                Code.PRECONDITION,
+                "watched_user_services needs systemctl --user (Linux); leave it empty "
+                "on macOS",
+            )
+
+
+def parse_vm_stat(text: str) -> int:
+    """Conservative available memory in KiB: free plus inactive pages."""
+    size = re.search(r"page size of (\d+) bytes", text)
+    free = re.search(r"(?m)^Pages free:\s+(\d+)\.", text)
+    inactive = re.search(r"(?m)^Pages inactive:\s+(\d+)\.", text)
+    if size is None or free is None or inactive is None:
+        raise GateStop(Code.ERROR, "vm_stat output not understood")
+    pages = int(free.group(1)) + int(inactive.group(1))
+    return pages * int(size.group(1)) // 1024
+
+
+def parse_swapusage(text: str) -> int:
+    """Free swap in KiB from ``sysctl -n vm.swapusage``."""
+    match = re.search(r"free = ([0-9.]+)([KMG])", text)
+    if match is None:
+        raise GateStop(Code.ERROR, "vm.swapusage output not understood")
+    factor = {"K": 1, "M": 1024, "G": 1024 * 1024}[match.group(2)]
+    return int(float(match.group(1)) * factor)
+
+
+def heavy_processes_from_ps(
+    text: str, patterns: Sequence[re.Pattern[str]], own_pid: int
+) -> list[str]:
+    """Like ``find_heavy_processes`` for ``ps -axww -o pid=,ppid=,command=`` output."""
+    table: dict[int, tuple[int, str]] = {}
+    for line in text.splitlines():
+        parts = line.split(None, 2)
+        if len(parts) >= 2 and parts[0].isdigit() and parts[1].isdigit():
+            table[int(parts[0])] = (int(parts[1]), parts[2] if len(parts) == 3 else "")
+    skip: set[int] = set()
+    pid = own_pid
+    while pid > 0 and pid not in skip:
+        skip.add(pid)
+        pid = table.get(pid, (0, ""))[0]
+    return [
+        f"{pid}: {command[:120]}"
+        for pid, (_, command) in table.items()
+        if pid not in skip and command and any(p.search(command) for p in patterns)
+    ]
+
+
+def _command_output(argv: Sequence[str]) -> str:
+    return subprocess.run(
+        list(argv), capture_output=True, text=True, check=True, timeout=30
+    ).stdout
+
+
 class LocalHost:
     """Read-only resource, service and permission probe of the local host."""
 
-    def __init__(self, config: Config, proc: Path = Path("/proc")) -> None:
+    def __init__(
+        self,
+        config: Config,
+        proc: Path = Path("/proc"),
+        system: str | None = None,
+        run: Callable[[Sequence[str]], str] = _command_output,
+    ) -> None:
         self.config = config
         self.proc = proc
+        self.system = sys.platform if system is None else system
+        self.run = run
         self.patterns = [re.compile(p) for p in config.heavy_process_patterns]
 
     def resources(self) -> ResourceSnapshot:
+        if host_platform(self.system) == "macos":
+            return self._macos_resources()
         meminfo: dict[str, int] = {}
         for line in Path("/proc/meminfo").read_text().splitlines():
             key, _, value = line.partition(":")
@@ -1037,6 +1139,24 @@ class LocalHost:
                 name: self._service_state(name)
                 for name in self.config.watched_user_services
             },
+        )
+
+    def _macos_resources(self) -> ResourceSnapshot:
+        try:
+            memory = self.run(("vm_stat",))
+            swap = self.run(("sysctl", "-n", "vm.swapusage"))
+            processes = self.run(("ps", "-axww", "-o", "pid=,ppid=,command="))
+        except (OSError, subprocess.SubprocessError) as error:
+            raise GateStop(
+                Code.ERROR, f"cannot read macOS resources: {error}"
+            ) from error
+        return ResourceSnapshot(
+            mem_available_kib=parse_vm_stat(memory),
+            swap_free_kib=parse_swapusage(swap),
+            heavy_processes=heavy_processes_from_ps(
+                processes, self.patterns, os.getpid()
+            ),
+            services={},
         )
 
     def uid(self) -> int:
@@ -2129,6 +2249,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             f"config valid: {config.slug} {config.integration_ref} sha256 {config.raw_sha256}"
         )
         return int(Code.PASS)
+    if args.mode in ("check-only", "merge-ff"):
+        try:
+            platform_preflight(config)
+        except GateStop as stop:
+            print(f"STOP {stop.code.name}: {stop.message}", file=sys.stderr)
+            return int(stop.code)
     repo_dir = Path(
         run_text(("git", "rev-parse", "--show-toplevel"), cwd=args.repo_dir).strip()
     )

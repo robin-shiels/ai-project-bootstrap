@@ -76,7 +76,7 @@ markers = ["pyproject.toml", "tests"]
 min_mem_available_mib = 2048
 min_swap_free_mib = 0
 heavy_process_patterns = ["(^|/)pytest(\\s|$)", "-m pytest(\\s|$)"]
-systemd_scope = true
+systemd_scope = true          # Linux only; must be false on macOS (see DEVBOX_GATE_POLICY.md section 10)
 scope_properties = ["MemoryMax=3G", "CPUQuota=200%"]
 watched_user_services = []   # recorded only; the gate never starts/stops them
 
