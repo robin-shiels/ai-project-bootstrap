@@ -3,7 +3,7 @@
   "order_revision": "e29b3f21eb877f9f1215d29a4bff5d6dfbac6174",
   "source_base": "11d642bcfd8de138da81ac11d7e5fedcc9c0028d",
   "branch": "claude/guided-bootstrap-v1",
-  "last_commit": "siehe git log des Branches; Artefakt-Quelle in ACCEPTANCE §6",
+  "last_commit": "67e5a9f28aebf16d21d7a8e71c6ee481c573e910 (Branch-Kopf vor dem Merge); Merge 213525fbedaf66749e991ed0efc49a3f40d9b150",
   "tasks": [
     {
       "id": "GBOOT-01",
@@ -152,8 +152,24 @@
       "blockers": []
     }
   ],
-  "next_action": "Owner: Integration von PR #5 entscheiden (enthält Gate-Änderung); vollständige Einrichtung mit Anmeldung auf macOS/Windows bleibt offen (ACCEPTANCE §8)",
-  "repository_state": "DONE_ON_BRANCH (nach Push; Remote-SHA in ACCEPTANCE §6)",
+  "next_action": "Keine offene Aufgabe dieser Kette. Produkt bleibt PACKAGE_BUILT: vollständige Einrichtung mit Anmeldung auf macOS/Windows und Webchat-Upload sind nicht geprüft (ACCEPTANCE §7, §8).",
+  "repository_state": "INTEGRATED (main 213525fbedaf66749e991ed0efc49a3f40d9b150, PR #5, Owner-Auftrag 2026-10-21)",
   "product_state": "PACKAGE_BUILT",
-  "artifact_source": "91c305b753adb9ff2b0a659f2e8232259add2a74"
+  "artifact_source": "91c305b753adb9ff2b0a659f2e8232259add2a74",
+  "integration": {
+    "pr": 5,
+    "merge_commit": "213525fbedaf66749e991ed0efc49a3f40d9b150",
+    "parents": [
+      "9fd3dc5f27ff6561753975bd83b5ef3abeb0480e",
+      "67e5a9f28aebf16d21d7a8e71c6ee481c573e910"
+    ],
+    "tree": "7c0ccac6083ff0a7a5d36461d8025fef3228b538",
+    "authorized_by": "Owner, 2026-10-21",
+    "checks_on_merge_tree": [
+      "python3 -m unittest discover -s tests: 82 OK",
+      "ruff check/format --check: ok",
+      "git diff --check: ok",
+      "validate-config: ok"
+    ]
+  }
 }
