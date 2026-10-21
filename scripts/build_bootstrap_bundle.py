@@ -129,8 +129,13 @@ nicht als Text weiter.
      (gibt es den Ordner schon: `git -C ~/.ai-bootstrap/repo fetch origin`),
      dann `git -C ~/.ai-bootstrap/repo checkout --detach {commit}`.
      Unter Windows liegt `~` unter `%USERPROFILE%`.
-   - Ohne Git: die Dateien einzeln von `{raw}/<pfad>` lesen, zum
-     Beispiel mit `curl -fsSL` oder `Invoke-WebRequest`.
+   - Ohne Git: die Dateien einzeln von `{raw}/<pfad>` lesen, mit deinem
+     eigenen Werkzeug zum Abrufen von Webseiten oder mit `curl -fsSL`,
+     `wget -qO-` bzw. `Invoke-WebRequest`.
+   - Geht beides nicht, installiere zuerst Git nach Freigabe: macOS
+     `xcode-select --install`, Windows `winget install --id Git.Git -e
+     --source winget`, Ubuntu/Debian `sudo apt-get install -y git`, Fedora
+     `sudo dnf install -y git`. Sag vorher in einem Satz, warum.
    - Liegt das entpackte Paket `AI-Bootstrap-{version}` vor, kannst du es
      stattdessen nutzen.
 4. **Folge `{ENTRY_SKILL}`** vollständig, ab seinem Schritt `start`. Die
