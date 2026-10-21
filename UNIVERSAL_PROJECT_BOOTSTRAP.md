@@ -2,7 +2,7 @@
 
 **Version:** 2.1.0
 
-**Scope:** product-neutral AI workflow bootstrap (ChatGPT + Codex, Claude + Claude Code)  
+**Scope:** product-neutral AI workflow bootstrap (ChatGPT + Codex, Claude + Claude Code)\
 **Mode:** inventory-first, idempotent, conflict-aware
 
 ## Purpose

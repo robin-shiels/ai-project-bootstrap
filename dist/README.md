@@ -11,4 +11,3 @@ Gebaut mit `python3 scripts/build_bootstrap_bundle.py --output-dir dist --source
 Quellstand: `fffd4ad17ae62f981e0c8a338f656223ffb4e280` (steht auch in `START_HIER.md` und im `BUNDLE_MANIFEST.json` des ZIP). Spätere Commits auf diesem Branch ändern nur `dist/` und `docs/`, nicht den Paketinhalt.
 
 Status: **PACKAGE_BUILT**, nicht freigegeben. Real geprüft sind nur Teile der beiden Linux-Wege; siehe `docs/results/GUIDED_BOOTSTRAP_V1_ACCEPTANCE.md`. Kein Release, kein Tag.
-
