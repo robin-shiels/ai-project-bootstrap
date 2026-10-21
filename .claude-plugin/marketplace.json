@@ -1,0 +1,15 @@
+{
+  "name": "ai-bootstrap",
+  "owner": {
+    "name": "robin-shiels"
+  },
+  "description": "Guided personal setup and working rules of the AI Project Bootstrap.",
+  "plugins": [
+    {
+      "name": "ai-bootstrap",
+      "source": "./plugins/ai-bootstrap",
+      "description": "Geführte Einrichtung, Projektstart und Arbeitsweise für ChatGPT/Codex und Claude/Claude Code.",
+      "version": "3.0.0"
+    }
+  ]
+}

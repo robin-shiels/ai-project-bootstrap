@@ -1,0 +1,43 @@
+{
+  "schema_version": 2,
+  "bundle_version": "3.0.0",
+  "provider_path": "claude-code",
+  "platform": "linux",
+  "current_step": "skills",
+  "decisions": [
+    {
+      "id": "provider_path",
+      "answer": "Claude mit Claude Code (festgestellt)",
+      "source": "user_choice",
+      "decided_at": "2026-10-21"
+    },
+    {
+      "id": "git_display_name",
+      "answer": "Beispiel Nutzer",
+      "source": "user_own_answer",
+      "decided_at": "2026-10-21"
+    }
+  ],
+  "verifications": [
+    {
+      "step": "start",
+      "checked_at": "2026-10-21T10:02",
+      "scope": "host",
+      "source": "tool_check",
+      "context": "claude-code-desktop@example-laptop",
+      "result": "ok",
+      "detail": "uname: Linux; git 2.x; gh 2.x"
+    },
+    {
+      "step": "github",
+      "checked_at": "2026-10-21T10:09",
+      "scope": "account",
+      "source": "tool_check",
+      "context": "claude-code-desktop@example-laptop",
+      "result": "ok",
+      "detail": "gh auth status: angemeldet; git user.name und user.email gesetzt"
+    }
+  ],
+  "blockers": [],
+  "next_action": "Superpowers und ai-bootstrap installieren und in neuer Sitzung pruefen"
+}

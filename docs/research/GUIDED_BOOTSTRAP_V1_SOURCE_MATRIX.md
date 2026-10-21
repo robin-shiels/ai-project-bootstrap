@@ -126,3 +126,32 @@ Daraus drei verständliche Agent-Profile (Vorsichtig, Standard, Erweitert) je An
 ### E7 Version
 
 Neue, kompatible Funktion: Standard und Paket werden **v2.1.0**. Eine Versionsquelle: Datei `VERSION`. v2.0.1 bleibt die Gate-Korrektur im Changelog; die Standarddateien nannten bisher v2.0.0 und werden auf v2.1.0 angehoben.
+
+## v2-Ergänzung (GB2-01, 2026-10-21)
+
+Abgerufen am 2026-10-21 für [GUIDED_BOOTSTRAP_V2](../tasks/GUIDED_BOOTSTRAP_V2.md). Lokal geprüft mit `codex-cli 0.163.0` und `gh 2.102.0`; `claude` war auf dem Prüfrechner nicht im Suchpfad, Claude-Aussagen sind deshalb nur aus der Dokumentation belegt.
+
+| # | Belegte Aussage | Quelle | Status | Grenzen |
+| --- | --- | --- | --- | --- |
+| V1 | Claude-Marktplatz: `<repo>/.claude-plugin/marketplace.json` mit `name`, `owner.name`, `plugins[]` (je `name`, `source`); Plugin im selben Repository mit relativer Quelle `./plugins/<name>`; `plugin.json` unter `<plugin>/.claude-plugin/` (nur `name` Pflicht); Skills unter `<plugin>/skills/<name>/SKILL.md`. | https://code.claude.com/docs/en/plugins/marketplace-reference, https://code.claude.com/docs/en/plugins-reference | gelesen | – |
+| V2 | `claude plugin marketplace add owner/repo` (Ref mit `owner/repo#ref` oder `@ref`), `--scope user` Standard; `claude plugin install name@marketplace`; wirksam ab nächster Sitzung oder nach `/reload-plugins`. | https://code.claude.com/docs/en/plugins/cli-reference | gelesen; real geprüft 2026-10-21 (frisches Ubuntu 24.04, Claude Code 2.1.306, ohne Anmeldung) | Branch-Ref funktioniert; **Commit-SHA als Ref scheitert** („Please make sure you have the correct access rights…“) |
+| V3 | `SKILL.md`: `name` (Standard: Ordnername) und `description` empfohlen; claude.ai-Upload erlaubt nur `name`, `description`, `license`, `compatibility`, `metadata`, `allowed-tools`. | https://code.claude.com/docs/en/skills | gelesen | – |
+| V4 | Codex-Skills: persönlich `$HOME/.agents/skills`, Projekt `.agents/skills`; `SKILL.md` mit `name` und `description` Pflicht (gleiches Format); neue Skills werden erkannt, sonst Neustart. | https://learn.chatgpt.com/docs/build-skills | gelesen | – |
+| V5 | Codex-Plugin-Marktplätze aus Git: `codex plugin marketplace add owner/repo[@ref]` mit `--ref`; Marktplatzdatei `.agents/plugins/marketplace.json` (Einträge mit `policy` und `category`); `.claude-plugin/marketplace.json` wird „legacy-compatible“ gelesen. | https://developers.openai.com/plugins/build/plugins; lokal `codex plugin marketplace add --help` | gelesen, lokal geprüft (CLI) | Werte für `policy` und Lesen eines reinen Claude-Marktplatzes durch die CLI UNBELEGT → Skill-Ordner-Weg gewählt |
+| V6 | Persönliche Codex-Anweisungen: `~/.codex/AGENTS.md` (bzw. `$CODEX_HOME/AGENTS.md`). | https://learn.chatgpt.com/docs/agent-configuration/agents-md | gelesen | – |
+| V7 | Codex-Befehlsregeln: Starlark-Dateien `~/.codex/rules/*.rules`, `prefix_rule(pattern=[...], decision="forbidden"\|"prompt"\|"allow")`, strengste Regel gewinnt; Test mit `codex execpolicy check`; experimentell, Neustart nötig. | https://learn.chatgpt.com/docs/agent-configuration/rules | gelesen | experimentell |
+| V8 | Claude-Berechtigungsregeln: `Bash(gh pr merge *)` gleich `Bash(gh pr merge:*)`; Reihenfolge deny → ask → allow, allow hebt deny nie auf. | https://code.claude.com/docs/en/permissions | gelesen | – |
+| V9 | Claude Code nativ unter Windows: Windows 10 1809+; Git for Windows empfohlen (Git Bash für das Bash-Werkzeug, sonst PowerShell); Sandbox auf nativem Windows nicht unterstützt (nur macOS, Linux, WSL2). | https://code.claude.com/docs/en/setup, https://code.claude.com/docs/en/sandboxing | gelesen | – |
+| V10 | Codex nativ unter Windows (CLI, IDE, Desktop-App) mit eigener Windows-Sandbox (MXC empfohlen). | https://learn.chatgpt.com/docs/windows/windows-sandbox | gelesen | – |
+| V11 | Claude-Projekte: „Projects“ → „+ New Project“; alle Pläne (Free bis 5 Projekte); GitHub im Projektwissen über „+“ → „GitHub“, „Sync“ zum Aktualisieren. | https://support.claude.com/en/articles/9519177, https://support.claude.com/en/articles/10167454 | gelesen | Planabdeckung der GitHub-Anbindung teils UNBELEGT |
+| V12 | ChatGPT-Projekte auf allen Plänen; GitHub wird pro Konto unter Einstellungen → Plugins (früher Apps) → GitHub verbunden und live gelesen. | https://help.openai.com/en/articles/10169521, https://help.openai.com/en/articles/11145903 | Suchtreffer (403) | genaue Bedienwege und Bindung an ein Projekt UNBELEGT |
+| V13 | `gh pr merge --match-head-commit <sha>`: Merge nur, wenn der PR-Kopf diesem Commit entspricht (GraphQL `expectedHeadOid`); nicht interaktiv ist `--merge`/`--squash`/`--rebase` Pflicht; ein veralteter Branch wird nur abgelehnt, wenn eine Schutzregel „up to date“ verlangt. `gh pr update-branch [--rebase]` holt die Basis in den PR-Branch. | https://cli.github.com/manual/gh_pr_merge, https://cli.github.com/manual/gh_pr_update-branch; lokal `--help` | gelesen, lokal geprüft | Ablehnung bei veraltetem Branch ohne Schutzregel nicht getestet → „Leicht“ prüft das selbst |
+
+### E8 Entscheidungen v2
+
+- **Claude:** eigener Marktplatz aus diesem Repository (V1, V2), ohne Ref (Hauptzweig); danach die Plugin-Version prüfen, weil ein Commit-SHA als Ref nicht funktioniert. Die Startdatei selbst liest die Skills exakt am Quellcommit (Clone + Checkout bzw. Rohdatei-Adresse).
+- **Codex:** Repository nach `~/.ai-bootstrap/repo` klonen und die drei Skill-Ordner nach `~/.agents/skills/` kopieren (V4). Der Codex-Plugin-Marktplatz (V5) wird erst genutzt, wenn sein Format belegt ist.
+- **Persönliche Regeln:** `~/.claude/CLAUDE.md` bzw. `~/.codex/AGENTS.md` (A11, V6) mit markiertem Block.
+- **Sperren:** Claude `permissions.deny` (V8); Codex `prefix_rule(..., decision="forbidden")` (V7).
+- **Windows:** nativ (V9, V10). Claude Code hat dort keine Sandbox; das wird im Profil offen gesagt, Sperrregeln gelten trotzdem.
+- **„Leicht“-Merge:** Prüfung „Branch enthält aktuellen main“ selbst ausführen (`git merge-base --is-ancestor origin/main HEAD`), bei Bedarf `gh pr update-branch`, dann `gh pr merge --match-head-commit` (V13).

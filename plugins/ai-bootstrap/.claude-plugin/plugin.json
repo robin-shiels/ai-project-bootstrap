@@ -1,0 +1,11 @@
+{
+  "name": "ai-bootstrap",
+  "version": "3.0.0",
+  "description": "Geführte Einrichtung, Projektstart und Arbeitsweise für ChatGPT/Codex und Claude/Claude Code.",
+  "author": {
+    "name": "robin-shiels"
+  },
+  "homepage": "https://github.com/robin-shiels/ai-project-bootstrap",
+  "repository": "https://github.com/robin-shiels/ai-project-bootstrap",
+  "license": "MIT"
+}

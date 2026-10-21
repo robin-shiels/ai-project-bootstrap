@@ -1,11 +1,23 @@
 # Changelog
 
+## 3.0.0 — LIGHT merge and deployment, guided setup v2 — 2026-10-21
+
+**Incompatible change of the authority contract.** Owner decision of 2026-10-21: new projects use the LIGHT merge and deployment policy by default. Existing projects keep their effective rules.
+
+- Added the [merge and deployment policy](UNIVERSAL_PROJECT_BOOTSTRAP.md#merge-and-deployment-policy) with the choices LIGHT (default for new projects), GATE (the dev-box merge gate, unchanged) and PER_CHANGE_APPROVAL. LIGHT merges only own task PRs without open decision after the project's checks passed locally on the current head that contains the current default branch, rechecks when the default branch moved, binds the merge to the checked commit and never merges foreign or fork PRs or PRs that change the policy or a gate. Deployment runs only to a recorded target with a recorded command and a result check; production with real user data needs one Owner decision per project.
+- Escalation rule: signs that LIGHT is not enough (broken default branch after a merge, rollback, recurring defect, overlapping parallel tasks) are raised with the Owner, who evaluates GATE and PER_CHANGE_APPROVAL together with the executor; the policy is never switched silently.
+- Added rule texts [`templates/AGENTS_MERGE_LIGHT.md`](templates/AGENTS_MERGE_LIGHT.md) and [`templates/CLAUDE_MERGE_LIGHT.md`](templates/CLAUDE_MERGE_LIGHT.md); reconciled the gate policy, skill manifest, discovery template, Codex prompt and README. The gate's script, schema and tests are unchanged.
+
+### Migration from v2.1.0
+
+Nothing changes in an existing project until the Owner chooses a policy. A project with an integrated gate records GATE (EQUIVALENT). A project without gate and without merge grant records PER_CHANGE_APPROVAL as its current behavior; offering LIGHT there is a CONFLICT for the Owner. Update the bootstrap marker only after the effective policy is recorded.
+
 ## 2.1.0 — Guided personal setup — 2026-10-19
 
 Compatible addition. No existing project rule, publication policy or gate stop condition changes.
 
-- Added the guided personal setup in German ([`onboarding/`](onboarding/ENTRY.md)): shared dialog control (only the current step, check before asking, „Frage X von Y“ with options and a recommendation, short confirmation on success, concrete diagnosis only for actual problems, questions in the same chat with return to the same step), a step catalog with evidence types, and equal paths for ChatGPT/Codex and Claude/Claude Code on macOS, Windows (WSL 2) and Linux. Own computer by default; dev box optional.
-- Added a versioned, secret-free setup state ([schema](onboarding/STATE.schema.json), [example](onboarding/STATE.example.json)) with an actual validator ([`scripts/onboarding_state.py`](scripts/onboarding_state.py)); saved before GitHub exists, re-read in a new chat with decisions kept and access/installations re-checked.
+- Added the guided personal setup in German ([`onboarding/`](https://github.com/robin-shiels/ai-project-bootstrap/blob/91c305b753adb9ff2b0a659f2e8232259add2a74/onboarding/ENTRY.md)): shared dialog control (only the current step, check before asking, „Frage X von Y“ with options and a recommendation, short confirmation on success, concrete diagnosis only for actual problems, questions in the same chat with return to the same step), a step catalog with evidence types, and equal paths for ChatGPT/Codex and Claude/Claude Code on macOS, Windows (WSL 2) and Linux. Own computer by default; dev box optional.
+- Added a versioned, secret-free setup state ([schema](https://github.com/robin-shiels/ai-project-bootstrap/blob/91c305b753adb9ff2b0a659f2e8232259add2a74/onboarding/STATE.schema.json), [example](https://github.com/robin-shiels/ai-project-bootstrap/blob/91c305b753adb9ff2b0a659f2e8232259add2a74/onboarding/STATE.example.json)) with an actual validator ([`scripts/onboarding_state.py`](https://github.com/robin-shiels/ai-project-bootstrap/blob/91c305b753adb9ff2b0a659f2e8232259add2a74/scripts/onboarding_state.py)); saved before GitHub exists, re-read in a new chat with decisions kept and access/installations re-checked.
 - Added the deterministic bundle build ([`scripts/build_bootstrap_bundle.py`](scripts/build_bootstrap_bundle.py)): `START_HIER.md`, `AI-Bootstrap-<version>.zip` with `BUNDLE_MANIFEST.json` (version, full source commit, file hashes) and `SHA256SUMS`, built from a Git commit without network access.
 - Gate platforms ([policy §10](DEVBOX_GATE_POLICY.md#10-platforms)): native macOS through a small host adapter (memory from `vm_stat`/`sysctl`, processes from `ps`), with `systemd_scope = true` or watched user services stopping as `PRECONDITION` instead of being ignored; native Windows stops with `PRECONDITION` naming WSL 2, where the Linux reference runs unchanged. Linux behavior is unchanged. This changes the gate script, so adopting projects integrate it through a separately approved gate PR.
 - Single version source [`VERSION`](VERSION); standard, policy, manifest and templates now name v2.1.0. The v2.0.1 entry below stays the gate hardening release; v2.0.0 remains the policy baseline.

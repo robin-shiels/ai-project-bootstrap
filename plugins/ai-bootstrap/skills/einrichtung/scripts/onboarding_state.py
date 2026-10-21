@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Validate a portable AI Bootstrap setup state (Einrichtungsstand).
 
-The JSON Schema document ``onboarding/STATE.schema.json`` describes the
-format. This module is the actual check: it reads the enums and required
+The JSON Schema document ``references/STATE.schema.json`` (next to this
+script's folder) describes the format. This module is the actual check: it reads the enums and required
 field lists from that document and enforces them, plus rules a schema alone
 does not express (no secret-looking values, known schema version, unknown
 values written as ``"unknown"`` instead of being left out).
@@ -10,9 +10,12 @@ values written as ``"unknown"`` instead of being left out).
 Standard library only. Usage::
 
     python3 scripts/onboarding_state.py validate <state.json>
+    python3 scripts/onboarding_state.py migrate <old.json> <new.json>
 
-Exit 0: valid. Exit 1: invalid (each problem on its own line). Exit 2: usage
-or unreadable file.
+``validate`` exit 0: valid. Exit 1: invalid (each problem on its own line).
+``migrate`` rewrites a version 1 state to version 2 and validates the result
+(exit 0 written, exit 1 invalid input or result). Exit 2: usage or unreadable
+file.
 """
 
 from __future__ import annotations
@@ -23,11 +26,35 @@ import sys
 from pathlib import Path
 from typing import Any
 
-SUPPORTED_SCHEMA_VERSIONS = (1,)
+SUPPORTED_SCHEMA_VERSIONS = (2,)
 
 SCHEMA_PATH = (
-    Path(__file__).resolve().parent.parent / "onboarding" / "STATE.schema.json"
+    Path(__file__).resolve().parent.parent / "references" / "STATE.schema.json"
 )
+
+# Version 1 steps (guided bootstrap 2.1.0) and the version 2 step that now
+# covers them. ``None``: the step no longer exists; its entries are dropped.
+V1_TO_V2_STEP: dict[str, str | None] = {
+    "start": "start",
+    "context": "start",
+    "path": "start",
+    "save_state": "start",
+    "local_agent": "start",
+    "handover": "start",
+    "git": "github",
+    "github_account": "github",
+    "github_cli": "github",
+    "git_identity": "github",
+    "chat_github": "projekt",
+    "wsl": "gate",
+    "python": "gate",
+    "skills": "skills",
+    "permissions": "arbeitsweise",
+    "project": "projekt",
+    "trial": "probelauf",
+    "done": "fertig",
+    "devbox": None,
+}
 
 # Values that look like credentials must never be stored in a portable state.
 SECRET_PATTERNS = (
@@ -141,7 +168,12 @@ def validate_state(state: Any, schema: dict[str, Any] | None = None) -> list[str
             return [
                 (
                     f"$.schema_version: version {version} is not supported by this tool "
-                    f"(supported: {SUPPORTED_SCHEMA_VERSIONS}); do not guess, use the matching bundle"
+                    f"(supported: {SUPPORTED_SCHEMA_VERSIONS}); "
+                    + (
+                        "run 'migrate' first"
+                        if version == 1
+                        else "do not guess, use the matching bundle"
+                    )
                 )
             ]
     _check_object(schema, schema, state, "$", errors)
@@ -155,15 +187,74 @@ def validate_state(state: Any, schema: dict[str, Any] | None = None) -> list[str
     return errors
 
 
+def migrate_state(state: dict[str, Any]) -> dict[str, Any]:
+    """Rewrite a version 1 state to version 2.
+
+    Decisions are kept unchanged. Verifications and blockers move to the step
+    that now covers them; entries of removed steps are dropped. The current
+    step becomes the version 2 step that covers the old one.
+    """
+    if state.get("schema_version") != 1:
+        raise ValueError("only version 1 states can be migrated")
+
+    def step(old: Any) -> str | None:
+        return V1_TO_V2_STEP.get(old) if isinstance(old, str) else None
+
+    def moved(entries: Any) -> list[Any]:
+        result = []
+        for entry in entries if isinstance(entries, list) else []:
+            new = step(entry.get("step")) if isinstance(entry, dict) else None
+            if new is not None:
+                result.append({**entry, "step": new})
+        return result
+
+    return {
+        **state,
+        "schema_version": 2,
+        "current_step": step(state.get("current_step")) or "start",
+        "verifications": moved(state.get("verifications")),
+        "blockers": moved(state.get("blockers")),
+    }
+
+
+def _read(path: str) -> Any:
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+USAGE = (
+    "usage: onboarding_state.py validate <state.json>\n"
+    "       onboarding_state.py migrate <old.json> <new.json>"
+)
+
+
 def main(argv: list[str]) -> int:
-    if len(argv) != 2 or argv[0] != "validate":
-        print("usage: onboarding_state.py validate <state.json>", file=sys.stderr)
+    command = argv[0] if argv else ""
+    if not (
+        (command == "validate" and len(argv) == 2)
+        or (command == "migrate" and len(argv) == 3)
+    ):
+        print(USAGE, file=sys.stderr)
         return 2
     try:
-        state = json.loads(Path(argv[1]).read_text(encoding="utf-8"))
+        state = _read(argv[1])
     except (OSError, json.JSONDecodeError) as error:
         print(f"cannot read state: {error}", file=sys.stderr)
         return 2
+    if command == "migrate":
+        if not isinstance(state, dict) or state.get("schema_version") != 1:
+            print("only version 1 states can be migrated")
+            return 1
+        state = migrate_state(state)
+        errors = validate_state(state)
+        for error in errors:
+            print(error)
+        if errors:
+            return 1
+        Path(argv[2]).write_text(
+            json.dumps(state, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+        )
+        print("state migrated to version 2")
+        return 0
     errors = validate_state(state)
     for error in errors:
         print(error)
